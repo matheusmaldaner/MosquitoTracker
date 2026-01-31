@@ -383,7 +383,7 @@
                 const props = feature.properties;
 
                 // Build popup content
-                let popupContent = '<div class="cs-popup-header">🦟 GLOBE Mosquito Observation</div>';
+                let popupContent = '<div class="cs-popup-header">GLOBE Mosquito Observation</div>';
 
                 // Water source
                 const waterSource = props.mosquitohabitatmapperWaterSource || props.waterSourceType || 'Unknown';
@@ -633,7 +633,7 @@
                 fillOpacity: 0.8
             })
             .bindPopup(`
-                <div class="cs-popup-header">🦟 Demo Observation</div>
+                <div class="cs-popup-header">Demo Observation</div>
                 <div class="cs-popup-detail"><strong>Location:</strong> ${point.name}</div>
                 <div class="cs-popup-detail"><strong>Larvae Count:</strong> ${point.larvae}</div>
                 <div class="cs-popup-detail"><strong>Water Source:</strong> ${point.source}</div>

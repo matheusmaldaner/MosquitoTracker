@@ -184,11 +184,8 @@
 
         // Fetch GLOBE data
         async function fetchGlobeData() {
-            const endDate = new Date().toISOString().split('T')[0];
-            const startDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-
-            // Correct GLOBE API endpoint format per documentation
-            const url = `https://api.globe.gov/search/v1/measurement/protocol/measureddate/?protocols=mosquito_habitat_mapper&startdate=${startDate}&enddate=${endDate}&geojson=TRUE&sample=TRUE`;
+            // Use working endpoint format from globe-map.js
+            const url = 'https://api.globe.gov/search/v1/measurement/?protocols=mosquito_habitat_mapper&datefield=measuredDate&startdate=2017-01-01&enddate=2026-01-31&geojson=TRUE';
 
             try {
                 const response = await fetch(url);
