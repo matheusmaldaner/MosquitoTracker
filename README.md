@@ -1,6 +1,10 @@
 # MosquitoWatch
 
+<div align="center">
+<img src="docs/img/mosquitotracker.png" alt="MosquitoTracker">
+
 Global mosquito surveillance platform combining NASA satellite data with GLOBE Observer citizen science observations. Built for the NASA EMERGE Hackathon.
+</div>
 
 ## Live Demo
 
