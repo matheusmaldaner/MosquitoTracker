@@ -14,13 +14,14 @@
 
 ## Live Demo
 
-Open `index.html` in a browser or start a local server:
+Start the development server:
 
 ```bash
-python -m http.server 8000
+npm install
+npm run dev
 ```
 
-Then visit `http://localhost:8000`
+Then visit `http://localhost:4321`
 
 ## Features
 

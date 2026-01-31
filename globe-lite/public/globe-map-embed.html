@@ -187,16 +187,19 @@
             const endDate = new Date().toISOString().split('T')[0];
             const startDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-            const url = `https://api.globe.gov/search/v1/measurement/protocol/mosquito_habitat_mapper?startdate=${startDate}&enddate=${endDate}&geojson=true&sample=true`;
+            // Correct GLOBE API endpoint format per documentation
+            const url = `https://api.globe.gov/search/v1/measurement/protocol/measureddate/?protocols=mosquito_habitat_mapper&startdate=${startDate}&enddate=${endDate}&geojson=TRUE&sample=TRUE`;
 
             try {
                 const response = await fetch(url);
-                if (!response.ok) throw new Error('API error');
+                if (!response.ok) throw new Error('API error: ' + response.status);
 
                 const data = await response.json();
                 return data;
             } catch (error) {
                 console.error('Failed to fetch GLOBE data:', error);
+                // Show error in UI for debugging
+                document.getElementById('count').textContent = 'API Error';
                 return null;
             }
         }
