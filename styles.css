@@ -1,0 +1,1879 @@
+/* ====================================
+   MosquitoWatch - Global Vector Surveillance
+   Modern CSS with CodeStitch-inspired patterns
+   NASA Design System
+   ==================================== */
+
+:root {
+    /* NASA Primary Colors */
+    --primary: #0B3D91;
+    --primaryLight: #1e5fbe;
+    --primaryDark: #062654;
+
+    /* Secondary - Accent for CTAs */
+    --secondary: #00B4D8;
+    --secondaryLight: #48CAE4;
+
+    /* Semantic Colors */
+    --headerColor: #0F172A;
+    --bodyTextColor: #475569;
+    --bodyTextColorWhite: #F8FAFC;
+
+    /* Risk Colors */
+    --critical: #DC2626;
+    --high: #F97316;
+    --medium: #EAB308;
+    --low: #22C55E;
+
+    /* Neutrals */
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-300: #CBD5E1;
+    --gray-400: #94A3B8;
+    --gray-500: #64748B;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1E293B;
+    --gray-900: #0F172A;
+
+    /* Typography Scale */
+    --topperFontSize: clamp(0.8125rem, 1.6vw, 1rem);
+    --headerFontSize: clamp(1.9375rem, 3.9vw, 3.0625rem);
+    --bodyFontSize: 1rem;
+
+    /* Spacing */
+    --sectionPadding: clamp(3.75rem, 7.82vw, 6.25rem) 1rem;
+
+    /* Container */
+    --containerMax: 80rem;
+
+    /* Transitions */
+    --transition: 0.3s ease;
+
+    /* Shadows */
+    --shadowSm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadowMd: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadowLg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadowXl: 0px 4px 120px 0px rgba(0, 0, 0, 0.12);
+}
+
+/* ====================================
+   Reset & Base
+   ==================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: var(--bodyFontSize);
+    line-height: 1.5;
+    color: var(--bodyTextColor);
+    background-color: var(--gray-50);
+    -webkit-font-smoothing: antialiased;
+}
+
+img, svg {
+    display: block;
+    max-width: 100%;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+/* Focus States */
+:focus {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Skip Link */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    padding: 0.75rem 1rem;
+    background: var(--primary);
+    color: white;
+    z-index: 1000;
+    transition: top var(--transition);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* ====================================
+   Typography Components
+   ==================================== */
+
+.cs-topper {
+    font-size: var(--topperFontSize);
+    line-height: 1.2em;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cs-topper--light {
+    color: var(--secondaryLight);
+}
+
+.cs-topper-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--low);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
+}
+
+.cs-title {
+    font-size: var(--headerFontSize);
+    font-weight: 900;
+    line-height: 1.2em;
+    max-width: 43.75rem;
+    margin: 0 0 1rem 0;
+    color: var(--headerColor);
+}
+
+.cs-title--light {
+    color: var(--bodyTextColorWhite);
+}
+
+.cs-title-accent {
+    display: block;
+    color: var(--secondary);
+}
+
+.cs-text {
+    font-size: var(--bodyFontSize);
+    line-height: 1.5em;
+    width: 100%;
+    max-width: 40.625rem;
+    margin: 0;
+    color: var(--bodyTextColor);
+}
+
+.cs-text--light {
+    color: var(--bodyTextColorWhite);
+    opacity: 0.85;
+}
+
+/* ====================================
+   Container
+   ==================================== */
+
+.cs-container {
+    width: 100%;
+    max-width: var(--containerMax);
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* ====================================
+   Content Sections
+   ==================================== */
+
+.cs-content {
+    width: 100%;
+    max-width: 32.625rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.cs-content--center {
+    text-align: center;
+    align-items: center;
+    margin: 0 auto clamp(2rem, 5vw, 3rem);
+}
+
+.cs-content--light .cs-title {
+    color: var(--bodyTextColorWhite);
+}
+
+.cs-content--light .cs-text {
+    color: var(--bodyTextColorWhite);
+    opacity: 0.85;
+}
+
+/* ====================================
+   Header & Navigation
+   ==================================== */
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--gray-200);
+    z-index: 100;
+}
+
+.cs-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4.5rem;
+}
+
+.cs-logo-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.cs-logo {
+    color: var(--primary);
+}
+
+.cs-logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primaryDark);
+}
+
+.cs-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 0.5rem;
+}
+
+.cs-toggle:focus-visible {
+    border-radius: 0.5rem;
+}
+
+.cs-toggle-line {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--gray-700);
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+.cs-nav-menu {
+    position: fixed;
+    top: 4.5rem;
+    left: 0;
+    right: 0;
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 1rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cs-nav-menu.is-open {
+    display: flex;
+}
+
+.cs-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    border-radius: 0.5rem;
+    transition: var(--transition);
+}
+
+.cs-nav-link:hover {
+    color: var(--primary);
+    background: var(--gray-100);
+}
+
+.cs-nav-link--cta {
+    background: var(--primary);
+    color: white;
+    text-align: center;
+    justify-content: center;
+}
+
+.cs-nav-link--cta:hover {
+    background: var(--primaryDark);
+    color: white;
+}
+
+/* Desktop Nav */
+@media (min-width: 48rem) {
+    .cs-toggle {
+        display: none;
+    }
+
+    .cs-nav-menu {
+        position: static;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
+
+    .cs-nav-link {
+        padding: 0.5rem 1rem;
+    }
+
+    .cs-nav-link--cta {
+        padding: 0.5rem 1.25rem;
+    }
+}
+
+/* ====================================
+   Buttons
+   ==================================== */
+
+.cs-button-solid {
+    font-size: 1rem;
+    line-height: clamp(2.875rem, 5.5vw, 3.5rem);
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    min-width: 9.375rem;
+    padding: 0 2rem;
+    background-color: var(--primary);
+    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    cursor: pointer;
+    transition: color var(--transition);
+}
+
+.cs-button-solid::before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 0%;
+    background: #fff;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    border-radius: 0.5rem;
+    transition: width var(--transition);
+}
+
+.cs-button-solid:hover {
+    color: var(--primary);
+}
+
+.cs-button-solid:hover::before {
+    width: 100%;
+}
+
+.cs-button-solid:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 2px;
+}
+
+.cs-button-solid--large {
+    padding: 0 2.5rem;
+    line-height: 3.5rem;
+}
+
+.cs-button-outline {
+    font-size: 1rem;
+    line-height: clamp(2.875rem, 5.5vw, 3.5rem);
+    font-weight: 600;
+    text-align: center;
+    color: var(--gray-700);
+    min-width: 9.375rem;
+    padding: 0 2rem;
+    background: transparent;
+    border: 2px solid var(--gray-300);
+    border-radius: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.cs-button-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.cs-button-outline--light {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.cs-button-outline--light:hover {
+    border-color: white;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.cs-button-outline--dark {
+    color: var(--gray-700);
+    border-color: var(--gray-300);
+}
+
+.cs-button-outline--large {
+    padding: 0 2.5rem;
+    line-height: 3.5rem;
+}
+
+.cs-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.cs-button-group--center {
+    justify-content: center;
+}
+
+/* ====================================
+   Hero Section
+   ==================================== */
+
+.cs-hero {
+    position: relative;
+    min-height: 100vh;
+    padding: clamp(8rem, 15vw, 10rem) 0 var(--sectionPadding);
+    background: linear-gradient(135deg, var(--primaryDark) 0%, var(--primary) 50%, #1d4ed8 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.cs-hero .cs-background {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.cs-background-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+.cs-background-glow {
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 180, 216, 0.25) 0%, transparent 70%);
+    filter: blur(80px);
+}
+
+.cs-hero-content {
+    position: relative;
+    z-index: 10;
+}
+
+.cs-hero .cs-content {
+    max-width: 42rem;
+}
+
+.cs-hero .cs-title {
+    color: white;
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    max-width: 100%;
+}
+
+.cs-hero .cs-text {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    max-width: 38rem;
+}
+
+/* Hero Stats */
+.cs-stats-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.cs-stat {
+    text-align: center;
+}
+
+.cs-stat-number {
+    display: block;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 900;
+    color: white;
+    line-height: 1.2;
+}
+
+.cs-stat-suffix {
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-weight: 700;
+    color: var(--secondaryLight);
+}
+
+.cs-stat-desc {
+    display: block;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 0.25rem;
+}
+
+/* Hero Map */
+.cs-hero-map {
+    position: absolute;
+    right: -5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60%;
+    max-width: 750px;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.cs-world-map {
+    width: 100%;
+    height: auto;
+}
+
+/* Heatmap animations */
+.cs-heat--pulse {
+    animation: heat-pulse 3s ease-in-out infinite;
+}
+
+@keyframes heat-pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
+.cs-point--active {
+    animation: point-glow 2s ease-in-out infinite;
+}
+
+@keyframes point-glow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.cs-connection {
+    stroke-dasharray: 5, 5;
+    animation: dash 20s linear infinite;
+}
+
+@keyframes dash {
+    to { stroke-dashoffset: -100; }
+}
+
+@media (max-width: 64rem) {
+    .cs-hero-map {
+        display: none;
+    }
+}
+
+/* ====================================
+   Features Section
+   ==================================== */
+
+.cs-features {
+    padding: var(--sectionPadding);
+    background: white;
+}
+
+.cs-card-group {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.25rem;
+}
+
+.cs-item {
+    text-align: left;
+    list-style: none;
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    padding: 1.5rem;
+    grid-column: span 12;
+    position: relative;
+    cursor: pointer;
+    transition: box-shadow var(--transition), border-color var(--transition);
+}
+
+.cs-item:hover {
+    box-shadow: var(--shadowXl);
+    border-color: var(--secondary);
+}
+
+.cs-item:hover .cs-h3 {
+    color: var(--primary);
+}
+
+.cs-icon-wrapper {
+    width: clamp(3rem, 6vw, 3.5rem);
+    height: clamp(3rem, 6vw, 3.5rem);
+    border-radius: 0.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.cs-icon-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--secondary);
+    opacity: 0.1;
+    border-radius: 0.75rem;
+}
+
+.cs-icon {
+    width: clamp(1.5rem, 3vw, 2rem);
+    height: auto;
+    color: var(--primary);
+}
+
+.cs-h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--headerColor);
+    margin: 0 0 0.5rem 0;
+    transition: color var(--transition);
+}
+
+.cs-item-text {
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
+    line-height: 1.5;
+    color: var(--bodyTextColor);
+    margin: 0 0 1rem;
+}
+
+.cs-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--gray-200);
+    color: var(--gray-700);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 0.25rem;
+}
+
+/* Tablet+ */
+@media (min-width: 48rem) {
+    .cs-item {
+        grid-column: span 6;
+    }
+}
+
+@media (min-width: 64rem) {
+    .cs-item {
+        grid-column: span 4;
+    }
+}
+
+/* ====================================
+   Map Section
+   ==================================== */
+
+.cs-map-section {
+    padding: var(--sectionPadding);
+    position: relative;
+    z-index: 1;
+}
+
+.cs-map-section .cs-background {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--primaryDark) 0%, var(--gray-900) 100%);
+    z-index: -1;
+}
+
+.cs-map-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.cs-map-wrapper {
+    width: 100%;
+    max-width: 56rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.cs-map-controls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.cs-map-control {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.cs-map-control:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.cs-map-visual {
+    position: relative;
+    aspect-ratio: 2 / 1;
+    min-height: 280px;
+}
+
+.cs-map-svg {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #0a1628 0%, #0d1f35 100%);
+}
+
+.cs-map-legend {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 0.5rem;
+    backdrop-filter: blur(4px);
+}
+
+.cs-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--gray-300);
+}
+
+.cs-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.cs-legend-dot--critical { background: var(--critical); }
+.cs-legend-dot--high { background: var(--high); }
+.cs-legend-dot--medium { background: var(--medium); }
+.cs-legend-dot--low { background: var(--low); }
+
+.cs-map-info {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cs-info-card {
+    flex: 1;
+    text-align: center;
+}
+
+.cs-info-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    margin-bottom: 0.25rem;
+}
+
+.cs-info-value {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: white;
+}
+
+.cs-info-value--alert {
+    color: var(--medium);
+}
+
+/* ====================================
+   Data Sources Section
+   ==================================== */
+
+.cs-data-sources {
+    padding: var(--sectionPadding);
+    background: var(--gray-50);
+}
+
+.cs-card-group--sources {
+    margin-bottom: 2rem;
+}
+
+.cs-item--source {
+    background: white;
+    padding: 1.5rem;
+}
+
+.cs-source-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.cs-badge {
+    padding: 0.25rem 0.5rem;
+    background: rgba(0, 180, 216, 0.1);
+    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 0.25rem;
+}
+
+.cs-badge--climate {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--low);
+}
+
+.cs-badge--community {
+    background: rgba(249, 115, 22, 0.1);
+    color: var(--high);
+}
+
+.cs-item--source .cs-h3 {
+    font-size: 1.375rem;
+    margin: 0;
+}
+
+.cs-meta {
+    display: flex;
+    gap: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-200);
+    margin-top: 1rem;
+}
+
+.cs-meta-item {
+    flex: 1;
+}
+
+.cs-meta-item dt {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin-bottom: 0.25rem;
+}
+
+.cs-meta-item dd {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--headerColor);
+}
+
+.cs-cta-group {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.cs-cta-group .cs-text {
+    margin: 0 auto 1rem;
+}
+
+/* ====================================
+   Community Section
+   ==================================== */
+
+.cs-community {
+    padding: var(--sectionPadding);
+    background: white;
+}
+
+.cs-testimonial-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 80rem;
+    margin: 0 auto;
+}
+
+.cs-testimonial {
+    padding: 1.5rem;
+    background: var(--gray-50);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 1rem 1rem 0;
+}
+
+.cs-testimonial-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--gray-700);
+    font-style: italic;
+    margin: 0 0 1rem;
+}
+
+.cs-testimonial-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cs-testimonial-author {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--headerColor);
+    font-style: normal;
+}
+
+.cs-testimonial-role {
+    font-size: 0.8125rem;
+    color: var(--gray-500);
+}
+
+/* ====================================
+   CTA Section
+   ==================================== */
+
+.cs-cta {
+    padding: var(--sectionPadding);
+    position: relative;
+    z-index: 1;
+}
+
+.cs-cta .cs-background {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primaryDark) 100%);
+    z-index: -1;
+}
+
+.cs-cta .cs-content {
+    max-width: 40rem;
+}
+
+.cs-badge-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.cs-check-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.cs-check-badge svg {
+    color: var(--low);
+}
+
+/* ====================================
+   Footer
+   ==================================== */
+
+.cs-footer {
+    padding: clamp(3rem, 6vw, 4rem) 1rem clamp(1.5rem, 3vw, 2rem);
+    background: var(--gray-900);
+    color: var(--gray-400);
+}
+
+.cs-footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.cs-footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.cs-footer-logo {
+    color: var(--secondary);
+}
+
+.cs-footer-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+}
+
+.cs-footer-tagline {
+    color: var(--gray-500);
+    font-size: 0.9375rem;
+}
+
+.cs-footer-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 2rem;
+}
+
+.cs-footer-nav-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.cs-footer-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cs-footer-nav-list a {
+    font-size: 0.9375rem;
+    color: var(--gray-400);
+    transition: color var(--transition);
+    min-height: auto;
+}
+
+.cs-footer-nav-list a:hover {
+    color: var(--secondary);
+}
+
+.cs-footer-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--gray-800);
+}
+
+.cs-footer-copyright {
+    font-size: 0.875rem;
+}
+
+.cs-footer-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.cs-footer-links a {
+    font-size: 0.875rem;
+    transition: color var(--transition);
+}
+
+.cs-footer-links a:hover {
+    color: var(--secondary);
+}
+
+@media (min-width: 48rem) {
+    .cs-footer-grid {
+        grid-template-columns: 1.5fr 2.5fr;
+    }
+
+    .cs-footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+/* ====================================
+   Utility & Accessibility
+   ==================================== */
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* ====================================
+   Africa Mosquito Map Section
+   ==================================== */
+
+.cs-africa-map {
+    padding: var(--sectionPadding);
+    background: linear-gradient(180deg, var(--gray-50) 0%, white 100%);
+}
+
+.cs-africa-map-container {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.cs-africa-map-wrapper {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: var(--shadowLg);
+    border: 1px solid var(--gray-200);
+    position: relative;
+}
+
+.cs-layer-controls {
+    background: var(--gray-50);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--gray-200);
+}
+
+.cs-layer-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--headerColor);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cs-layer-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    color: var(--bodyTextColor);
+    transition: color 0.2s ease;
+}
+
+.cs-layer-toggle:hover {
+    color: var(--primary);
+}
+
+.cs-layer-toggle input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+.cs-africa-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: var(--gray-50);
+    border-radius: 0.5rem;
+}
+
+.cs-species-marker {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cs-species-marker:hover {
+    r: 9;
+    opacity: 1 !important;
+}
+
+.cs-africa-legend {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--gray-50);
+    border-radius: 0.75rem;
+    border: 1px solid var(--gray-200);
+}
+
+.cs-legend-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--headerColor);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cs-legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.cs-legend-circle {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.cs-africa-stats {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: var(--shadowLg);
+    border: 1px solid var(--gray-200);
+}
+
+.cs-stats-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--headerColor);
+    margin-bottom: 1.5rem;
+}
+
+.cs-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.cs-stat-card {
+    text-align: center;
+    padding: 1.25rem;
+    background: var(--gray-50);
+    border-radius: 0.75rem;
+    border: 1px solid var(--gray-200);
+    transition: all 0.3s ease;
+}
+
+.cs-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadowMd);
+    border-color: var(--primary);
+}
+
+.cs-stat-card .cs-stat-number {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.cs-stat-card .cs-stat-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--headerColor);
+    margin-bottom: 0.25rem;
+}
+
+.cs-stat-card .cs-stat-sublabel {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--bodyTextColor);
+}
+
+.cs-info-box {
+    background: linear-gradient(135deg, var(--primary), var(--primaryLight));
+    color: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+}
+
+.cs-info-box h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.cs-info-box p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    opacity: 0.95;
+}
+
+.cs-data-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cs-data-list li {
+    font-size: 0.875rem;
+    padding: 0.375rem 0;
+    opacity: 0.9;
+}
+
+/* ====================================
+   Species Information Section
+   ==================================== */
+
+.cs-species-info {
+    padding: var(--sectionPadding);
+    background: white;
+}
+
+.cs-species-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.cs-species-card {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--shadowLg);
+    border: 1px solid var(--gray-200);
+    transition: all 0.3s ease;
+}
+
+.cs-species-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadowXl);
+}
+
+.cs-species-header {
+    padding: 1.5rem;
+    color: white;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cs-species-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.cs-species-risk {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cs-species-content {
+    padding: 1.5rem;
+}
+
+.cs-species-desc {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--bodyTextColor);
+    margin-bottom: 1.5rem;
+}
+
+.cs-species-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.cs-species-details div {
+    display: flex;
+    flex-direction: column;
+}
+
+.cs-species-details dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.cs-species-details dd {
+    font-size: 0.875rem;
+    color: var(--headerColor);
+    font-weight: 500;
+}
+
+.cs-species-prevention {
+    background: var(--gray-50);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--bodyTextColor);
+    border-left: 3px solid var(--primary);
+}
+
+.cs-species-prevention strong {
+    color: var(--headerColor);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* Tablet */
+@media (min-width: 48rem) {
+    .cs-africa-map-container {
+        grid-template-columns: 2fr 1fr;
+    }
+    
+    .cs-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Desktop */
+@media (min-width: 64rem) {
+    .cs-africa-map-wrapper {
+        padding: 3rem;
+    }
+    
+    .cs-stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .cs-species-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Animations */
+@keyframes pulse-glow {
+    0%, 100% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+.cs-species-marker {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ====================================
+   GLOBE Observations Map Section
+   ==================================== */
+
+.cs-globe-map {
+    padding: var(--sectionPadding);
+    background: white;
+}
+
+.cs-nasa-controls {
+    background: linear-gradient(135deg, var(--primary), var(--primaryLight));
+    color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    margin: 2rem 0;
+    box-shadow: var(--shadowLg);
+}
+
+.cs-controls-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.cs-layer-toggles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.cs-layer-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.cs-layer-toggle:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.cs-layer-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.cs-layer-toggle input[type="checkbox"]:checked + span {
+    font-weight: 700;
+}
+
+.cs-layer-toggle input[type="checkbox"]:checked ~ * {
+    opacity: 1;
+}
+
+.cs-layer-toggle span {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: white;
+}
+
+.cs-layer-toggle small {
+    font-size: 0.75rem;
+    opacity: 0.85;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.cs-nasa-methodology {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--gray-50);
+    border-radius: 1rem;
+    border: 1px solid var(--gray-200);
+}
+
+.cs-nasa-methodology h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--headerColor);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.cs-methodology-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.cs-method-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: var(--shadowMd);
+    border: 1px solid var(--gray-200);
+    transition: all 0.3s ease;
+}
+
+.cs-method-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadowLg);
+    border-color: var(--primary);
+}
+
+.cs-method-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cs-method-card h4 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+}
+
+.cs-method-card p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--bodyTextColor);
+    margin-bottom: 1rem;
+}
+
+.cs-method-tag {
+    display: inline-block;
+    background: var(--gray-100);
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--bodyTextColor);
+}
+
+.cs-legend-section {
+    margin-bottom: 1.5rem;
+}
+
+.cs-legend-section:last-child {
+    margin-bottom: 0;
+}
+
+.cs-legend-dot {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.cs-globe-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.cs-globe-stats {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.cs-stat-badge {
+    background: var(--gray-100);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--headerColor);
+    border: 1px solid var(--gray-200);
+}
+
+#observation-count {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.cs-leaflet-map {
+    height: 600px;
+    width: 100%;
+    border-radius: 1rem;
+    box-shadow: var(--shadowLg);
+    border: 1px solid var(--gray-200);
+    z-index: 1;
+}
+
+.cs-globe-legend {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: var(--gray-50);
+    border-radius: 0.75rem;
+    border: 1px solid var(--gray-200);
+}
+
+.cs-legend-marker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    font-size: 0.75rem;
+}
+
+/* Leaflet Marker Cluster Customization */
+.marker-cluster {
+    background: transparent;
+}
+
+.cluster-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 3px solid white;
+}
+
+.cluster-small {
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+    background: var(--secondary);
+}
+
+.cluster-medium {
+    width: 40px;
+    height: 40px;
+    font-size: 0.875rem;
+    background: var(--high);
+}
+
+.cluster-large {
+    width: 50px;
+    height: 50px;
+    font-size: 1rem;
+    background: var(--critical);
+}
+
+/* Override default MarkerCluster styles */
+.leaflet-cluster-anim .leaflet-marker-icon,
+.leaflet-cluster-anim .leaflet-marker-shadow {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+/* Leaflet Popup Customization */
+.leaflet-popup-content-wrapper {
+    border-radius: 0.5rem;
+    box-shadow: var(--shadowLg);
+}
+
+.leaflet-popup-content {
+    margin: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.cs-popup-header {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.cs-popup-detail {
+    font-size: 0.875rem;
+    color: var(--bodyTextColor);
+    margin: 0.25rem 0;
+}
+
+.cs-popup-detail strong {
+    color: var(--headerColor);
+}
+
+.cs-popup-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 48rem) {
+    .cs-leaflet-map {
+        height: 400px;
+    }
+
+    .cs-globe-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #refresh-globe {
+        width: 100%;
+    }
+
+    .cs-testimonial {
+        border-width: 2px;
+    }
+
+    .cs-button-solid {
+        border: 2px solid white;
+    }
+}
+
+/* Print */
+@media print {
+    .header,
+    .cs-hero-map,
+    .cs-map-controls,
+    .cs-cta,
+    .cs-footer {
+        display: none;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .cs-hero {
+        background: white;
+        min-height: auto;
+        padding: 2rem 0;
+    }
+
+    .cs-hero .cs-title,
+    .cs-hero .cs-text {
+        color: black;
+    }
+}
