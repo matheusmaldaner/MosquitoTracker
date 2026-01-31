@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Global mosquito surveillance powered by NASA data. Track disease vectors, monitor populations, and protect communities worldwide.">
+    <meta name="theme-color" content="#0B3D91">
+
+    <title>MosquitoWatch | Global Vector Surveillance</title>
+
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Lightweight font loading with display swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Skip link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Navigation -->
+    <header class="header" role="banner">
+        <nav class="cs-nav cs-container" aria-label="Main navigation">
+            <div class="cs-logo-group">
+                <span class="cs-logo" aria-hidden="true">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="16" cy="16" r="6" fill="currentColor"/>
+                        <path d="M16 2V8M16 24V30M2 16H8M24 16H30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <span class="cs-logo-text">MosquitoWatch</span>
+            </div>
+
+            <button class="cs-toggle" aria-expanded="false" aria-controls="cs-nav-menu" aria-label="Toggle navigation menu">
+                <span class="cs-toggle-line"></span>
+                <span class="cs-toggle-line"></span>
+                <span class="cs-toggle-line"></span>
+            </button>
+
+            <ul class="cs-nav-menu" id="cs-nav-menu" role="menubar">
+                <li role="none"><a href="#globe" class="cs-nav-link" role="menuitem">Live Map</a></li>
+                <li role="none"><a href="#data" class="cs-nav-link" role="menuitem">NASA Data</a></li>
+                <li role="none"><a href="#species" class="cs-nav-link" role="menuitem">Mosquito Species</a></li>
+                <li role="none"><a href="#about" class="cs-nav-link" role="menuitem">About</a></li>
+                <li role="none"><a href="#contribute" class="cs-nav-link cs-nav-link--cta" role="menuitem">Report Sighting</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="cs-hero" aria-labelledby="hero-title">
+            <div class="cs-background" aria-hidden="true">
+                <div class="cs-background-grid"></div>
+                <div class="cs-background-glow"></div>
+            </div>
+
+            <div class="cs-container cs-hero-content">
+                <div class="cs-content">
+                    <span class="cs-topper">
+                        <span class="cs-topper-dot" aria-hidden="true"></span>
+                        Powered by NASA Open Data
+                    </span>
+
+                    <h1 id="hero-title" class="cs-title">
+                        Track Mosquito Populations
+                        <span class="cs-title-accent">Protect Communities Worldwide</span>
+                    </h1>
+
+                    <p class="cs-text">
+                        In regions across the globe, communities face mosquito-borne disease threats without accessible local data.
+                        MosquitoWatch transforms NASA satellite imagery and environmental data into actionable insights—available to anyone, anywhere.
+                    </p>
+
+                    <div class="cs-button-group">
+                        <a href="#map" class="cs-button-solid">
+                            <span>Explore Live Map</span>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                                <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                        <a href="#data" class="cs-button-outline">View Data Sources</a>
+                    </div>
+                </div>
+
+                <div class="cs-stats-group" aria-label="Key statistics">
+                    <div class="cs-stat">
+                        <span class="cs-stat-number" data-count="147">0</span>
+                        <span class="cs-stat-desc">Countries Monitored</span>
+                    </div>
+                    <div class="cs-stat">
+                        <span class="cs-stat-number" data-count="2.4">0</span><span class="cs-stat-suffix">M+</span>
+                        <span class="cs-stat-desc">Data Points</span>
+                    </div>
+                    <div class="cs-stat">
+                        <span class="cs-stat-number" data-count="98">0</span><span class="cs-stat-suffix">%</span>
+                        <span class="cs-stat-desc">Open Access</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Realistic World Map Heatmap -->
+            <div class="cs-hero-map" aria-hidden="true">
+                <svg class="cs-world-map" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid slice">
+                    <defs>
+                        <!-- Realistic heatmap gradients -->
+                        <radialGradient id="heatmap-critical" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#ff0000" stop-opacity="0.9"/>
+                            <stop offset="30%" stop-color="#ff4500" stop-opacity="0.7"/>
+                            <stop offset="60%" stop-color="#ff6b00" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#ff8c00" stop-opacity="0"/>
+                        </radialGradient>
+                        <radialGradient id="heatmap-high" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#ff6b00" stop-opacity="0.85"/>
+                            <stop offset="35%" stop-color="#ff8c00" stop-opacity="0.6"/>
+                            <stop offset="70%" stop-color="#ffa500" stop-opacity="0.3"/>
+                            <stop offset="100%" stop-color="#ffcc00" stop-opacity="0"/>
+                        </radialGradient>
+                        <radialGradient id="heatmap-medium" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#ffcc00" stop-opacity="0.8"/>
+                            <stop offset="40%" stop-color="#ffdd00" stop-opacity="0.5"/>
+                            <stop offset="80%" stop-color="#ffee00" stop-opacity="0.2"/>
+                            <stop offset="100%" stop-color="#ffff00" stop-opacity="0"/>
+                        </radialGradient>
+                        <radialGradient id="heatmap-low" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.7"/>
+                            <stop offset="50%" stop-color="#00ffaa" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#00ffcc" stop-opacity="0"/>
+                        </radialGradient>
+
+                        <!-- Glow filter for data points -->
+                        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+
+                        <!-- Grid pattern -->
+                        <pattern id="map-grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                            <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(59,130,246,0.1)" stroke-width="0.5"/>
+                        </pattern>
+                    </defs>
+
+                    <!-- Grid background -->
+                    <rect width="1000" height="500" fill="url(#map-grid)"/>
+
+                    <!-- Realistic continent outlines -->
+                    <g class="cs-continents" fill="none" stroke="rgba(59,130,246,0.4)" stroke-width="1.5">
+                        <!-- North America -->
+                        <path d="M80,60 Q120,45 180,55 Q220,50 260,70 Q280,85 275,110 Q285,130 270,155 Q250,175 220,190 Q185,200 150,195 Q130,210 115,200 Q90,185 85,160 Q75,130 80,100 Q75,75 80,60Z" opacity="0.8"/>
+                        <!-- South America -->
+                        <path d="M180,220 Q210,210 235,225 Q255,245 265,280 Q275,320 265,365 Q250,400 225,420 Q195,435 175,410 Q160,380 165,340 Q155,300 165,260 Q170,235 180,220Z" opacity="0.8"/>
+                        <!-- Europe -->
+                        <path d="M450,55 Q490,45 530,55 Q560,65 575,90 Q580,115 565,135 Q545,150 515,155 Q485,160 455,150 Q435,135 440,110 Q435,80 450,55Z" opacity="0.8"/>
+                        <!-- Africa -->
+                        <path d="M445,165 Q485,155 525,165 Q560,180 580,220 Q595,270 585,325 Q570,375 540,405 Q500,430 460,415 Q430,395 425,350 Q415,300 425,250 Q430,200 445,165Z" opacity="0.8"/>
+                        <!-- Asia -->
+                        <path d="M560,50 Q640,35 720,50 Q790,65 850,100 Q890,140 880,190 Q865,235 820,265 Q760,290 700,280 Q640,265 600,235 Q565,200 560,155 Q555,100 560,50Z" opacity="0.8"/>
+                        <!-- Southeast Asia / Indonesia -->
+                        <path d="M720,260 Q760,250 800,265 Q830,280 850,310 Q860,340 840,365 Q810,380 775,375 Q745,365 730,340 Q715,310 720,280 Q718,268 720,260Z" opacity="0.8"/>
+                        <!-- Australia -->
+                        <path d="M780,340 Q830,325 875,345 Q910,370 915,410 Q910,450 875,475 Q830,495 785,480 Q750,460 745,420 Q745,375 780,340Z" opacity="0.8"/>
+                    </g>
+
+                    <!-- Heatmap overlays - realistic distribution -->
+                    <g class="cs-heatmap-layer" style="mix-blend-mode: screen;">
+                        <!-- Brazil - High activity -->
+                        <ellipse cx="220" cy="310" rx="55" ry="70" fill="url(#heatmap-critical)" class="cs-heat cs-heat--pulse"/>
+
+                        <!-- Central Africa - Critical -->
+                        <ellipse cx="510" cy="280" rx="70" ry="80" fill="url(#heatmap-critical)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.5s"/>
+
+                        <!-- Southeast Asia - High -->
+                        <ellipse cx="780" cy="300" rx="50" ry="45" fill="url(#heatmap-high)" class="cs-heat cs-heat--pulse" style="animation-delay: 1s"/>
+
+                        <!-- India - High -->
+                        <ellipse cx="680" cy="200" rx="45" ry="50" fill="url(#heatmap-high)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.3s"/>
+
+                        <!-- West Africa -->
+                        <ellipse cx="440" cy="250" rx="35" ry="40" fill="url(#heatmap-high)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.7s"/>
+
+                        <!-- Central America -->
+                        <ellipse cx="150" cy="180" rx="30" ry="35" fill="url(#heatmap-medium)" class="cs-heat cs-heat--pulse" style="animation-delay: 1.2s"/>
+
+                        <!-- Southern US -->
+                        <ellipse cx="180" cy="130" rx="40" ry="25" fill="url(#heatmap-medium)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.9s"/>
+
+                        <!-- Mediterranean -->
+                        <ellipse cx="500" cy="120" rx="30" ry="20" fill="url(#heatmap-low)" class="cs-heat cs-heat--pulse" style="animation-delay: 1.5s"/>
+
+                        <!-- Northern Australia -->
+                        <ellipse cx="850" cy="380" rx="35" ry="30" fill="url(#heatmap-medium)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.4s"/>
+
+                        <!-- East Africa -->
+                        <ellipse cx="560" cy="320" rx="30" ry="45" fill="url(#heatmap-high)" class="cs-heat cs-heat--pulse" style="animation-delay: 1.1s"/>
+                    </g>
+
+                    <!-- Data collection points -->
+                    <g class="cs-data-points" filter="url(#glow)">
+                        <!-- Major monitoring stations -->
+                        <circle cx="220" cy="310" r="4" fill="#00ffff" class="cs-point cs-point--active"/>
+                        <circle cx="510" cy="280" r="4" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 0.2s"/>
+                        <circle cx="780" cy="300" r="3" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 0.4s"/>
+                        <circle cx="680" cy="200" r="3" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 0.6s"/>
+                        <circle cx="440" cy="250" r="3" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 0.8s"/>
+                        <circle cx="150" cy="180" r="2" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 1s"/>
+                        <circle cx="180" cy="130" r="2" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 1.2s"/>
+                        <circle cx="560" cy="320" r="3" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 1.4s"/>
+                        <circle cx="850" cy="380" r="2" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 1.6s"/>
+
+                        <!-- Secondary points -->
+                        <circle cx="195" cy="280" r="2" fill="#60a5fa" class="cs-point"/>
+                        <circle cx="250" cy="350" r="2" fill="#60a5fa" class="cs-point"/>
+                        <circle cx="480" cy="310" r="2" fill="#60a5fa" class="cs-point"/>
+                        <circle cx="545" cy="250" r="2" fill="#60a5fa" class="cs-point"/>
+                        <circle cx="720" cy="230" r="2" fill="#60a5fa" class="cs-point"/>
+                        <circle cx="810" cy="320" r="2" fill="#60a5fa" class="cs-point"/>
+                        <circle cx="640" cy="180" r="2" fill="#60a5fa" class="cs-point"/>
+                    </g>
+
+                    <!-- Connection lines (data flow) -->
+                    <g class="cs-connections" stroke="rgba(0,255,255,0.2)" stroke-width="0.5" fill="none">
+                        <path d="M220,310 Q365,295 510,280" class="cs-connection"/>
+                        <path d="M510,280 Q595,240 680,200" class="cs-connection" style="animation-delay: 0.5s"/>
+                        <path d="M680,200 Q730,250 780,300" class="cs-connection" style="animation-delay: 1s"/>
+                        <path d="M440,250 Q475,265 510,280" class="cs-connection" style="animation-delay: 0.3s"/>
+                    </g>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="cs-features" id="features" aria-labelledby="features-title">
+            <div class="cs-container">
+                <div class="cs-content cs-content--center">
+                    <span class="cs-topper">Capabilities</span>
+                    <h2 id="features-title" class="cs-title">Democratizing Vector Surveillance</h2>
+                    <p class="cs-text">
+                        Built for accessibility, designed for impact. Our tools work on any device, any connection speed.
+                    </p>
+                </div>
+
+                <ul class="cs-card-group">
+                    <li class="cs-item">
+                        <div class="cs-icon-wrapper">
+                            <svg class="cs-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 2V6M12 18V22M2 12H6M18 12H22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="cs-h3">Real-Time Tracking</h3>
+                        <p class="cs-item-text">
+                            Monitor mosquito population density using NASA satellite data, updated daily.
+                            Identify high-risk zones before outbreaks occur.
+                        </p>
+                        <span class="cs-tag">MODIS + Landsat Data</span>
+                    </li>
+
+                    <li class="cs-item">
+                        <div class="cs-icon-wrapper">
+                            <svg class="cs-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                                <path d="M3 9H21M9 3V21" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <h3 class="cs-h3">Low-Bandwidth Mode</h3>
+                        <p class="cs-item-text">
+                            Designed for 2G connections and low-powered devices.
+                            Full functionality without heavy downloads or processing.
+                        </p>
+                        <span class="cs-tag">&lt; 500KB Initial Load</span>
+                    </li>
+
+                    <li class="cs-item">
+                        <div class="cs-icon-wrapper">
+                            <svg class="cs-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                <path d="M2 12H22M12 2C14.5 4.7 16 8.3 16 12C16 15.7 14.5 19.3 12 22C9.5 19.3 8 15.7 8 12C8 8.3 9.5 4.7 12 2Z" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <h3 class="cs-h3">Multilingual Support</h3>
+                        <p class="cs-item-text">
+                            Available in 12 languages with more coming.
+                            Community-contributed translations ensure local accuracy.
+                        </p>
+                        <span class="cs-tag">Community-Driven</span>
+                    </li>
+
+                    <li class="cs-item">
+                        <div class="cs-icon-wrapper">
+                            <svg class="cs-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M14 2H6C5.5 2 5 2.2 4.6 2.6C4.2 3 4 3.5 4 4V20C4 20.5 4.2 21 4.6 21.4C5 21.8 5.5 22 6 22H18C18.5 22 19 21.8 19.4 21.4C19.8 21 20 20.5 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M14 2V8H20M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="cs-h3">Open Data Export</h3>
+                        <p class="cs-item-text">
+                            Download datasets in standard formats (CSV, GeoJSON).
+                            Full methodology documentation for reproducible research.
+                        </p>
+                        <span class="cs-tag">MIT Licensed</span>
+                    </li>
+
+                    <li class="cs-item">
+                        <div class="cs-icon-wrapper">
+                            <svg class="cs-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M17 21V19C17 18 16.6 17 15.8 16.2C15 15.4 14 15 13 15H5C4 15 3 15.4 2.2 16.2C1.4 17 1 18 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                                <path d="M23 21V19C23 18.1 22.7 17.3 22.2 16.6C21.6 15.9 20.9 15.4 20 15.1M16 3.1C16.9 3.4 17.6 3.9 18.2 4.6C18.7 5.3 19 6.1 19 7C19 7.9 18.7 8.8 18.2 9.5C17.6 10.2 16.9 10.7 16 10.9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="cs-h3">Citizen Reporting</h3>
+                        <p class="cs-item-text">
+                            Submit sightings via SMS, app, or web. No smartphone required.
+                            Community data validated against satellite observations.
+                        </p>
+                        <span class="cs-tag">SMS Gateway Available</span>
+                    </li>
+
+                    <li class="cs-item">
+                        <div class="cs-icon-wrapper">
+                            <svg class="cs-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M22 12H18L15 21L9 3L6 12H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="cs-h3">Risk Prediction</h3>
+                        <p class="cs-item-text">
+                            Environmental modeling predicts breeding conditions 7-14 days ahead.
+                            Methodology transparent and peer-reviewed.
+                        </p>
+                        <span class="cs-tag">GPM Precipitation Data</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- GLOBE + NASA Data Map Section (Removed old global map) -->
+        <section class="cs-map-section-removed" id="map-old" style="display: none;" aria-labelledby="map-title">
+            <div class="cs-background">
+                <div class="cs-background-overlay"></div>
+            </div>
+
+            <div class="cs-container">
+                <div class="cs-content cs-content--center cs-content--light">
+                    <span class="cs-topper cs-topper--light">Live Data</span>
+                    <h2 id="map-title" class="cs-title cs-title--light">Global Surveillance Network</h2>
+                    <p class="cs-text cs-text--light">
+                        Real-time mosquito activity data from satellite observations and community reports.
+                    </p>
+                </div>
+
+                <div class="cs-map-container">
+                    <div class="cs-map-wrapper">
+                        <!-- Map controls -->
+                        <div class="cs-map-controls" role="toolbar" aria-label="Map controls">
+                            <button class="cs-map-control" aria-label="Zoom in">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M10 4V16M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                            <button class="cs-map-control" aria-label="Zoom out">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M4 10H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                            <button class="cs-map-control" aria-label="Toggle layers">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M2 10L10 14L18 10M2 14L10 18L18 14M2 6L10 10L18 6L10 2L2 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Interactive Map -->
+                        <div class="cs-map-visual">
+                            <svg viewBox="0 0 800 400" class="cs-map-svg" role="img" aria-label="Interactive world map showing mosquito activity hotspots">
+                                <defs>
+                                    <radialGradient id="interactive-heat-critical" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#ff0000" stop-opacity="0.9"/>
+                                        <stop offset="40%" stop-color="#ff4500" stop-opacity="0.6"/>
+                                        <stop offset="100%" stop-color="#ff6b00" stop-opacity="0"/>
+                                    </radialGradient>
+                                    <radialGradient id="interactive-heat-high" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#ff6b00" stop-opacity="0.85"/>
+                                        <stop offset="45%" stop-color="#ff8c00" stop-opacity="0.5"/>
+                                        <stop offset="100%" stop-color="#ffa500" stop-opacity="0"/>
+                                    </radialGradient>
+                                    <radialGradient id="interactive-heat-medium" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#ffcc00" stop-opacity="0.8"/>
+                                        <stop offset="50%" stop-color="#ffdd00" stop-opacity="0.4"/>
+                                        <stop offset="100%" stop-color="#ffee00" stop-opacity="0"/>
+                                    </radialGradient>
+                                    <radialGradient id="interactive-heat-low" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#22c55e" stop-opacity="0.7"/>
+                                        <stop offset="60%" stop-color="#4ade80" stop-opacity="0.3"/>
+                                        <stop offset="100%" stop-color="#86efac" stop-opacity="0"/>
+                                    </radialGradient>
+                                    <filter id="map-glow">
+                                        <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                                        <feMerge>
+                                            <feMergeNode in="coloredBlur"/>
+                                            <feMergeNode in="SourceGraphic"/>
+                                        </feMerge>
+                                    </filter>
+                                    <pattern id="interactive-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(59,130,246,0.15)" stroke-width="0.5"/>
+                                    </pattern>
+                                </defs>
+
+                                <rect width="800" height="400" fill="url(#interactive-grid)"/>
+
+                                <!-- Continents -->
+                                <g fill="none" stroke="rgba(59,130,246,0.5)" stroke-width="1">
+                                    <path d="M65,50 Q100,35 145,45 Q180,40 210,55 Q225,70 220,90 Q230,105 215,125 Q200,140 175,150 Q150,158 120,155 Q105,168 92,160 Q72,148 68,128 Q60,105 64,80 Q60,62 65,50Z"/>
+                                    <path d="M145,175 Q170,168 190,180 Q205,195 212,225 Q220,255 212,290 Q200,320 180,335 Q156,348 140,328 Q128,305 132,270 Q125,240 132,210 Q136,188 145,175Z"/>
+                                    <path d="M360,45 Q392,36 425,45 Q450,52 462,72 Q465,92 452,108 Q436,120 412,124 Q388,128 365,120 Q348,108 352,88 Q348,64 360,45Z"/>
+                                    <path d="M356,132 Q388,124 420,132 Q448,144 465,175 Q476,215 468,260 Q456,300 432,325 Q400,345 368,332 Q345,315 340,280 Q332,240 340,200 Q345,160 356,132Z"/>
+                                    <path d="M450,40 Q512,28 575,40 Q630,52 680,80 Q712,112 705,152 Q692,188 656,212 Q608,232 560,224 Q512,212 480,188 Q452,160 448,124 Q444,80 450,40Z"/>
+                                    <path d="M575,208 Q608,200 640,212 Q665,225 680,248 Q688,272 672,292 Q648,305 620,300 Q596,292 584,272 Q572,248 575,225 Q574,215 575,208Z"/>
+                                    <path d="M625,272 Q665,260 700,275 Q728,295 732,328 Q728,360 700,380 Q665,396 628,385 Q600,368 596,336 Q596,300 625,272Z"/>
+                                </g>
+
+                                <!-- Heatmap Layer -->
+                                <g style="mix-blend-mode: screen;">
+                                    <ellipse cx="175" cy="248" rx="45" ry="55" fill="url(#interactive-heat-critical)" class="cs-heat cs-heat--pulse"/>
+                                    <ellipse cx="408" cy="225" rx="55" ry="65" fill="url(#interactive-heat-critical)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.4s"/>
+                                    <ellipse cx="625" cy="240" rx="40" ry="35" fill="url(#interactive-heat-high)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.8s"/>
+                                    <ellipse cx="545" cy="160" rx="35" ry="40" fill="url(#interactive-heat-high)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.3s"/>
+                                    <ellipse cx="352" cy="200" rx="28" ry="32" fill="url(#interactive-heat-high)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.6s"/>
+                                    <ellipse cx="120" cy="145" rx="25" ry="28" fill="url(#interactive-heat-medium)" class="cs-heat cs-heat--pulse" style="animation-delay: 1s"/>
+                                    <ellipse cx="145" cy="105" rx="32" ry="20" fill="url(#interactive-heat-medium)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.7s"/>
+                                    <ellipse cx="400" cy="95" rx="24" ry="16" fill="url(#interactive-heat-low)" class="cs-heat cs-heat--pulse" style="animation-delay: 1.2s"/>
+                                    <ellipse cx="680" cy="305" rx="28" ry="24" fill="url(#interactive-heat-medium)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.5s"/>
+                                    <ellipse cx="448" cy="260" rx="24" ry="35" fill="url(#interactive-heat-high)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.9s"/>
+                                </g>
+
+                                <!-- Data Points -->
+                                <g filter="url(#map-glow)">
+                                    <circle cx="175" cy="248" r="4" fill="#00ffff" class="cs-point cs-point--active"/>
+                                    <circle cx="408" cy="225" r="4" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 0.2s"/>
+                                    <circle cx="625" cy="240" r="3" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 0.4s"/>
+                                    <circle cx="545" cy="160" r="3" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 0.6s"/>
+                                    <circle cx="352" cy="200" r="3" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 0.8s"/>
+                                    <circle cx="120" cy="145" r="2" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 1s"/>
+                                    <circle cx="145" cy="105" r="2" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 1.2s"/>
+                                    <circle cx="448" cy="260" r="3" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 1.4s"/>
+                                    <circle cx="680" cy="305" r="2" fill="#00ffff" class="cs-point cs-point--active" style="animation-delay: 1.6s"/>
+                                </g>
+                            </svg>
+
+                            <!-- Legend -->
+                            <div class="cs-map-legend">
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot cs-legend-dot--critical"></span>
+                                    <span>Critical Risk</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot cs-legend-dot--high"></span>
+                                    <span>High Activity</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot cs-legend-dot--medium"></span>
+                                    <span>Moderate</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot cs-legend-dot--low"></span>
+                                    <span>Low</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Map Info Panel -->
+                        <div class="cs-map-info">
+                            <div class="cs-info-card">
+                                <span class="cs-info-label">Last Updated</span>
+                                <span class="cs-info-value" id="last-updated">Loading...</span>
+                            </div>
+                            <div class="cs-info-card">
+                                <span class="cs-info-label">Active Alerts</span>
+                                <span class="cs-info-value cs-info-value--alert">23</span>
+                            </div>
+                            <div class="cs-info-card">
+                                <span class="cs-info-label">Reports Today</span>
+                                <span class="cs-info-value">1,247</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#" class="cs-button-solid cs-button-solid--large">
+                        Open Full Interactive Map
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Africa Map Section (Removed - consolidated into GLOBE map) -->
+        <section class="cs-africa-map-removed" id="africa-old" style="display: none;" aria-labelledby="africa-title">
+            <div class="cs-container">
+                <div class="cs-content cs-content--center">
+                    <span class="cs-topper">Focus Region</span>
+                    <h2 id="africa-title" class="cs-title">Mosquito Surveillance in Africa</h2>
+                    <p class="cs-text">
+                        Based on NASA satellite data tracking disease vectors across Africa. Real-time monitoring of environmental 
+                        conditions that favor mosquito breeding and disease transmission.
+                    </p>
+                </div>
+
+                <!-- Africa Map Container -->
+                <div class="cs-africa-map-container">
+                    <div class="cs-africa-map-wrapper">
+                        <!-- Environmental Data Toggles -->
+                        <div class="cs-layer-controls">
+                            <h3 class="cs-layer-title">Data Layers</h3>
+                            <label class="cs-layer-toggle">
+                                <input type="checkbox" checked data-layer="mosquito">
+                                <span>Mosquito Distribution</span>
+                            </label>
+                            <label class="cs-layer-toggle">
+                                <input type="checkbox" data-layer="temperature">
+                                <span>Land Surface Temperature</span>
+                            </label>
+                            <label class="cs-layer-toggle">
+                                <input type="checkbox" data-layer="rainfall">
+                                <span>Rainfall (GPM)</span>
+                            </label>
+                            <label class="cs-layer-toggle">
+                                <input type="checkbox" data-layer="ndvi">
+                                <span>Vegetation Index (NDVI)</span>
+                            </label>
+                            <label class="cs-layer-toggle">
+                                <input type="checkbox" data-layer="diseases">
+                                <span>Disease Risk Zones</span>
+                            </label>
+                        </div>
+
+                        <!-- Africa Map SVG -->
+                        <svg viewBox="0 0 800 900" class="cs-africa-svg" role="img" aria-label="Detailed map of Africa showing mosquito populations and disease risk">
+                            <defs>
+                                <!-- Gradients for different risk levels and species -->
+                                <radialGradient id="africa-malaria-high" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#dc2626" stop-opacity="0.9"/>
+                                    <stop offset="50%" stop-color="#f97316" stop-opacity="0.6"/>
+                                    <stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/>
+                                </radialGradient>
+                                <radialGradient id="africa-rvf" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.85"/>
+                                    <stop offset="50%" stop-color="#a78bfa" stop-opacity="0.5"/>
+                                    <stop offset="100%" stop-color="#c4b5fd" stop-opacity="0"/>
+                                </radialGradient>
+                                <radialGradient id="africa-dengue" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#ea580c" stop-opacity="0.8"/>
+                                    <stop offset="50%" stop-color="#fb923c" stop-opacity="0.5"/>
+                                    <stop offset="100%" stop-color="#fdba74" stop-opacity="0"/>
+                                </radialGradient>
+                                <radialGradient id="africa-chikungunya" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#0891b2" stop-opacity="0.8"/>
+                                    <stop offset="50%" stop-color="#22d3ee" stop-opacity="0.5"/>
+                                    <stop offset="100%" stop-color="#67e8f9" stop-opacity="0"/>
+                                </radialGradient>
+                                
+                                <!-- Pattern for breeding sites -->
+                                <pattern id="breeding-pattern" width="10" height="10" patternUnits="userSpaceOnUse">
+                                    <circle cx="5" cy="5" r="1.5" fill="#3b82f6" opacity="0.4"/>
+                                </pattern>
+                            </defs>
+
+                            <!-- Africa Continent Outline -->
+                            <g id="africa-continent" stroke="#64748b" stroke-width="2" fill="none">
+                                <!-- North Africa -->
+                                <path d="M180,80 Q220,70 280,75 Q350,78 420,85 Q480,90 540,100 Q590,115 620,140 
+                                         L640,180 Q650,220 640,260 L620,280 Q580,290 540,285 L480,280 Q420,275 360,270 
+                                         L300,265 Q240,260 200,250 L180,220 Q170,180 175,140 Q178,110 180,80Z" 
+                                      fill="rgba(59,130,246,0.05)"/>
+                                
+                                <!-- West Africa -->
+                                <path d="M180,220 L200,250 Q220,280 220,320 L210,380 Q200,420 195,450 
+                                         L200,490 Q210,530 230,560 L250,580 Q280,600 310,610 L340,615 
+                                         Q360,618 380,615 L400,610 Q420,605 430,595 L420,560 Q410,520 390,480 
+                                         L370,440 Q350,400 330,360 L310,320 Q290,290 270,270 L240,255 L200,250Z" 
+                                      fill="rgba(34,197,94,0.05)"/>
+                                
+                                <!-- Central Africa -->
+                                <path d="M330,360 L350,400 L370,440 L390,480 Q410,520 420,560 L430,595 
+                                         Q450,610 480,620 L520,628 Q560,630 600,625 L640,615 
+                                         Q660,605 670,585 L675,550 Q678,510 675,470 L670,430 
+                                         Q665,390 655,350 L640,320 Q620,295 590,280 L550,270 
+                                         Q510,265 470,268 L430,275 Q390,285 360,305 L340,330 L330,360Z" 
+                                      fill="rgba(168,85,247,0.05)"/>
+                                
+                                <!-- East Africa -->
+                                <path d="M640,180 L660,220 Q670,260 675,300 L680,340 L685,380 Q690,420 688,460 
+                                         L685,500 Q680,540 672,575 L670,585 Q665,600 655,610 L640,615 
+                                         L600,625 Q560,630 520,628 L520,600 Q522,560 530,520 L540,480 
+                                         Q550,440 565,400 L580,360 Q595,320 605,280 L615,240 Q625,200 640,180Z" 
+                                      fill="rgba(234,88,12,0.05)"/>
+                                
+                                <!-- Southern Africa -->
+                                <path d="M400,610 L420,650 Q430,690 435,730 L432,770 Q425,810 410,840 
+                                         L385,865 Q355,885 320,890 L280,888 Q245,880 220,860 L200,835 
+                                         Q185,805 180,770 L178,730 Q180,690 190,650 L205,615 Q220,590 240,575 
+                                         L270,560 Q310,550 350,555 L380,565 Q395,580 400,610Z" 
+                                      fill="rgba(249,115,22,0.05)"/>
+                            </g>
+
+                            <!-- Disease Risk Zones Layer -->
+                            <g id="disease-layer" opacity="0.7">
+                                <!-- Malaria Belt - Sub-Saharan Africa -->
+                                <ellipse cx="400" cy="420" rx="180" ry="140" fill="url(#africa-malaria-high)" class="cs-heat cs-heat--pulse"/>
+                                <ellipse cx="280" cy="380" rx="90" ry="110" fill="url(#africa-malaria-high)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.3s"/>
+                                <ellipse cx="520" cy="450" rx="100" ry="95" fill="url(#africa-malaria-high)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.6s"/>
+                                
+                                <!-- Rift Valley Fever - East Africa -->
+                                <ellipse cx="600" cy="350" rx="70" ry="100" fill="url(#africa-rvf)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.4s"/>
+                                <ellipse cx="580" cy="480" rx="60" ry="75" fill="url(#africa-rvf)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.7s"/>
+                                
+                                <!-- Dengue/Chikungunya - Coastal areas -->
+                                <ellipse cx="650" cy="280" rx="45" ry="60" fill="url(#africa-dengue)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.5s"/>
+                                <ellipse cx="230" cy="320" rx="40" ry="55" fill="url(#africa-chikungunya)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.8s"/>
+                                <ellipse cx="320" cy="580" rx="50" ry="45" fill="url(#africa-dengue)" class="cs-heat cs-heat--pulse" style="animation-delay: 0.9s"/>
+                            </g>
+
+                            <!-- Mosquito Species Distribution Markers -->
+                            <g id="mosquito-markers">
+                                <!-- Anopheles (Malaria) - widespread in sub-Saharan -->
+                                <circle cx="280" cy="320" r="6" fill="#dc2626" opacity="0.9" class="cs-species-marker"/>
+                                <circle cx="350" cy="380" r="6" fill="#dc2626" opacity="0.9" class="cs-species-marker"/>
+                                <circle cx="420" cy="420" r="7" fill="#dc2626" opacity="0.9" class="cs-species-marker"/>
+                                <circle cx="320" cy="480" r="6" fill="#dc2626" opacity="0.9" class="cs-species-marker"/>
+                                <circle cx="480" cy="450" r="6" fill="#dc2626" opacity="0.9" class="cs-species-marker"/>
+                                <circle cx="550" cy="390" r="6" fill="#dc2626" opacity="0.9" class="cs-species-marker"/>
+                                <circle cx="600" cy="440" r="6" fill="#dc2626" opacity="0.9" class="cs-species-marker"/>
+                                
+                                <!-- Aedes (Dengue, Chikungunya, Yellow Fever) - urban areas -->
+                                <circle cx="250" cy="280" r="5" fill="#ea580c" opacity="0.85" class="cs-species-marker"/>
+                                <circle cx="380" cy="340" r="5" fill="#ea580c" opacity="0.85" class="cs-species-marker"/>
+                                <circle cx="640" cy="280" r="5" fill="#ea580c" opacity="0.85" class="cs-species-marker"/>
+                                <circle cx="320" cy="570" r="5" fill="#ea580c" opacity="0.85" class="cs-species-marker"/>
+                                <circle cx="300" cy="650" r="5" fill="#ea580c" opacity="0.85" class="cs-species-marker"/>
+                                
+                                <!-- Culex (West Nile, Rift Valley Fever) -->
+                                <circle cx="390" cy="150" r="4" fill="#7c3aed" opacity="0.8" class="cs-species-marker"/>
+                                <circle cx="580" cy="320" r="5" fill="#7c3aed" opacity="0.8" class="cs-species-marker"/>
+                                <circle cx="620" cy="480" r="5" fill="#7c3aed" opacity="0.8" class="cs-species-marker"/>
+                            </g>
+
+                            <!-- Environmental Conditions Overlay (hidden by default) -->
+                            <g id="env-temperature" opacity="0">
+                                <!-- High temperature zones -->
+                                <rect x="180" y="100" width="250" height="80" fill="#fbbf24" opacity="0.3"/>
+                                <text x="305" y="145" text-anchor="middle" fill="#78350f" font-size="14" font-weight="600">High Temp Zone (>30°C)</text>
+                            </g>
+
+                            <!-- Water Bodies / Breeding Sites -->
+                            <g id="breeding-sites">
+                                <!-- Lake Victoria -->
+                                <ellipse cx="590" cy="360" rx="25" ry="30" fill="url(#breeding-pattern)" stroke="#3b82f6" stroke-width="1.5"/>
+                                <text x="590" y="405" text-anchor="middle" fill="#1e40af" font-size="11">Lake Victoria</text>
+                                
+                                <!-- Lake Tanganyika -->
+                                <ellipse cx="555" cy="450" rx="12" ry="45" fill="url(#breeding-pattern)" stroke="#3b82f6" stroke-width="1"/>
+                                
+                                <!-- Niger River -->
+                                <path d="M240,280 Q280,290 320,310 L350,340" stroke="#3b82f6" stroke-width="3" fill="none" opacity="0.6"/>
+                                
+                                <!-- Congo River -->
+                                <path d="M400,450 Q450,460 490,470 L520,480" stroke="#3b82f6" stroke-width="3" fill="none" opacity="0.6"/>
+                                
+                                <!-- Nile River -->
+                                <path d="M500,100 L510,150 L520,200 L530,250 L540,300 L550,350 L560,400" stroke="#3b82f6" stroke-width="3" fill="none" opacity="0.6"/>
+                            </g>
+
+                            <!-- Country Labels -->
+                            <g id="country-labels" font-size="12" fill="#475569" font-weight="500">
+                                <text x="350" y="120">Algeria</text>
+                                <text x="280" y="165">Mali</text>
+                                <text x="220" y="300">Guinea</text>
+                                <text x="280" y="350">Nigeria</text>
+                                <text x="450" y="330">CAR</text>
+                                <text x="450" y="430">DRC</text>
+                                <text x="610" y="310">Kenya</text>
+                                <text x="570" y="460">Tanzania</text>
+                                <text x="320" y="710">South Africa</text>
+                            </g>
+                        </svg>
+
+                        <!-- Map Legend for Africa -->
+                        <div class="cs-africa-legend">
+                            <h4 class="cs-legend-title">Mosquito Species</h4>
+                            <div class="cs-legend-grid">
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-circle" style="background-color: #dc2626;"></span>
+                                    <span><strong>Anopheles</strong> - Malaria vector</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-circle" style="background-color: #ea580c;"></span>
+                                    <span><strong>Aedes</strong> - Dengue, Zika, Chikungunya</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-circle" style="background-color: #7c3aed;"></span>
+                                    <span><strong>Culex</strong> - West Nile, RVF</span>
+                                </div>
+                            </div>
+                            
+                            <h4 class="cs-legend-title" style="margin-top: 1rem;">Disease Risk</h4>
+                            <div class="cs-legend-grid">
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot cs-legend-dot--critical"></span>
+                                    <span>Malaria Endemic</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot" style="background: #7c3aed;"></span>
+                                    <span>Rift Valley Fever Risk</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot" style="background: #ea580c;"></span>
+                                    <span>Dengue/Chikungunya</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Africa Statistics Panel -->
+                    <div class="cs-africa-stats">
+                        <h3 class="cs-stats-title">Africa Disease Burden (2024)</h3>
+                        <div class="cs-stats-grid">
+                            <div class="cs-stat-card">
+                                <span class="cs-stat-number">229M</span>
+                                <span class="cs-stat-label">Malaria Cases</span>
+                                <span class="cs-stat-sublabel">94% global burden</span>
+                            </div>
+                            <div class="cs-stat-card">
+                                <span class="cs-stat-number">558K</span>
+                                <span class="cs-stat-label">Malaria Deaths</span>
+                                <span class="cs-stat-sublabel">Mostly children &lt;5</span>
+                            </div>
+                            <div class="cs-stat-card">
+                                <span class="cs-stat-number">47</span>
+                                <span class="cs-stat-label">Countries</span>
+                                <span class="cs-stat-sublabel">Endemic regions</span>
+                            </div>
+                            <div class="cs-stat-card">
+                                <span class="cs-stat-number">15°C-40°C</span>
+                                <span class="cs-stat-label">Optimal Temp Range</span>
+                                <span class="cs-stat-sublabel">For mosquito breeding</span>
+                            </div>
+                        </div>
+
+                        <div class="cs-info-box">
+                            <h4>NASA Satellite Monitoring</h4>
+                            <p>This map uses NASA MODIS data for vegetation indices (NDVI), land surface temperature, and GPM precipitation data to identify optimal mosquito breeding conditions. Based on methodology from NASA's disease tracking research.</p>
+                            <ul class="cs-data-list">
+                                <li>✓ MODIS Vegetation Index (NDVI anomalies)</li>
+                                <li>✓ GPM Precipitation (rainfall patterns)</li>
+                                <li>✓ Land Surface Temperature (LST)</li>
+                                <li>✓ Water body detection (breeding sites)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GLOBE Observations Map Section -->
+        <section class="cs-globe-map" id="globe" aria-labelledby="globe-title">
+            <div class="cs-container">
+                <div class="cs-content cs-content--center">
+                    <span class="cs-topper">NASA-Powered Tracking</span>
+                    <h2 id="globe-title" class="cs-title">Live Mosquito Habitat Observations + NASA Satellite Data</h2>
+                    <p class="cs-text">
+                        Combining citizen science observations from GLOBE Observer with NASA satellite environmental monitoring. 
+                        Real-time tracking of mosquito breeding conditions using MODIS vegetation indices, GPM precipitation data, 
+                        and land surface temperature analysis.
+                    </p>
+                </div>
+
+                <!-- NASA Data Layer Controls -->
+                <div class="cs-nasa-controls">
+                    <h3 class="cs-controls-title">NASA Satellite Data Layers</h3>
+                    <div class="cs-layer-toggles">
+                        <label class="cs-layer-toggle">
+                            <input type="checkbox" id="layer-observations" checked data-layer="observations">
+                            <span>GLOBE Observations</span>
+                        </label>
+                        <label class="cs-layer-toggle">
+                            <input type="checkbox" id="layer-ndvi" data-layer="ndvi">
+                            <span>NDVI (Vegetation Index)</span>
+                            <small>MODIS - Breeding habitat indicator</small>
+                        </label>
+                        <label class="cs-layer-toggle">
+                            <input type="checkbox" id="layer-rainfall" data-layer="rainfall">
+                            <span>Precipitation Data</span>
+                            <small>GPM - Breeding site formation</small>
+                        </label>
+                        <label class="cs-layer-toggle">
+                            <input type="checkbox" id="layer-temperature" data-layer="temperature">
+                            <span>Land Surface Temperature</span>
+                            <small>MODIS - Optimal breeding temps (15-40°C)</small>
+                        </label>
+                        <label class="cs-layer-toggle">
+                            <input type="checkbox" id="layer-disease-risk" data-layer="disease-risk">
+                            <span>Disease Risk Prediction</span>
+                            <small>Based on NASA methodology</small>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="cs-globe-controls">
+                    <button id="refresh-globe" class="cs-button-outline">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M14 8C14 11.3 11.3 14 8 14C4.7 14 2 11.3 2 8C2 4.7 4.7 2 8 2C9.4 2 10.7 2.5 11.7 3.3M11 2V5H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Refresh GLOBE Data
+                    </button>
+                    <div class="cs-globe-stats">
+                        <span class="cs-stat-badge">
+                            <strong id="observation-count">Loading...</strong> GLOBE Observations
+                        </span>
+                        <span class="cs-stat-badge">
+                            Period: 2017 - Present
+                        </span>
+                        <span class="cs-stat-badge" id="nasa-status">
+                            NASA Layers: Ready
+                        </span>
+                    </div>
+                </div>
+
+                <div class="cs-map-container">
+                    <div id="globe-map" class="cs-leaflet-map"></div>
+                    
+                    <div class="cs-globe-legend">
+                        <div class="cs-legend-section">
+                            <h4 class="cs-legend-title">GLOBE Citizen Observations</h4>
+                            <div class="cs-legend-grid">
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-marker" style="background-color: #dc2626;">📍</span>
+                                    <span>Container/Artificial</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-marker" style="background-color: #2563eb;">📍</span>
+                                    <span>Natural Pool/Pond</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-marker" style="background-color: #16a34a;">📍</span>
+                                    <span>Other Water Source</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="cs-legend-section">
+                            <h4 class="cs-legend-title">NASA Disease Risk (Methodology)</h4>
+                            <div class="cs-legend-grid">
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot" style="background: #dc2626;"></span>
+                                    <span>Critical - High breeding conditions</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot" style="background: #f97316;"></span>
+                                    <span>High - Favorable conditions</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot" style="background: #eab308;"></span>
+                                    <span>Moderate - Watch areas</span>
+                                </div>
+                                <div class="cs-legend-item">
+                                    <span class="cs-legend-dot" style="background: #22c55e;"></span>
+                                    <span>Low - Minimal risk</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NASA Methodology Info -->
+                <div class="cs-nasa-methodology">
+                    <h3>How NASA Satellite Data Predicts Mosquito Outbreaks</h3>
+                    <div class="cs-methodology-grid">
+                        <div class="cs-method-card">
+                            <div class="cs-method-icon">🛰️</div>
+                            <h4>MODIS NDVI</h4>
+                            <p>Normalized Difference Vegetation Index tracks "greeness" anomalies. Greener areas = wetter conditions = better mosquito habitat.</p>
+                            <span class="cs-method-tag">250m-1km resolution • Daily updates</span>
+                        </div>
+                        
+                        <div class="cs-method-card">
+                            <div class="cs-method-icon">🌧️</div>
+                            <h4>GPM Precipitation</h4>
+                            <p>Global Precipitation Measurement tracks rainfall patterns. Heavy rain creates breeding sites, especially for Aedes mosquitoes carrying Rift Valley Fever.</p>
+                            <span class="cs-method-tag">~10km resolution • 30-min updates</span>
+                        </div>
+                        
+                        <div class="cs-method-card">
+                            <div class="cs-method-icon">🌡️</div>
+                            <h4>Land Surface Temp</h4>
+                            <p>MODIS temperature data identifies optimal breeding ranges (15-40°C). Extreme heat can drive mosquitoes to urban water containers.</p>
+                            <span class="cs-method-tag">1km resolution • Daily</span>
+                        </div>
+                        
+                        <div class="cs-method-card">
+                            <div class="cs-method-icon">📊</div>
+                            <h4>Predictive Models</h4>
+                            <p>NASA researchers successfully predicted Rift Valley Fever in Kenya (2016) and cholera in Yemen (2017) using this methodology 7-14 days in advance.</p>
+                            <span class="cs-method-tag">Peer-reviewed science</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cs-info-box" style="margin-top: 2rem;">
+                    <h4>About This Map</h4>
+                    <p>
+                        <strong>GLOBE Observer Data:</strong> Real citizen science observations from the Global Learning and Observations to Benefit 
+                        the Environment (GLOBE) Program. Community members worldwide report mosquito breeding sites and larvae counts.<br><br>
+                        
+                        <strong>NASA Satellite Integration:</strong> Environmental conditions overlay based on the same methodology used by NASA researchers 
+                        Assaf Anyamba (Rift Valley Fever tracking) and Antar Jutla (cholera prediction). This approach has prevented disease outbreaks 
+                        by identifying favorable mosquito breeding conditions weeks in advance.<br><br>
+                        
+                        <strong>Key Success:</strong> In 2016, NASA satellite data detected wetter-than-usual conditions in Kenya during El Niño. 
+                        Early warnings enabled mass livestock vaccination, preventing a Rift Valley Fever outbreak despite large numbers of disease-carrying 
+                        mosquitoes. No human or animal outbreaks were reported.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mosquito Species Information Section -->
+        <section class="cs-species-info" id="species" aria-labelledby="species-title">
+            <div class="cs-container">
+                <div class="cs-content cs-content--center">
+                    <span class="cs-topper">Know Your Vectors</span>
+                    <h2 id="species-title" class="cs-title">Mosquito Species in Africa</h2>
+                    <p class="cs-text">
+                        Understanding which mosquitoes carry which diseases is crucial for targeted prevention.
+                    </p>
+                </div>
+
+                <div class="cs-species-grid">
+                    <!-- Anopheles -->
+                    <article class="cs-species-card">
+                        <div class="cs-species-header" style="background: linear-gradient(135deg, #dc2626, #f87171);">
+                            <h3 class="cs-species-name">Anopheles</h3>
+                            <span class="cs-species-risk">Critical Risk</span>
+                        </div>
+                        <div class="cs-species-content">
+                            <p class="cs-species-desc">
+                                <strong>Primary malaria vector</strong> in Africa. Female Anopheles mosquitoes transmit Plasmodium parasites 
+                                responsible for over 200 million malaria cases annually.
+                            </p>
+                            <dl class="cs-species-details">
+                                <div>
+                                    <dt>Active Time:</dt>
+                                    <dd>Dusk to dawn (nocturnal)</dd>
+                                </div>
+                                <div>
+                                    <dt>Breeding Sites:</dt>
+                                    <dd>Clean, sunlit water pools</dd>
+                                </div>
+                                <div>
+                                    <dt>Diseases:</dt>
+                                    <dd>Malaria, Lymphatic filariasis</dd>
+                                </div>
+                                <div>
+                                    <dt>Peak Season:</dt>
+                                    <dd>After heavy rainfall</dd>
+                                </div>
+                            </dl>
+                            <div class="cs-species-prevention">
+                                <strong>Prevention:</strong> Bed nets, indoor spraying, drain standing water
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Aedes -->
+                    <article class="cs-species-card">
+                        <div class="cs-species-header" style="background: linear-gradient(135deg, #ea580c, #fb923c);">
+                            <h3 class="cs-species-name">Aedes aegypti</h3>
+                            <span class="cs-species-risk">High Risk</span>
+                        </div>
+                        <div class="cs-species-content">
+                            <p class="cs-species-desc">
+                                <strong>Urban specialist</strong> mosquito. Recognized by white markings on legs. Transmits dengue, chikungunya, 
+                                Zika, and yellow fever. Thrives in urban environments.
+                            </p>
+                            <dl class="cs-species-details">
+                                <div>
+                                    <dt>Active Time:</dt>
+                                    <dd>Daytime (dawn & dusk peaks)</dd>
+                                </div>
+                                <div>
+                                    <dt>Breeding Sites:</dt>
+                                    <dd>Containers, tires, flower pots</dd>
+                                </div>
+                                <div>
+                                    <dt>Diseases:</dt>
+                                    <dd>Dengue, Zika, Chikungunya, Yellow Fever</dd>
+                                </div>
+                                <div>
+                                    <dt>Peak Season:</dt>
+                                    <dd>Warm, humid conditions</dd>
+                                </div>
+                            </dl>
+                            <div class="cs-species-prevention">
+                                <strong>Prevention:</strong> Remove containers, cover water storage, use repellent
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Culex -->
+                    <article class="cs-species-card">
+                        <div class="cs-species-header" style="background: linear-gradient(135deg, #7c3aed, #a78bfa);">
+                            <h3 class="cs-species-name">Culex</h3>
+                            <span class="cs-species-risk">Moderate Risk</span>
+                        </div>
+                        <div class="cs-species-content">
+                            <p class="cs-species-desc">
+                                <strong>Common brown mosquito.</strong> Transmits West Nile virus and Rift Valley fever. 
+                                Breeds in polluted water. Key vector during flooding events.
+                            </p>
+                            <dl class="cs-species-details">
+                                <div>
+                                    <dt>Active Time:</dt>
+                                    <dd>Nighttime (nocturnal)</dd>
+                                </div>
+                                <div>
+                                    <dt>Breeding Sites:</dt>
+                                    <dd>Polluted water, sewage, flooded areas</dd>
+                                </div>
+                                <div>
+                                    <dt>Diseases:</dt>
+                                    <dd>West Nile, Rift Valley Fever, Filariasis</dd>
+                                </div>
+                                <div>
+                                    <dt>Peak Season:</dt>
+                                    <dd>Post-flooding, wet seasons</dd>
+                                </div>
+                            </dl>
+                            <div class="cs-species-prevention">
+                                <strong>Prevention:</strong> Improve sanitation, drain flooded areas, window screens
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Sources Section -->
+        <section class="cs-data-sources" id="data" aria-labelledby="data-title">
+            <div class="cs-container">
+                <div class="cs-content cs-content--center">
+                    <span class="cs-topper">Credibility</span>
+                    <h2 id="data-title" class="cs-title">Powered by NASA Open Data</h2>
+                    <p class="cs-text">
+                        Our methodology is transparent and reproducible. All data sources are publicly accessible.
+                    </p>
+                </div>
+
+                <ul class="cs-card-group cs-card-group--sources">
+                    <li class="cs-item cs-item--source">
+                        <div class="cs-source-header">
+                            <span class="cs-badge">Satellite</span>
+                            <h3 class="cs-h3">MODIS</h3>
+                        </div>
+                        <p class="cs-item-text">
+                            Moderate Resolution Imaging Spectroradiometer provides vegetation indices
+                            and land surface temperature data critical for habitat modeling.
+                        </p>
+                        <dl class="cs-meta">
+                            <div class="cs-meta-item">
+                                <dt>Resolution</dt>
+                                <dd>250m - 1km</dd>
+                            </div>
+                            <div class="cs-meta-item">
+                                <dt>Update Frequency</dt>
+                                <dd>Daily</dd>
+                            </div>
+                        </dl>
+                    </li>
+
+                    <li class="cs-item cs-item--source">
+                        <div class="cs-source-header">
+                            <span class="cs-badge">Satellite</span>
+                            <h3 class="cs-h3">Landsat 8/9</h3>
+                        </div>
+                        <p class="cs-item-text">
+                            High-resolution multispectral imagery for detecting water bodies
+                            and wetland areas—potential breeding sites.
+                        </p>
+                        <dl class="cs-meta">
+                            <div class="cs-meta-item">
+                                <dt>Resolution</dt>
+                                <dd>30m</dd>
+                            </div>
+                            <div class="cs-meta-item">
+                                <dt>Update Frequency</dt>
+                                <dd>16 days</dd>
+                            </div>
+                        </dl>
+                    </li>
+
+                    <li class="cs-item cs-item--source">
+                        <div class="cs-source-header">
+                            <span class="cs-badge cs-badge--climate">Climate</span>
+                            <h3 class="cs-h3">GPM IMERG</h3>
+                        </div>
+                        <p class="cs-item-text">
+                            Global Precipitation Measurement mission provides near-real-time
+                            rainfall data essential for predicting breeding conditions.
+                        </p>
+                        <dl class="cs-meta">
+                            <div class="cs-meta-item">
+                                <dt>Resolution</dt>
+                                <dd>0.1° (~10km)</dd>
+                            </div>
+                            <div class="cs-meta-item">
+                                <dt>Update Frequency</dt>
+                                <dd>30 min</dd>
+                            </div>
+                        </dl>
+                    </li>
+
+                    <li class="cs-item cs-item--source">
+                        <div class="cs-source-header">
+                            <span class="cs-badge cs-badge--community">Community</span>
+                            <h3 class="cs-h3">Citizen Reports</h3>
+                        </div>
+                        <p class="cs-item-text">
+                            Ground-truth observations from community members, validated through
+                            cross-referencing with satellite data and expert review.
+                        </p>
+                        <dl class="cs-meta">
+                            <div class="cs-meta-item">
+                                <dt>Contributors</dt>
+                                <dd>12,000+</dd>
+                            </div>
+                            <div class="cs-meta-item">
+                                <dt>Validation Rate</dt>
+                                <dd>94.2%</dd>
+                            </div>
+                        </dl>
+                    </li>
+                </ul>
+
+                <div class="cs-cta-group">
+                    <p class="cs-text">Full methodology and data pipeline documentation available for reproducibility.</p>
+                    <a href="#" class="cs-button-outline cs-button-outline--dark">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <path d="M10 2C5.6 2 2 5.6 2 10C2 13.5 4.3 16.4 7.5 17.5C7.9 17.6 8 17.3 8 17.1V15.7C5.8 16.2 5.3 14.6 5.3 14.6C5 13.7 4.4 13.4 4.4 13.4C3.7 12.9 4.5 12.9 4.5 12.9C5.3 13 5.7 13.7 5.7 13.7C6.4 15 7.6 14.6 8 14.4C8.1 13.9 8.3 13.6 8.5 13.4C6.8 13.2 4.9 12.5 4.9 9.5C4.9 8.6 5.2 7.9 5.7 7.3C5.6 7.1 5.4 6.3 5.8 5.2C5.8 5.2 6.5 5 8 6C8.6 5.8 9.3 5.8 10 5.7C10.7 5.8 11.4 5.8 12 6C13.5 5 14.2 5.2 14.2 5.2C14.6 6.3 14.4 7.1 14.3 7.3C14.8 7.9 15.1 8.6 15.1 9.5C15.1 12.5 13.2 13.2 11.4 13.4C11.7 13.6 12 14.1 12 14.8V17.1C12 17.3 12.1 17.6 12.5 17.5C15.7 16.4 18 13.5 18 10C18 5.6 14.4 2 10 2Z" fill="currentColor"/>
+                        </svg>
+                        View on GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section class="cs-community" id="community" aria-labelledby="community-title">
+            <div class="cs-container">
+                <div class="cs-content cs-content--center">
+                    <span class="cs-topper">Impact</span>
+                    <h2 id="community-title" class="cs-title">Community Stories</h2>
+                    <p class="cs-text">
+                        Real impact from real communities using MosquitoWatch data.
+                    </p>
+                </div>
+
+                <ul class="cs-testimonial-group">
+                    <li class="cs-testimonial">
+                        <p class="cs-testimonial-text">
+                            "Before MosquitoWatch, our health department spent days cross-referencing data sources.
+                            Now we identify high-risk areas in minutes, allowing us to deploy prevention resources
+                            before outbreaks occur."
+                        </p>
+                        <footer class="cs-testimonial-footer">
+                            <cite class="cs-testimonial-author">Dr. Maria Santos</cite>
+                            <span class="cs-testimonial-role">Public Health Director, Pernambuco, Brazil</span>
+                        </footer>
+                    </li>
+
+                    <li class="cs-testimonial">
+                        <p class="cs-testimonial-text">
+                            "My students use the data export feature for their epidemiology coursework.
+                            Having access to real, current data instead of textbook examples completely
+                            transformed their engagement with the material."
+                        </p>
+                        <footer class="cs-testimonial-footer">
+                            <cite class="cs-testimonial-author">Prof. James Okonkwo</cite>
+                            <span class="cs-testimonial-role">University of Lagos, Nigeria</span>
+                        </footer>
+                    </li>
+
+                    <li class="cs-testimonial">
+                        <p class="cs-testimonial-text">
+                            "The SMS reporting feature was crucial for our village. Most people here don't
+                            have smartphones, but everyone can send a text message. We've become part of
+                            something bigger than ourselves."
+                        </p>
+                        <footer class="cs-testimonial-footer">
+                            <cite class="cs-testimonial-author">Kamala Devi</cite>
+                            <span class="cs-testimonial-role">Community Health Worker, Bihar, India</span>
+                        </footer>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cs-cta" id="contribute" aria-labelledby="cta-title">
+            <div class="cs-background">
+                <div class="cs-background-overlay"></div>
+            </div>
+
+            <div class="cs-container">
+                <div class="cs-content cs-content--center cs-content--light">
+                    <h2 id="cta-title" class="cs-title cs-title--light">Join the Global Surveillance Network</h2>
+                    <p class="cs-text cs-text--light">
+                        Every observation matters. Whether you're a researcher, health worker,
+                        or concerned community member—your contribution helps protect lives.
+                    </p>
+
+                    <div class="cs-button-group cs-button-group--center">
+                        <a href="#" class="cs-button-solid cs-button-solid--large">
+                            Report a Sighting
+                        </a>
+                        <a href="#" class="cs-button-outline cs-button-outline--light cs-button-outline--large">
+                            Download the Data
+                        </a>
+                    </div>
+
+                    <ul class="cs-badge-group">
+                        <li class="cs-check-badge">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            No account required
+                        </li>
+                        <li class="cs-check-badge">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Works offline
+                        </li>
+                        <li class="cs-check-badge">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            SMS available
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="cs-footer" role="contentinfo">
+        <div class="cs-container">
+            <div class="cs-footer-grid">
+                <div class="cs-footer-brand">
+                    <span class="cs-footer-logo" aria-hidden="true">
+                        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                            <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="16" cy="16" r="6" fill="currentColor"/>
+                            <path d="M16 2V8M16 24V30M2 16H8M24 16H30" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </span>
+                    <span class="cs-footer-title">MosquitoWatch</span>
+                    <p class="cs-footer-tagline">Global vector surveillance for everyone.</p>
+                </div>
+
+                <nav class="cs-footer-nav" aria-label="Footer navigation">
+                    <div class="cs-footer-nav-group">
+                        <h3 class="cs-footer-nav-title">Platform</h3>
+                        <ul class="cs-footer-nav-list">
+                            <li><a href="#">Live Map</a></li>
+                            <li><a href="#">Report Sighting</a></li>
+                            <li><a href="#">Data Explorer</a></li>
+                            <li><a href="#">API Access</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="cs-footer-nav-group">
+                        <h3 class="cs-footer-nav-title">Resources</h3>
+                        <ul class="cs-footer-nav-list">
+                            <li><a href="#">Documentation</a></li>
+                            <li><a href="#">Methodology</a></li>
+                            <li><a href="#">Research Papers</a></li>
+                            <li><a href="#">Educational Materials</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="cs-footer-nav-group">
+                        <h3 class="cs-footer-nav-title">Community</h3>
+                        <ul class="cs-footer-nav-list">
+                            <li><a href="#">Contribute</a></li>
+                            <li><a href="#">Translations</a></li>
+                            <li><a href="#">Partner Organizations</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="cs-footer-bottom">
+                <p class="cs-footer-copyright">
+                    Open source under MIT License. Data from NASA Earth Science Data Systems.
+                </p>
+                <div class="cs-footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Use</a>
+                    <a href="#">Accessibility</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet MarkerCluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="script.js" defer></script>
+    <script src="globe-map.js" defer></script>
+</body>
+</html>
