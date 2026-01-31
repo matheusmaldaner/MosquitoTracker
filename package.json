@@ -4,11 +4,12 @@
   "private": true,
   "description": "GLOBE Observer Lite - Fast, offline-first citizen science",
   "scripts": {
-    "install": "cd globe-lite && npm install",
+    "postinstall": "cd globe-lite && npm install",
     "build": "cd globe-lite && npm run build",
     "dev": "cd globe-lite && npm run dev",
     "cap:sync": "cd globe-lite && npm run cap:sync",
     "cap:android": "cd globe-lite && npm run cap:android",
     "cap:ios": "cd globe-lite && npm run cap:ios"
-  }
+  },
+  "dependencies": {}
 }
