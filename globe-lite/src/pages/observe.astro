@@ -2,32 +2,60 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import ObservationForm from '../components/ObservationForm.svelte';
+
+const steps = [
+  { num: '1', title: 'Select Protocol', desc: 'Choose Mosquito Habitat, Clouds, Land Cover, or Trees' },
+  { num: '2', title: 'Capture Photos', desc: 'Take photos following the protocol guidelines' },
+  { num: '3', title: 'Add Details', desc: 'Record observations and environmental data' },
+  { num: '4', title: 'Submit', desc: 'Upload instantly or queue for later sync' },
+];
 ---
 
 <Layout title="Observe | GLOBE Observer Lite">
   <Header />
-  <main class="py-16">
-    <div class="max-w-3xl mx-auto px-4">
-      <div class="glass-panel p-8">
-        <div class="flex justify-between items-start mb-6">
-          <div>
-            <h1 class="text-3xl font-bold text-globe-text mb-2">New Observation</h1>
-            <p class="text-globe-muted">Capture and submit your observation.</p>
-          </div>
-          <a 
-            href="/pending" 
-            class="text-sm px-3 py-1.5 rounded-lg bg-nasa-blue/10 text-nasa-blue hover:bg-nasa-blue/20 transition-colors"
-          >
-            📤 Pending Uploads
-          </a>
+
+  <main>
+    <!-- Hero -->
+    <section class="py-20 px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <span class="inline-block px-3 py-1 text-xs font-medium bg-nasa-cyan/20 text-nasa-cyan rounded-full mb-6">
+          Coming Soon
+        </span>
+        <h1 class="text-4xl font-bold text-globe-text mb-4">
+          Make an <span class="text-nasa-cyan">Observation</span>
+        </h1>
+        <p class="text-lg text-globe-muted max-w-2xl mx-auto">
+          The full observation capture interface is under development.
+        </p>
+      </div>
+    </section>
+
+    <!-- Preview -->
+    <div class="max-w-4xl mx-auto px-4 pb-16">
+      <div class="glass-panel p-8 text-center mb-8">
+        <h2 class="text-2xl font-semibold text-globe-text mb-4">Observation Flow Preview</h2>
+        <p class="text-globe-muted mb-8">Here's how the optimized observation process will work:</p>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((step) => (
+            <div class="glass-card p-6 flex flex-col items-center text-center">
+              <div class="w-12 h-12 rounded-full bg-nasa-cyan/20 border border-nasa-cyan/40 flex items-center justify-center text-nasa-cyan font-bold text-xl mb-4">
+                {step.num}
+              </div>
+              <h3 class="font-semibold text-globe-text mb-2">{step.title}</h3>
+              <p class="text-sm text-globe-muted">{step.desc}</p>
+            </div>
+          ))}
         </div>
-        
-        <ObservationForm client:load />
-        
-        <a href="/" class="inline-flex items-center gap-2 mt-8 text-nasa-blue hover:underline">
-          &larr; Back to Home
-        </a>
+      </div>
+
+      <!-- CTA -->
+      <div class="glass-panel p-6 text-center">
+        <p class="text-globe-muted mb-4">In the meantime, explore our demos:</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="/test-upload" class="bg-nasa-cyan text-nasa-dark font-semibold px-8 py-3 rounded-xl hover:bg-white transition-colors">Test Image Compression</a>
+          <a href="/" class="glass-btn px-8 py-3 font-semibold">Back to Home</a>
+        </div>
       </div>
     </div>
   </main>
