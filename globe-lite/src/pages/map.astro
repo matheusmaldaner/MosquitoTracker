@@ -1,0 +1,146 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Mosquito Habitat Map - GLOBE Observer Lite">
+  <main class="map-page">
+    <header class="map-header">
+      <a href="/" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </a>
+      <h1>Global Mosquito Habitat Map</h1>
+      <p class="subtitle">Real-time observations from NASA GLOBE Observer</p>
+    </header>
+
+    <div class="map-container">
+      <iframe
+        src="/map-embed.html"
+        title="GLOBE Mosquito Habitat Map"
+        loading="lazy"
+      ></iframe>
+    </div>
+
+    <section class="map-info">
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>Data Source</h3>
+          <p>Live data from the <a href="https://observer.globe.gov" target="_blank" rel="noopener">GLOBE Observer</a> citizen science program, updated in real-time.</p>
+        </div>
+        <div class="info-card">
+          <h3>How to Use</h3>
+          <p>Toggle layers using the controls. Click markers for observation details. Use the heatmap view to see density patterns.</p>
+        </div>
+        <div class="info-card">
+          <h3>Disease Risk Zones</h3>
+          <p>Based on NASA satellite data analyzing temperature, rainfall, and vegetation conditions favorable for mosquito breeding.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .map-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .map-header {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #0b3d91 0%, #1a5fb4 100%);
+    color: white;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover {
+    color: white;
+  }
+
+  .map-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    margin: 0.25rem 0 0;
+  }
+
+  .map-container {
+    flex: 1;
+    min-height: 60vh;
+    position: relative;
+  }
+
+  .map-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .map-info {
+    padding: 1.5rem;
+    background: #f8f9fa;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .info-card {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .info-card h3 {
+    font-size: 1rem;
+    color: #0b3d91;
+    margin: 0 0 0.5rem;
+  }
+
+  .info-card p {
+    font-size: 0.875rem;
+    color: #555;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .info-card a {
+    color: #0b3d91;
+  }
+
+  @media (max-width: 640px) {
+    .map-header h1 {
+      font-size: 1.25rem;
+    }
+
+    .map-container {
+      min-height: 50vh;
+    }
+  }
+</style>
