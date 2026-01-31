@@ -1,4 +1,5 @@
 const CACHE_NAME = 'globe-lite-v2';
+const UPLOAD_ENDPOINT = '/api/globe-upload';
 const STATIC_ASSETS = [
   '/',
   '/observe',
@@ -47,7 +48,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
 
   // API calls: network first, fallback to cache
-  if (url.hostname === 'api.globe.gov') {
+  if (url.hostname === 'api.globe.gov' || url.pathname.startsWith('/api/')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
@@ -129,8 +130,9 @@ async function syncPendingObservations() {
 
     for (const obs of observations) {
       try {
-        // For now, simulate upload (actual implementation needs API key)
-        await simulateUpload(obs);
+        await updateStatus(db, obs.id, 'syncing');
+        await uploadObservation(obs);
+        await saveSyncedObservation(db, obs);
         await deleteObservation(db, obs.id);
         successCount++;
       } catch (error) {
@@ -156,13 +158,16 @@ async function syncPendingObservations() {
 // IndexedDB helpers for service worker
 function openIndexedDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('globe-lite-db', 1);
+    const request = indexedDB.open('globe-lite-db', 2);
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
       if (!db.objectStoreNames.contains('pending-observations')) {
         db.createObjectStore('pending-observations', { keyPath: 'id' });
+      }
+      if (!db.objectStoreNames.contains('synced-observations')) {
+        db.createObjectStore('synced-observations', { keyPath: 'id' });
       }
     };
   });
@@ -173,7 +178,7 @@ function getAllPendingObservations(db) {
     const tx = db.transaction('pending-observations', 'readonly');
     const store = tx.objectStore('pending-observations');
     const request = store.getAll();
-    request.onsuccess = () => resolve(request.result.filter(o => o.status === 'pending' || o.status === 'failed'));
+    request.onsuccess = () => resolve(request.result.filter(o => o.status === 'pending' || o.status === 'failed' || o.status === 'syncing'));
     request.onerror = () => reject(request.error);
   });
 }
@@ -208,17 +213,66 @@ function updateStatus(db, id, status) {
   });
 }
 
-function simulateUpload(observation) {
-  // Simulate network delay and potential failure
+function saveSyncedObservation(db, observation) {
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // 90% success rate for demo
-      if (Math.random() > 0.1) {
-        console.log('[SW] Uploaded:', observation.id);
-        resolve();
-      } else {
-        reject(new Error('Simulated upload failure'));
-      }
-    }, 1000);
+    const tx = db.transaction('synced-observations', 'readwrite');
+    const store = tx.objectStore('synced-observations');
+    const synced = { ...observation, status: 'synced', syncedAt: Date.now() };
+    const request = store.put(synced);
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
   });
+}
+
+async function uploadObservation(observation) {
+  const formData = new FormData();
+  formData.append('observationId', observation.id);
+  formData.append('protocol', observation.protocol);
+  formData.append('data', JSON.stringify(observation.data || {}));
+  if (observation.imageBlob) {
+    formData.append('image', observation.imageBlob, `observation-${observation.id}.webp`);
+  }
+
+  const response = await fetch(UPLOAD_ENDPOINT, {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!response.ok) {
+    throw new Error(await extractErrorDetails(response));
+  }
+
+  console.log('[SW] Uploaded:', observation.id);
+}
+
+async function extractErrorDetails(response) {
+  const statusText = response.statusText ? ` ${response.statusText}` : '';
+  const contentType = response.headers.get('content-type') || '';
+  let details = '';
+  let rawText = '';
+
+  try {
+    rawText = await response.text();
+  } catch {
+    rawText = '';
+  }
+
+  if (rawText && (contentType.includes('application/json') || contentType.includes('application/stream+json'))) {
+    try {
+      const body = JSON.parse(rawText);
+      if (body?.message) {
+        details = body.message;
+      } else if (body?.error) {
+        details = body.error;
+      } else {
+        details = JSON.stringify(body);
+      }
+    } catch {
+      details = rawText;
+    }
+  } else if (rawText) {
+    details = rawText;
+  }
+
+  return `Upload failed (${response.status}${statusText})${details ? `: ${details}` : ''}`;
 }

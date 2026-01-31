@@ -1,9 +1,14 @@
 // src/lib/sync-worker.ts
 // Sync worker for uploading pending observations
 
-import { getPendingObservations, removeObservation, updateObservationStatus } from './offline-storage';
+import {
+  getPendingObservations,
+  removeObservation,
+  saveSyncedObservation,
+  updateObservationStatus
+} from './offline-storage';
 
-const GLOBE_API_UPLOAD_URL = 'https://api.globe.gov/search/v1/upload'; // Placeholder - actual endpoint needs API key
+const GLOBE_API_UPLOAD_URL = import.meta.env.PUBLIC_GLOBE_UPLOAD_URL || '/api/globe-upload';
 
 export interface SyncResult {
   id: string;
@@ -48,6 +53,7 @@ export async function syncAllObservations(
       const success = await uploadObservation(obs);
 
       if (success) {
+        await saveSyncedObservation(obs);
         await removeObservation(obs.id);
         progress.completed++;
         progress.results.push({ id: obs.id, success: true });
@@ -73,8 +79,7 @@ export async function syncAllObservations(
 }
 
 /**
- * Upload a single observation to GLOBE API
- * Note: This is a placeholder - actual GLOBE API requires developer key
+ * Upload a single observation to GLOBE API via server-side proxy.
  */
 async function uploadObservation(observation: {
   id: string;
@@ -87,20 +92,25 @@ async function uploadObservation(observation: {
     throw new Error('No internet connection');
   }
 
-  // In a real implementation, this would:
-  // 1. Create FormData with observation data
-  // 2. Attach the image blob
-  // 3. POST to GLOBE API with API key
-  // 4. Handle response
+  if (!GLOBE_API_UPLOAD_URL) {
+    throw new Error('Upload endpoint not configured');
+  }
 
-  // For demo purposes, simulate upload with delay
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  const formData = new FormData();
+  formData.append('observationId', observation.id);
+  formData.append('protocol', observation.protocol);
+  formData.append('data', JSON.stringify(observation.data ?? {}));
+  if (observation.imageBlob) {
+    formData.append('image', observation.imageBlob, `observation-${observation.id}.webp`);
+  }
 
-  // Simulate 90% success rate for demo
-  const success = Math.random() > 0.1;
-  
-  if (!success) {
-    throw new Error('Simulated upload failure');
+  const response = await fetch(GLOBE_API_UPLOAD_URL, {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!response.ok) {
+    throw new Error(await extractErrorDetails(response));
   }
 
   console.log(`[Sync] Uploaded observation ${observation.id}`, {
@@ -110,6 +120,38 @@ async function uploadObservation(observation: {
   });
 
   return true;
+}
+
+async function extractErrorDetails(response: Response): Promise<string> {
+  const statusText = response.statusText ? ` ${response.statusText}` : '';
+  const contentType = response.headers.get('content-type') || '';
+  let details = '';
+  let rawText = '';
+
+  try {
+    rawText = await response.text();
+  } catch {
+    rawText = '';
+  }
+
+  if (rawText && (contentType.includes('application/json') || contentType.includes('application/stream+json'))) {
+    try {
+      const body = JSON.parse(rawText);
+      if (body?.message) {
+        details = body.message;
+      } else if (body?.error) {
+        details = body.error;
+      } else {
+        details = JSON.stringify(body);
+      }
+    } catch {
+      details = rawText;
+    }
+  } else if (rawText) {
+    details = rawText;
+  }
+
+  return `Upload failed (${response.status}${statusText})${details ? `: ${details}` : ''}`;
 }
 
 /**

@@ -1,5 +1,6 @@
 const DB_NAME = 'globe-lite-db';
 const STORE_NAME = 'pending-observations';
+const SYNCED_STORE = 'synced-observations';
 
 interface PendingObservation {
   id: string;
@@ -10,10 +11,15 @@ interface PendingObservation {
   status: 'pending' | 'syncing' | 'failed';
 }
 
+interface SyncedObservation extends Omit<PendingObservation, 'status'> {
+  status: 'synced';
+  syncedAt: number;
+}
+
 // Initialize IndexedDB
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1);
+    const request = indexedDB.open(DB_NAME, 2);
 
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
@@ -22,6 +28,9 @@ function openDB(): Promise<IDBDatabase> {
       const db = (event.target as IDBOpenDBRequest).result;
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      }
+      if (!db.objectStoreNames.contains(SYNCED_STORE)) {
+        db.createObjectStore(SYNCED_STORE, { keyPath: 'id' });
       }
     };
   });
@@ -75,6 +84,41 @@ export async function removeObservation(id: string): Promise<void> {
     const request = store.delete(id);
 
     request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Save observation to synced history
+export async function saveSyncedObservation(
+  observation: PendingObservation
+): Promise<void> {
+  const db = await openDB();
+  const synced: SyncedObservation = {
+    ...observation,
+    status: 'synced',
+    syncedAt: Date.now()
+  };
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(SYNCED_STORE, 'readwrite');
+    const store = tx.objectStore(SYNCED_STORE);
+    const request = store.put(synced);
+
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+// Get synced observation history
+export async function getSyncedObservations(): Promise<SyncedObservation[]> {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(SYNCED_STORE, 'readonly');
+    const store = tx.objectStore(SYNCED_STORE);
+    const request = store.getAll();
+
+    request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
 }

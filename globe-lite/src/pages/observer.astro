@@ -1,36 +1,39 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 const protocols = [
   {
+    id: "clouds",
     name: "Clouds",
     desc: "Observe cloud type, cover, and conditions. Your observations help validate NASA satellite data.",
     icon: "cloud",
     color: "bg-blue-500",
-    stats: { week: 1247, total: "2.1M" }
+    stats: { week: null, total: null }
   },
   {
+    id: "mosquito_habitat_mapper",
     name: "Mosquito Habitat Mapper",
     desc: "Document standing water sites where mosquitoes breed. Help track disease vectors globally.",
     icon: "bug",
     color: "bg-red-500",
-    stats: { week: 328, total: "47K" }
+    stats: { week: null, total: null }
   },
   {
+    id: "land_covers",
     name: "Land Cover",
     desc: "Classify what covers the land around you. Compare your observations to satellite imagery.",
     icon: "map",
     color: "bg-green-500",
-    stats: { week: 892, total: "156K" }
+    stats: { week: null, total: null }
   },
   {
+    id: "tree_heights",
     name: "Trees",
     desc: "Measure tree height using your phone. Track forest growth and changes in your area.",
     icon: "tree",
     color: "bg-emerald-600",
-    stats: { week: 456, total: "89K" }
+    stats: { week: null, total: null }
   }
 ];
 
@@ -76,11 +79,11 @@ const recentNews = [
 
         <!-- Right side -->
         <div class="flex items-center gap-3">
-          <button class="p-2 nav-link rounded-md">
+          <a href="#protocol-search" class="p-2 nav-link rounded-md" data-search-toggle aria-label="Search protocols">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
-          </button>
+          </a>
           <button class="theme-toggle hidden sm:inline-flex" data-theme-toggle aria-label="Toggle theme">
             <svg class="w-4 h-4 theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364-1.414 1.414M7.05 16.95l-1.414 1.414m0-11.314L7.05 7.05m9.9 9.9 1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"/>
@@ -219,11 +222,41 @@ const recentNews = [
         <div class="text-center mb-12">
           <h2 class="text-3xl font-bold text-globe-text mb-2">Choose Your Protocol</h2>
           <p class="text-globe-muted">Select a protocol to start making observations</p>
+          <div class="mt-6 flex justify-center">
+            <div class="relative w-full max-w-md">
+              <input
+                id="protocol-search"
+                data-protocol-search
+                type="search"
+                placeholder="Search protocols..."
+                class="w-full px-4 py-3 rounded-lg bg-[color:var(--surface-soft)] border border-[color:var(--glass-border)] focus:border-nasa-blue focus:outline-none text-globe-text placeholder-globe-muted"
+              />
+              <button
+                type="button"
+                data-search-clear
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-globe-muted hover:text-globe-text"
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+          <p class="text-xs text-globe-muted mt-2">Tip: search by protocol name or description.</p>
+        </div>
+        <div data-protocol-empty class="hidden text-center text-sm text-globe-muted mb-6">
+          No protocols match your search.
         </div>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {protocols.map((protocol) => (
-            <a href="/observe" class="group glass-card rounded-xl overflow-hidden transition-all">
+            <a
+              href="/observe"
+              class="group glass-card rounded-xl overflow-hidden transition-all"
+              data-protocol-card
+              data-protocol-id={protocol.id}
+              data-protocol-name={protocol.name}
+              data-protocol-desc={protocol.desc}
+            >
               <div class={`h-3 ${protocol.color}`}></div>
               <div class="p-6">
                 <div class={`w-14 h-14 ${protocol.color} bg-opacity-10 rounded-xl flex items-center justify-center mb-4`}>
@@ -254,11 +287,15 @@ const recentNews = [
                 <div class="flex items-center justify-between pt-4 border-t border-[color:var(--border)] text-xs">
                   <div>
                     <span class="text-globe-muted">This week:</span>
-                    <span class="font-semibold text-globe-text ml-1">{protocol.stats.week.toLocaleString()}</span>
+                    <span class="font-semibold text-globe-text ml-1" data-protocol-week={protocol.id}>
+                      {protocol.stats.week === null ? '—' : protocol.stats.week.toLocaleString()}
+                    </span>
                   </div>
                   <div>
                     <span class="text-globe-muted">Total:</span>
-                    <span class="font-semibold text-globe-text ml-1">{protocol.stats.total}</span>
+                    <span class="font-semibold text-globe-text ml-1" data-protocol-total={protocol.id}>
+                      {protocol.stats.total === null ? '—' : protocol.stats.total}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -294,12 +331,19 @@ const recentNews = [
 
             <div class="space-y-3">
               {protocols.map((protocol) => (
-                <div class="flex items-center justify-between p-3 glass-card rounded-lg">
+                <div
+                  class="flex items-center justify-between p-3 glass-card rounded-lg"
+                  data-protocol-recent
+                  data-protocol-id={protocol.id}
+                  data-protocol-name={protocol.name}
+                >
                   <div class="flex items-center gap-3">
                     <div class={`w-3 h-3 ${protocol.color} rounded-full`}></div>
                     <span class="text-sm text-globe-text">{protocol.name}</span>
                   </div>
-                  <span class="font-semibold text-globe-text">{protocol.stats.week.toLocaleString()}</span>
+                  <span class="font-semibold text-globe-text" data-protocol-week={protocol.id}>
+                    {protocol.stats.week === null ? '—' : protocol.stats.week.toLocaleString()}
+                  </span>
                 </div>
               ))}
             </div>
@@ -388,4 +432,103 @@ const recentNews = [
   </main>
 
   <Footer />
+
+  <script is:inline>
+    (() => {
+      const searchInput = document.querySelector('[data-protocol-search]');
+      const searchButton = document.querySelector('[data-search-toggle]');
+      const clearButton = document.querySelector('[data-search-clear]');
+      const cards = Array.from(document.querySelectorAll('[data-protocol-card]'));
+      const recentRows = Array.from(document.querySelectorAll('[data-protocol-recent]'));
+      const emptyState = document.querySelector('[data-protocol-empty]');
+
+      const normalize = (value) => (value || '').toLowerCase();
+      const applyFilter = (value) => {
+        const query = normalize(value);
+        let visible = 0;
+
+        cards.forEach((card) => {
+          const haystack = `${normalize(card.dataset.protocolName)} ${normalize(card.dataset.protocolDesc)}`;
+          const show = !query || haystack.includes(query);
+          card.style.display = show ? '' : 'none';
+          if (show) visible += 1;
+        });
+
+        recentRows.forEach((row) => {
+          const name = normalize(row.dataset.protocolName);
+          const show = !query || name.includes(query);
+          row.style.display = show ? '' : 'none';
+        });
+
+        if (emptyState) {
+          emptyState.classList.toggle('hidden', visible !== 0);
+        }
+      };
+
+      if (searchInput) {
+        searchInput.addEventListener('input', () => applyFilter(searchInput.value));
+        searchInput.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            searchInput.value = '';
+            applyFilter('');
+            searchInput.blur();
+          }
+        });
+      }
+
+      if (searchButton && searchInput) {
+        searchButton.addEventListener('click', () => {
+          searchInput.focus();
+          searchInput.select();
+        });
+      }
+
+      if (clearButton && searchInput) {
+        clearButton.addEventListener('click', () => {
+          searchInput.value = '';
+          applyFilter('');
+          searchInput.focus();
+        });
+      }
+
+      applyFilter('');
+
+      const protocolIds = Array.from(
+        new Set(cards.map((card) => card.dataset.protocolId).filter(Boolean))
+      );
+
+      if (protocolIds.length) {
+        fetch(`/api/protocol-stats?protocols=${protocolIds.join(',')}`)
+          .then(async (response) => {
+            if (!response.ok) {
+              throw new Error(await response.text());
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const formatter = new Intl.NumberFormat();
+            protocolIds.forEach((protocolId) => {
+              const stats = data?.protocols?.[protocolId];
+              const weekEls = document.querySelectorAll(`[data-protocol-week='${protocolId}']`);
+              const totalEls = document.querySelectorAll(`[data-protocol-total='${protocolId}']`);
+
+              if (stats && typeof stats.week === 'number') {
+                weekEls.forEach((el) => { el.textContent = formatter.format(stats.week); });
+              }
+              if (stats && typeof stats.total === 'number') {
+                totalEls.forEach((el) => { el.textContent = formatter.format(stats.total); });
+              }
+            });
+          })
+          .catch(() => {
+            protocolIds.forEach((protocolId) => {
+              const weekEls = document.querySelectorAll(`[data-protocol-week='${protocolId}']`);
+              const totalEls = document.querySelectorAll(`[data-protocol-total='${protocolId}']`);
+              weekEls.forEach((el) => { el.textContent = 'N/A'; });
+              totalEls.forEach((el) => { el.textContent = 'N/A'; });
+            });
+          });
+      }
+    })();
+  </script>
 </Layout>
