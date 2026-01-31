@@ -7,9 +7,14 @@
     "postinstall": "cd globe-lite && npm install",
     "build": "cd globe-lite && npm run build",
     "dev": "cd globe-lite && npm run dev",
-    "cap:sync": "cd globe-lite && npm run cap:sync",
-    "cap:android": "cd globe-lite && npm run cap:android",
-    "cap:ios": "cd globe-lite && npm run cap:ios"
+    "cap:sync": "npm run build && npx cap sync",
+    "cap:android": "npm run build && npx cap sync && npx cap open android",
+    "cap:ios": "npm run build && npx cap sync && npx cap open ios"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@capacitor/cli": "^6.2.0",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/ios": "^6.2.0",
+    "@capacitor/android": "^6.2.0"
+  }
 }
