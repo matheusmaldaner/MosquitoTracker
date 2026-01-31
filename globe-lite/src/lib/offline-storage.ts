@@ -79,6 +79,33 @@ export async function removeObservation(id: string): Promise<void> {
   });
 }
 
+// Update observation status
+export async function updateObservationStatus(
+  id: string,
+  status: 'pending' | 'syncing' | 'failed'
+): Promise<void> {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const store = tx.objectStore(STORE_NAME);
+    const getRequest = store.get(id);
+
+    getRequest.onsuccess = () => {
+      const observation = getRequest.result;
+      if (observation) {
+        observation.status = status;
+        const putRequest = store.put(observation);
+        putRequest.onsuccess = () => resolve();
+        putRequest.onerror = () => reject(putRequest.error);
+      } else {
+        reject(new Error('Observation not found'));
+      }
+    };
+    getRequest.onerror = () => reject(getRequest.error);
+  });
+}
+
 // Get count of pending observations
 export async function getPendingCount(): Promise<number> {
   const observations = await getPendingObservations();
