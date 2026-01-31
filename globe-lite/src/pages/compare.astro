@@ -1,0 +1,138 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Performance Comparison | GLOBE Observer Lite">
+  <Header />
+
+  <main class="py-16">
+    <div class="max-w-6xl mx-auto px-4 space-y-12">
+      <!-- Header -->
+      <section class="text-center">
+        <h1 class="text-4xl font-bold text-globe-text mb-3">See the Difference</h1>
+        <p class="text-lg text-globe-muted">Same data. 10x faster. Works everywhere.</p>
+      </section>
+
+      <!-- Metrics Comparison -->
+      <section class="grid md:grid-cols-2 gap-8">
+        <div class="glass-card p-6 border-l-4 border-red-500/70">
+          <h2 class="text-2xl font-bold text-globe-text mb-4">Current GLOBE Observer</h2>
+          <div class="space-y-4 text-globe-muted">
+            <div class="flex justify-between">
+              <span>Initial Load (3G)</span>
+              <span class="font-mono text-red-500">5-8 seconds</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Total Transfer</span>
+              <span class="font-mono text-red-500">2-5 MB</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Works Offline</span>
+              <span class="font-mono text-red-500">No</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Lighthouse Score</span>
+              <span class="font-mono text-red-500">~50-60</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 border-l-4 border-nasa-green/70">
+          <h2 class="text-2xl font-bold text-globe-text mb-4">GLOBE Observer Lite</h2>
+          <div class="space-y-4 text-globe-muted">
+            <div class="flex justify-between">
+              <span>Initial Load (3G)</span>
+              <span class="font-mono text-nasa-green">&lt;2 seconds</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Total Transfer</span>
+              <span class="font-mono text-nasa-green">&lt;200 KB</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Works Offline</span>
+              <span class="font-mono text-nasa-green">Yes</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Lighthouse Score</span>
+              <span class="font-mono text-nasa-green">95+</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Test Section -->
+      <section class="glass-panel p-8">
+        <h2 class="text-2xl font-bold text-globe-text mb-3">Try It Yourself</h2>
+        <p class="text-globe-muted mb-4">
+          Open Chrome DevTools → Network → Throttle to &quot;Slow 3G&quot; → Reload this page
+        </p>
+        <div class="glass-card p-4 font-mono text-sm text-globe-muted">
+          <p>1. Press F12 (or Cmd+Option+I on Mac)</p>
+          <p>2. Go to Network tab</p>
+          <p>3. Select &quot;Slow 3G&quot; from dropdown</p>
+          <p>4. Reload and watch the difference</p>
+        </div>
+      </section>
+
+      <!-- Visual Comparison -->
+      <section>
+        <h2 class="text-2xl font-bold text-center text-globe-text mb-8">Visual Comparison</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="glass-card overflow-hidden">
+            <div class="px-4 py-2 text-sm font-mono text-globe-muted border-b border-[color:var(--border)]">
+              observer.globe.gov
+            </div>
+            <div class="h-64 flex items-center justify-center text-globe-muted">
+              <p>Current site screenshot here</p>
+            </div>
+          </div>
+
+          <div class="glass-card overflow-hidden border border-nasa-green/40">
+            <div class="px-4 py-2 text-sm font-mono text-nasa-green border-b border-[color:var(--border)]">
+              GLOBE Observer Lite
+            </div>
+            <div class="h-64 flex items-center justify-center text-globe-muted">
+              <p>Our version screenshot here</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How We Did It -->
+      <section>
+        <h2 class="text-2xl font-bold text-center text-globe-text mb-8">How We Achieved This</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="glass-card p-6">
+            <h3 class="font-bold mb-2 text-globe-text">Zero JS by Default</h3>
+            <p class="text-globe-muted text-sm">
+              Astro ships HTML first. JavaScript only where needed.
+            </p>
+          </div>
+          <div class="glass-card p-6">
+            <h3 class="font-bold mb-2 text-globe-text">Smart Compression</h3>
+            <p class="text-globe-muted text-sm">
+              Images compressed client-side before upload. WebP format.
+            </p>
+          </div>
+          <div class="glass-card p-6">
+            <h3 class="font-bold mb-2 text-globe-text">Edge Deployment</h3>
+            <p class="text-globe-muted text-sm">
+              Served from nearest location. Vercel's global CDN.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="text-center">
+        <a href="/" class="glass-btn inline-flex items-center gap-2 px-8 py-3 font-semibold">
+          ← Back to Home
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>

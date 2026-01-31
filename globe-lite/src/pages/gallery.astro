@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Gallery - GLOBE Observer Lite">
+  <Header />
+  <main class="py-16">
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="glass-card p-8">
+        <h1 class="text-3xl font-bold text-globe-text mb-3">Observation Gallery</h1>
+        <p class="text-globe-muted">View your submitted observations.</p>
+        <a href="/" class="inline-flex items-center gap-2 mt-6 text-nasa-blue hover:underline">
+          &larr; Back to Home
+        </a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>

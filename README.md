@@ -45,7 +45,7 @@ NasaHackathon/
 
 ## Embedding the Map
 
-Your friend can embed the map using an iframe:
+Embed the map using an iframe:
 
 ```html
 <iframe
@@ -97,6 +97,10 @@ Key methodology:
 2. GPM precipitation tracks rainfall creating breeding sites
 3. Land surface temperature identifies optimal breeding ranges (15-40°C)
 4. Combined analysis predicts outbreak risk 7-14 days ahead
+
+## Team
+
+GeoEMERGE Hackathon 2026
 
 ## License
 
