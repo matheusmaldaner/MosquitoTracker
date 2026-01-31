@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-nasa-blue: #105bd8;
+  --color-nasa-dark: #0b3d91;
+  --color-nasa-cyan: #02bfe7;
+  --color-nasa-green: #2e8540;
+  --color-nasa-gold: #ff9d1e;
+  --color-globe-bg: #f7f8f9;
+  --color-globe-text: #272833;
+  --color-globe-muted: #6b6c7e;
+}
