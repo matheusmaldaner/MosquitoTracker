@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLOBE Mosquito Observations Map</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0B3D91;
+            --primaryLight: #1e5fbe;
+            --secondary: #00B4D8;
+            --critical: #DC2626;
+            --high: #F97316;
+            --medium: #EAB308;
+            --low: #22C55E;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-500: #64748B;
+            --gray-700: #334155;
+            --gray-900: #0F172A;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            min-height: 100vh;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Controls Bar */
+        .controls-bar {
+            background: linear-gradient(135deg, var(--primary), var(--primaryLight));
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .controls-left {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .controls-right {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .layer-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid transparent;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .layer-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .layer-btn.active {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--primary);
+            border-color: white;
+        }
+
+        .refresh-btn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .refresh-btn:hover {
+            background: var(--gray-100);
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .stat-badge strong {
+            color: var(--secondary);
+        }
+
+        /* Map */
+        #globe-map {
+            flex: 1;
+            width: 100%;
+            min-height: 400px;
+        }
+
+        /* Legend */
+        .map-legend {
+            background: white;
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.75rem;
+        }
+
+        .legend-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .legend-title {
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-right: 0.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            color: var(--gray-500);
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-marker {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.625rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Marker Clusters */
+        .marker-cluster {
+            background: transparent;
+        }
+
+        .cluster-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            border: 3px solid white;
+        }
+
+        .cluster-small {
+            width: 30px;
+            height: 30px;
+            font-size: 0.75rem;
+            background: var(--secondary);
+        }
+
+        .cluster-medium {
+            width: 40px;
+            height: 40px;
+            font-size: 0.875rem;
+            background: var(--high);
+        }
+
+        .cluster-large {
+            width: 50px;
+            height: 50px;
+            font-size: 1rem;
+            background: var(--critical);
+        }
+
+        /* Leaflet Popup */
+        .leaflet-popup-content-wrapper {
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .leaflet-popup-content {
+            margin: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+        }
+
+        .popup-header {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .popup-detail {
+            color: var(--gray-700);
+            margin: 0.25rem 0;
+            line-height: 1.4;
+        }
+
+        .popup-detail strong {
+            color: var(--gray-900);
+        }
+
+        .popup-footer {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.6875rem;
+            color: var(--gray-500);
+        }
+
+        .popup-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.375rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Mobile */
+        @media (max-width: 640px) {
+            .controls-bar {
+                padding: 0.75rem;
+            }
+
+            .layer-btn {
+                padding: 0.375rem 0.625rem;
+                font-size: 0.75rem;
+            }
+
+            .stat-badge {
+                font-size: 0.6875rem;
+            }
+
+            .map-legend {
+                gap: 0.75rem;
+                padding: 0.75rem;
+            }
+
+            .legend-section {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <!-- Controls -->
+        <div class="controls-bar">
+            <div class="controls-left">
+                <button class="layer-btn active" data-layer="observations">GLOBE Observations</button>
+                <button class="layer-btn" data-layer="disease-risk">Disease Risk Zones</button>
+            </div>
+            <div class="controls-right">
+                <span class="stat-badge">
+                    <strong id="observation-count">Loading...</strong> Observations
+                </span>
+                <span class="stat-badge">2017 - Present</span>
+                <button class="refresh-btn" id="refresh-globe">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                        <path d="M14 8C14 11.3 11.3 14 8 14C4.7 14 2 11.3 2 8C2 4.7 4.7 2 8 2C9.4 2 10.7 2.5 11.7 3.3M11 2V5H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Map -->
+        <div id="globe-map"></div>
+
+        <!-- Legend -->
+        <div class="map-legend">
+            <div class="legend-section">
+                <span class="legend-title">Observations:</span>
+                <div class="legend-item">
+                    <span class="legend-marker" style="background: #dc2626;"></span>
+                    <span>Container</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-marker" style="background: #2563eb;"></span>
+                    <span>Natural Pool</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-marker" style="background: #16a34a;"></span>
+                    <span>Other</span>
+                </div>
+            </div>
+            <div class="legend-section">
+                <span class="legend-title">Risk Level:</span>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background: #dc2626;"></span>
+                    <span>Critical</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background: #f97316;"></span>
+                    <span>High</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background: #eab308;"></span>
+                    <span>Moderate</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot" style="background: #22c55e;"></span>
+                    <span>Low</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+    <script>
+    (function() {
+        'use strict';
+
+        let globeMap;
+        let markerClusterGroup = null;
+        let nasaLayers = {
+            observations: null,
+            diseaseRisk: null
+        };
+
+        // Initialize map
+        function initGlobeMap() {
+            globeMap = L.map('globe-map').setView([20, 0], 2);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap | GLOBE Observer | NASA',
+                maxZoom: 18
+            }).addTo(globeMap);
+
+            addNASADiseaseRiskZones();
+            fetchGlobeData();
+            setupLayerToggles();
+        }
+
+        function addNASADiseaseRiskZones() {
+            const riskZones = [
+                // AFRICA
+                { lat: 0, lng: 30, radius: 800000, risk: 'critical', disease: 'Malaria Endemic (Central Africa)' },
+                { lat: -5, lng: 25, radius: 600000, risk: 'critical', disease: 'Malaria (DRC)' },
+                { lat: 10, lng: 5, radius: 500000, risk: 'high', disease: 'Malaria (West Africa)' },
+                { lat: -1.3, lng: 36.8, radius: 400000, risk: 'high', disease: 'RVF Risk (Kenya)' },
+                { lat: 6.5, lng: -1.5, radius: 350000, risk: 'high', disease: 'Malaria (Ghana)' },
+                { lat: 9.0, lng: 7.5, radius: 450000, risk: 'critical', disease: 'Malaria (Nigeria)' },
+                { lat: -15.4, lng: 28.3, radius: 300000, risk: 'high', disease: 'Malaria (Zambia)' },
+                { lat: -25.9, lng: 32.6, radius: 250000, risk: 'high', disease: 'Malaria (Mozambique)' },
+                { lat: 14.7, lng: -17.5, radius: 200000, risk: 'high', disease: 'Malaria (Senegal)' },
+                { lat: -4.3, lng: 15.3, radius: 350000, risk: 'critical', disease: 'Malaria (Congo)' },
+                { lat: 0.3, lng: 32.6, radius: 300000, risk: 'high', disease: 'Malaria (Uganda)' },
+
+                // SOUTH AMERICA
+                { lat: -3.1, lng: -60.0, radius: 700000, risk: 'critical', disease: 'Dengue/Zika (Amazon Basin)' },
+                { lat: -22.9, lng: -43.2, radius: 400000, risk: 'high', disease: 'Dengue (Rio de Janeiro)' },
+                { lat: -23.5, lng: -46.6, radius: 350000, risk: 'high', disease: 'Dengue (São Paulo)' },
+                { lat: 4.6, lng: -74.1, radius: 300000, risk: 'moderate', disease: 'Dengue (Colombia)' },
+                { lat: -12.0, lng: -77.0, radius: 250000, risk: 'moderate', disease: 'Dengue (Lima)' },
+                { lat: 10.5, lng: -66.9, radius: 350000, risk: 'high', disease: 'Dengue (Venezuela)' },
+                { lat: -8.0, lng: -35.0, radius: 300000, risk: 'high', disease: 'Dengue (Recife, Brazil)' },
+                { lat: -12.9, lng: -38.5, radius: 280000, risk: 'high', disease: 'Dengue (Salvador, Brazil)' },
+                { lat: -3.7, lng: -38.5, radius: 300000, risk: 'high', disease: 'Dengue (Fortaleza, Brazil)' },
+
+                // CENTRAL AMERICA & CARIBBEAN
+                { lat: 19.4, lng: -99.1, radius: 400000, risk: 'high', disease: 'Dengue (Mexico City)' },
+                { lat: 18.5, lng: -69.9, radius: 200000, risk: 'high', disease: 'Dengue/Zika (Dominican Republic)' },
+                { lat: 18.2, lng: -66.5, radius: 150000, risk: 'moderate', disease: 'Zika (Puerto Rico)' },
+                { lat: 23.1, lng: -82.4, radius: 200000, risk: 'moderate', disease: 'Dengue (Cuba)' },
+                { lat: 14.6, lng: -90.5, radius: 250000, risk: 'high', disease: 'Dengue (Guatemala)' },
+                { lat: 12.1, lng: -86.3, radius: 200000, risk: 'high', disease: 'Dengue (Nicaragua)' },
+                { lat: 9.0, lng: -79.5, radius: 200000, risk: 'moderate', disease: 'Dengue (Panama)' },
+                { lat: 20.9, lng: -86.8, radius: 200000, risk: 'high', disease: 'Dengue (Cancun)' },
+
+                // SOUTHEAST ASIA
+                { lat: 13.7, lng: 100.5, radius: 400000, risk: 'critical', disease: 'Dengue (Thailand)' },
+                { lat: 10.8, lng: 106.6, radius: 350000, risk: 'high', disease: 'Dengue (Vietnam)' },
+                { lat: 14.6, lng: 121.0, radius: 400000, risk: 'high', disease: 'Dengue (Philippines)' },
+                { lat: -6.2, lng: 106.8, radius: 500000, risk: 'critical', disease: 'Dengue (Indonesia)' },
+                { lat: 3.1, lng: 101.7, radius: 300000, risk: 'high', disease: 'Dengue (Malaysia)' },
+                { lat: 1.3, lng: 103.8, radius: 150000, risk: 'moderate', disease: 'Dengue (Singapore)' },
+                { lat: 16.9, lng: 96.2, radius: 350000, risk: 'high', disease: 'Dengue/Malaria (Myanmar)' },
+                { lat: 11.6, lng: 104.9, radius: 280000, risk: 'high', disease: 'Dengue (Cambodia)' },
+                { lat: -8.7, lng: 115.2, radius: 200000, risk: 'high', disease: 'Dengue (Bali)' },
+                { lat: 10.3, lng: 123.9, radius: 250000, risk: 'high', disease: 'Dengue (Cebu)' },
+
+                // SOUTH ASIA
+                { lat: 19.1, lng: 72.9, radius: 400000, risk: 'high', disease: 'Malaria/Dengue (Mumbai)' },
+                { lat: 28.6, lng: 77.2, radius: 350000, risk: 'high', disease: 'Dengue (Delhi)' },
+                { lat: 12.9, lng: 77.6, radius: 300000, risk: 'moderate', disease: 'Dengue (Bangalore)' },
+                { lat: 23.8, lng: 90.4, radius: 400000, risk: 'high', disease: 'Dengue (Bangladesh)' },
+                { lat: 22.6, lng: 88.4, radius: 350000, risk: 'high', disease: 'Dengue (Kolkata)' },
+                { lat: 13.1, lng: 80.3, radius: 300000, risk: 'high', disease: 'Dengue (Chennai)' },
+                { lat: 6.9, lng: 79.9, radius: 200000, risk: 'high', disease: 'Dengue (Colombo)' },
+                { lat: 24.9, lng: 67.1, radius: 300000, risk: 'high', disease: 'Dengue (Karachi)' },
+
+                // EAST ASIA
+                { lat: 23.1, lng: 113.3, radius: 350000, risk: 'moderate', disease: 'Dengue (Guangzhou)' },
+                { lat: 22.3, lng: 114.2, radius: 200000, risk: 'moderate', disease: 'Dengue (Hong Kong)' },
+                { lat: 25.0, lng: 121.5, radius: 200000, risk: 'moderate', disease: 'Dengue (Taiwan)' },
+
+                // OCEANIA
+                { lat: -5.0, lng: 145.8, radius: 500000, risk: 'high', disease: 'Malaria (Papua New Guinea)' },
+                { lat: -18.1, lng: 178.4, radius: 200000, risk: 'moderate', disease: 'Dengue (Fiji)' },
+                { lat: -12.5, lng: 130.8, radius: 250000, risk: 'moderate', disease: 'Dengue (Northern Australia)' },
+                { lat: -9.4, lng: 160.0, radius: 200000, risk: 'high', disease: 'Malaria (Solomon Islands)' },
+                { lat: -16.9, lng: 145.8, radius: 200000, risk: 'moderate', disease: 'Dengue (Cairns, Australia)' },
+
+                // USA
+                { lat: 25.8, lng: -80.2, radius: 200000, risk: 'moderate', disease: 'Dengue/Zika (Florida)' },
+                { lat: 29.8, lng: -95.4, radius: 250000, risk: 'low', disease: 'West Nile (Texas)' },
+                { lat: 29.9, lng: -90.1, radius: 200000, risk: 'low', disease: 'West Nile (New Orleans)' },
+                { lat: 34.1, lng: -118.2, radius: 200000, risk: 'low', disease: 'West Nile (Los Angeles)' },
+
+                // MIDDLE EAST
+                { lat: 21.5, lng: 39.2, radius: 200000, risk: 'moderate', disease: 'Dengue (Jeddah)' },
+                { lat: 15.4, lng: 44.2, radius: 250000, risk: 'high', disease: 'Dengue (Yemen)' },
+
+                // MEDITERRANEAN
+                { lat: 37.9, lng: 23.7, radius: 120000, risk: 'low', disease: 'West Nile (Greece)' },
+                { lat: 41.0, lng: 29.0, radius: 150000, risk: 'low', disease: 'West Nile (Istanbul)' },
+            ];
+
+            nasaLayers.diseaseRisk = L.layerGroup();
+
+            const colors = {
+                critical: { fill: '#dc2626', stroke: '#991b1b' },
+                high: { fill: '#f97316', stroke: '#c2410c' },
+                moderate: { fill: '#eab308', stroke: '#a16207' },
+                low: { fill: '#22c55e', stroke: '#15803d' }
+            };
+
+            riskZones.forEach(function(zone) {
+                const color = colors[zone.risk];
+                L.circle([zone.lat, zone.lng], {
+                    radius: zone.radius,
+                    fillColor: color.fill,
+                    fillOpacity: 0.2,
+                    color: color.stroke,
+                    weight: 2,
+                    opacity: 0.6
+                })
+                .bindPopup(`
+                    <div class="popup-header">Disease Risk Zone</div>
+                    <div class="popup-detail"><strong>Risk Level:</strong> ${zone.risk.toUpperCase()}</div>
+                    <div class="popup-detail"><strong>Disease:</strong> ${zone.disease}</div>
+                    <div class="popup-footer">Based on NASA satellite environmental monitoring</div>
+                `)
+                .addTo(nasaLayers.diseaseRisk);
+            });
+        }
+
+        function setupLayerToggles() {
+            document.querySelectorAll('.layer-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const layer = this.dataset.layer;
+                    const isActive = this.classList.toggle('active');
+                    handleLayerToggle(layer, isActive);
+                });
+            });
+        }
+
+        function handleLayerToggle(layerName, isChecked) {
+            if (layerName === 'observations' && nasaLayers.observations) {
+                if (isChecked) {
+                    globeMap.addLayer(nasaLayers.observations);
+                } else {
+                    globeMap.removeLayer(nasaLayers.observations);
+                }
+            } else if (layerName === 'disease-risk' && nasaLayers.diseaseRisk) {
+                if (isChecked) {
+                    globeMap.addLayer(nasaLayers.diseaseRisk);
+                } else {
+                    globeMap.removeLayer(nasaLayers.diseaseRisk);
+                }
+            }
+        }
+
+        async function fetchGlobeData() {
+            const countElement = document.getElementById('observation-count');
+            countElement.textContent = 'Loading...';
+
+            try {
+                const apiUrl = 'https://api.globe.gov/search/v1/measurement/?protocols=mosquito_habitat_mapper&datefield=measuredDate&startdate=2017-01-01&enddate=2026-01-31&geojson=TRUE';
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) throw new Error('API failed');
+
+                const data = await response.json();
+                const featureCount = data.features ? data.features.length : 0;
+                countElement.textContent = featureCount.toLocaleString();
+
+                if (data.features && data.features.length > 0) {
+                    addGlobeMarkers(data);
+                } else {
+                    addDemoMarkers();
+                }
+            } catch (error) {
+                console.error('Error fetching GLOBE data:', error);
+                countElement.textContent = 'Demo Mode';
+                addDemoMarkers();
+            }
+        }
+
+        function getMarkerColor(properties) {
+            const waterSource = properties.mosquitohabitatmapperWaterSource || properties.waterSourceType || 'other';
+            if (waterSource.toLowerCase().includes('container') || waterSource.toLowerCase().includes('artificial')) {
+                return '#dc2626';
+            } else if (waterSource.toLowerCase().includes('pool') || waterSource.toLowerCase().includes('pond')) {
+                return '#2563eb';
+            }
+            return '#16a34a';
+        }
+
+        function addGlobeMarkers(geojsonData) {
+            markerClusterGroup = L.markerClusterGroup({
+                maxClusterRadius: 50,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                zoomToBoundsOnClick: true,
+                iconCreateFunction: function(cluster) {
+                    const count = cluster.getChildCount();
+                    let size = 'small', dimensions = 30;
+                    if (count > 50) { size = 'large'; dimensions = 50; }
+                    else if (count > 10) { size = 'medium'; dimensions = 40; }
+                    return L.divIcon({
+                        html: '<div class="cluster-icon cluster-' + size + '">' + count + '</div>',
+                        className: 'marker-cluster',
+                        iconSize: L.point(dimensions, dimensions)
+                    });
+                }
+            });
+
+            const geoJsonLayer = L.geoJSON(geojsonData, {
+                pointToLayer: function(feature, latlng) {
+                    return L.circleMarker(latlng, {
+                        radius: 8,
+                        fillColor: getMarkerColor(feature.properties),
+                        color: '#fff',
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    });
+                },
+                onEachFeature: function(feature, layer) {
+                    const props = feature.properties;
+                    let popup = '<div class="popup-header">GLOBE Observation</div>';
+
+                    const waterSource = props.mosquitohabitatmapperWaterSource || props.waterSourceType || 'Unknown';
+                    popup += `<div class="popup-detail"><strong>Water Source:</strong> ${waterSource}</div>`;
+
+                    const larvae = props.mosquitohabitatmapperLarvaeCount || props.larvaeCount || 'Not reported';
+                    popup += `<div class="popup-detail"><strong>Larvae Count:</strong> ${larvae}</div>`;
+
+                    if (props.measuredDate || props.measured_date) {
+                        const date = new Date(props.measuredDate || props.measured_date);
+                        popup += `<div class="popup-detail"><strong>Date:</strong> ${date.toLocaleDateString()}</div>`;
+                    }
+
+                    if (props.country) {
+                        popup += `<div class="popup-detail"><strong>Location:</strong> ${props.country}</div>`;
+                    }
+
+                    if (props.mosquitohabitatmapperPhoto || props.photo) {
+                        popup += `<img src="${props.mosquitohabitatmapperPhoto || props.photo}" class="popup-image" onerror="this.style.display='none'">`;
+                    }
+
+                    popup += '<div class="popup-footer">Citizen Science via GLOBE Observer</div>';
+                    layer.bindPopup(popup, { maxWidth: 280 });
+                }
+            });
+
+            markerClusterGroup.addLayer(geoJsonLayer);
+            globeMap.addLayer(markerClusterGroup);
+            nasaLayers.observations = markerClusterGroup;
+        }
+
+        function addDemoMarkers() {
+            const demoData = [
+                // Global demo points (abbreviated for embed)
+                { lat: -1.29, lng: 36.82, name: 'Nairobi, Kenya', larvae: 15, source: 'Container' },
+                { lat: -6.79, lng: 39.21, name: 'Dar es Salaam, Tanzania', larvae: 18, source: 'Container' },
+                { lat: 6.52, lng: 3.38, name: 'Lagos, Nigeria', larvae: 28, source: 'Container' },
+                { lat: -4.44, lng: 15.27, name: 'Kinshasa, DRC', larvae: 35, source: 'Natural Pool' },
+                { lat: 5.60, lng: -0.19, name: 'Accra, Ghana', larvae: 19, source: 'Container' },
+                { lat: -22.91, lng: -43.17, name: 'Rio de Janeiro, Brazil', larvae: 32, source: 'Container' },
+                { lat: -23.55, lng: -46.63, name: 'São Paulo, Brazil', larvae: 28, source: 'Container' },
+                { lat: -3.12, lng: -60.02, name: 'Manaus, Brazil', larvae: 45, source: 'Natural Pool' },
+                { lat: -8.05, lng: -34.88, name: 'Recife, Brazil', larvae: 38, source: 'Container' },
+                { lat: 4.71, lng: -74.07, name: 'Bogotá, Colombia', larvae: 15, source: 'Container' },
+                { lat: 10.48, lng: -66.90, name: 'Caracas, Venezuela', larvae: 31, source: 'Container' },
+                { lat: 19.43, lng: -99.13, name: 'Mexico City, Mexico', larvae: 14, source: 'Container' },
+                { lat: 18.49, lng: -69.93, name: 'Santo Domingo, DR', larvae: 29, source: 'Container' },
+                { lat: 14.63, lng: -90.51, name: 'Guatemala City', larvae: 27, source: 'Container' },
+                { lat: 13.76, lng: 100.50, name: 'Bangkok, Thailand', larvae: 38, source: 'Container' },
+                { lat: 10.82, lng: 106.63, name: 'Ho Chi Minh City, Vietnam', larvae: 34, source: 'Container' },
+                { lat: 14.60, lng: 120.98, name: 'Manila, Philippines', larvae: 42, source: 'Container' },
+                { lat: -6.21, lng: 106.85, name: 'Jakarta, Indonesia', larvae: 48, source: 'Container' },
+                { lat: 3.14, lng: 101.69, name: 'Kuala Lumpur, Malaysia', larvae: 29, source: 'Container' },
+                { lat: 1.35, lng: 103.82, name: 'Singapore', larvae: 12, source: 'Container' },
+                { lat: 16.87, lng: 96.20, name: 'Yangon, Myanmar', larvae: 36, source: 'Natural Pool' },
+                { lat: 11.56, lng: 104.93, name: 'Phnom Penh, Cambodia', larvae: 33, source: 'Container' },
+                { lat: 19.08, lng: 72.88, name: 'Mumbai, India', larvae: 38, source: 'Container' },
+                { lat: 28.61, lng: 77.21, name: 'Delhi, India', larvae: 34, source: 'Container' },
+                { lat: 22.57, lng: 88.36, name: 'Kolkata, India', larvae: 31, source: 'Natural Pool' },
+                { lat: 13.08, lng: 80.27, name: 'Chennai, India', larvae: 29, source: 'Container' },
+                { lat: 23.81, lng: 90.41, name: 'Dhaka, Bangladesh', larvae: 40, source: 'Natural Pool' },
+                { lat: 24.86, lng: 67.00, name: 'Karachi, Pakistan', larvae: 32, source: 'Container' },
+                { lat: 6.93, lng: 79.86, name: 'Colombo, Sri Lanka', larvae: 25, source: 'Container' },
+                { lat: -5.0, lng: 145.8, name: 'Port Moresby, PNG', larvae: 44, source: 'Natural Pool' },
+                { lat: -12.46, lng: 130.85, name: 'Darwin, Australia', larvae: 11, source: 'Container' },
+                { lat: -18.14, lng: 178.44, name: 'Suva, Fiji', larvae: 23, source: 'Container' },
+                { lat: 25.76, lng: -80.19, name: 'Miami, Florida', larvae: 9, source: 'Container' },
+                { lat: 29.76, lng: -95.37, name: 'Houston, Texas', larvae: 8, source: 'Natural Pool' },
+                { lat: 29.95, lng: -90.07, name: 'New Orleans, Louisiana', larvae: 10, source: 'Natural Pool' },
+                { lat: 15.37, lng: 44.19, name: 'Sanaa, Yemen', larvae: 28, source: 'Natural Pool' },
+                { lat: 37.98, lng: 23.73, name: 'Athens, Greece', larvae: 4, source: 'Container' },
+            ];
+
+            markerClusterGroup = L.markerClusterGroup({
+                maxClusterRadius: 50,
+                iconCreateFunction: function(cluster) {
+                    const count = cluster.getChildCount();
+                    let size = 'small', dimensions = 30;
+                    if (count > 50) { size = 'large'; dimensions = 50; }
+                    else if (count > 10) { size = 'medium'; dimensions = 40; }
+                    return L.divIcon({
+                        html: '<div class="cluster-icon cluster-' + size + '">' + count + '</div>',
+                        className: 'marker-cluster',
+                        iconSize: L.point(dimensions, dimensions)
+                    });
+                }
+            });
+
+            demoData.forEach(function(point) {
+                const color = point.source.includes('Container') ? '#dc2626' : '#2563eb';
+                const marker = L.circleMarker([point.lat, point.lng], {
+                    radius: 8,
+                    fillColor: color,
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).bindPopup(`
+                    <div class="popup-header">Demo Observation</div>
+                    <div class="popup-detail"><strong>Location:</strong> ${point.name}</div>
+                    <div class="popup-detail"><strong>Larvae Count:</strong> ${point.larvae}</div>
+                    <div class="popup-detail"><strong>Water Source:</strong> ${point.source}</div>
+                    <div class="popup-footer">Demo data - GLOBE API unavailable</div>
+                `);
+                markerClusterGroup.addLayer(marker);
+            });
+
+            globeMap.addLayer(markerClusterGroup);
+            nasaLayers.observations = markerClusterGroup;
+            document.getElementById('observation-count').textContent = demoData.length + ' Demo';
+        }
+
+        // Refresh button
+        document.getElementById('refresh-globe').addEventListener('click', function() {
+            if (markerClusterGroup) {
+                globeMap.removeLayer(markerClusterGroup);
+                markerClusterGroup = null;
+            }
+            fetchGlobeData();
+        });
+
+        // Initialize
+        initGlobeMap();
+    })();
+    </script>
+</body>
+</html>
