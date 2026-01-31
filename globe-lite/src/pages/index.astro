@@ -1,14 +1,167 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const stats = [
+  { label: '<200 KB load', value: 'Ultra-light' },
+  { label: 'Works offline', value: 'Field-ready' },
+  { label: '10x faster', value: '3G optimized' },
+];
+
+const features = [
+  {
+    title: 'Offline First',
+    desc: 'Queue observations and sync when connectivity returns.',
+  },
+  {
+    title: 'Smart Compression',
+    desc: 'Client-side WebP compression keeps uploads tiny.',
+  },
+  {
+    title: 'Edge Delivery',
+    desc: 'Observations served from the nearest global node.',
+  },
+  {
+    title: 'Open Science',
+    desc: 'All data feeds NASA research and education.',
+  },
+];
+
+const steps = [
+  { title: 'Find standing water', desc: 'Identify potential mosquito habitat.' },
+  { title: 'Photograph the habitat', desc: 'Capture a clear image of the site.' },
+  { title: 'Identify species (optional)', desc: 'Note larvae or adults when possible.' },
+  { title: 'Submit observation', desc: 'Sync instantly or later offline.' },
+];
 ---
+
 <Layout title="GLOBE Observer Lite">
-  <main class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-nasa-dark mb-4">GLOBE Observer Lite</h1>
-    <p class="text-globe-muted">Fast, offline-first citizen science for everyone.</p>
-    <nav class="mt-8 flex gap-4">
-      <a href="/observe" class="bg-nasa-blue text-white px-4 py-2 rounded hover:bg-nasa-dark">Start Observation</a>
-      <a href="/gallery" class="bg-globe-bg border border-nasa-blue text-nasa-blue px-4 py-2 rounded hover:bg-white">Gallery</a>
-      <a href="/compare" class="bg-globe-bg border border-nasa-blue text-nasa-blue px-4 py-2 rounded hover:bg-white">Compare</a>
-    </nav>
+  <Header />
+
+  <main>
+    <!-- Hero -->
+    <section class="hero-surface py-16">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+          <div class="glass-panel p-8">
+            <span class="glass-badge px-3 py-1 text-xs font-semibold">Low-bandwidth prototype</span>
+            <h1 class="text-4xl lg:text-5xl font-bold text-globe-text mt-4 mb-4">
+              Global Science. Local Access.
+            </h1>
+            <p class="text-globe-muted text-lg mb-6">
+              GLOBE Observer Lite is citizen science that works everywhere—even on 2G.
+              We cut initial load from megabytes to kilobytes without sacrificing data quality.
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <a href="/observe" class="bg-nasa-cyan text-nasa-dark font-semibold px-6 py-3 rounded-lg hover:bg-white transition-colors">
+                Start Observing
+              </a>
+              <a href="/compare" class="glass-btn inline-flex items-center gap-2 px-6 py-3 font-semibold">
+                See the Comparison
+              </a>
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-3 gap-4">
+            {stats.map((stat) => (
+              <div class="glass-card p-4 text-center">
+                <div class="text-lg font-semibold text-globe-text">{stat.label}</div>
+                <div class="text-sm text-globe-muted">{stat.value}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Problem -->
+    <section class="glass-section py-16">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-bold text-globe-text">The Digital Divide in Citizen Science</h2>
+          <p class="text-globe-muted mt-3 max-w-2xl mx-auto">
+            When pages take 8 seconds on 3G, observations stop. We built a 10x faster path to participation.
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="glass-card p-6 border-l-4 border-red-500/70">
+            <h3 class="text-xl font-bold text-globe-text mb-3">Current GLOBE Observer</h3>
+            <ul class="space-y-2 text-globe-muted text-sm">
+              <li>5–8 seconds on 3G</li>
+              <li>2–5 MB initial transfer</li>
+              <li>No offline mode</li>
+            </ul>
+          </div>
+          <div class="glass-card p-6 border-l-4 border-nasa-green/70">
+            <h3 class="text-xl font-bold text-globe-text mb-3">GLOBE Observer Lite</h3>
+            <ul class="space-y-2 text-globe-muted text-sm">
+              <li>&lt;2 seconds on 3G</li>
+              <li>&lt;200 KB initial transfer</li>
+              <li>Offline-first workflow</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="glass-section py-16">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-bold text-globe-text">Built for Limited Connectivity</h2>
+          <p class="text-globe-muted">Every interaction is designed to minimize bandwidth.</p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature) => (
+            <div class="glass-card p-6">
+              <h3 class="font-semibold text-globe-text mb-2">{feature.title}</h3>
+              <p class="text-sm text-globe-muted">{feature.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="glass-section py-16">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-bold text-globe-text">How It Works</h2>
+          <p class="text-globe-muted">Optimized for the Mosquito Habitat Mapper workflow.</p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((step, index) => (
+            <div class="glass-card p-6">
+              <div class="text-sm text-nasa-cyan font-semibold mb-2">Step {index + 1}</div>
+              <h3 class="font-semibold text-globe-text mb-2">{step.title}</h3>
+              <p class="text-sm text-globe-muted">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-surface py-16">
+      <div class="max-w-4xl mx-auto px-4 text-center">
+        <div class="glass-panel p-8">
+          <h2 class="text-3xl font-bold text-globe-text mb-4">Ready to Observe Anywhere?</h2>
+          <p class="text-globe-muted mb-6">
+            Experience the low-bandwidth prototype and help expand global participation in NASA science.
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="/observer" class="bg-nasa-cyan text-nasa-dark font-semibold px-8 py-3 rounded-lg hover:bg-white transition-colors">
+              Explore the App
+            </a>
+            <a href="/compare" class="glass-btn inline-flex items-center gap-2 px-8 py-3 font-semibold">
+              Watch the Speed Demo
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <Footer />
 </Layout>

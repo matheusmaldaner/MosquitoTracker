@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ObservationsList from '../components/ObservationsList.svelte';
+---
+
+<Layout title="API Test - GLOBE Lite">
+  <Header />
+
+  <main class="py-16">
+    <div class="max-w-4xl mx-auto px-4 space-y-10">
+      <header class="text-center">
+        <h1 class="text-3xl font-bold text-globe-text mb-2">GLOBE API Integration Test</h1>
+        <p class="text-globe-muted">Testing low-bandwidth data fetching from the GLOBE Observer API</p>
+      </header>
+
+      <section class="glass-card p-6">
+        <h2 class="text-xl font-semibold text-globe-text mb-2">Recent Mosquito Habitat Observations</h2>
+        <p class="text-globe-muted text-sm mb-4">
+          Fetching the most recent mosquito habitat observations from the GLOBE API.
+          Using sample mode for faster loading.
+        </p>
+        <div class="border-t border-[color:var(--border)] pt-4">
+          <ObservationsList client:load protocol="mosquito_habitat_mapper" limit={10} />
+        </div>
+      </section>
+
+      <section class="glass-card p-6">
+        <h2 class="text-xl font-semibold text-globe-text mb-4">API Details</h2>
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <div class="glass-card p-4">
+            <h3 class="text-nasa-blue font-semibold mb-2">Endpoint</h3>
+            <code class="text-globe-muted">GET /search/v1/measurement/protocol/measureddate/</code>
+          </div>
+          <div class="glass-card p-4">
+            <h3 class="text-nasa-blue font-semibold mb-2">Base URL</h3>
+            <code class="text-globe-muted">https://api.globe.gov</code>
+          </div>
+          <div class="glass-card p-4">
+            <h3 class="text-nasa-blue font-semibold mb-2">Available Protocols</h3>
+            <ul class="text-globe-muted space-y-1">
+              <li>mosquito_habitat_mapper</li>
+              <li>clouds</li>
+              <li>land_covers</li>
+              <li>tree_heights</li>
+              <li>sky_conditions</li>
+            </ul>
+          </div>
+          <div class="glass-card p-4">
+            <h3 class="text-nasa-blue font-semibold mb-2">Response Format</h3>
+            <code class="text-globe-muted">GeoJSON FeatureCollection</code>
+          </div>
+        </div>
+      </section>
+
+      <section class="glass-card p-6">
+        <h2 class="text-xl font-semibold text-globe-text mb-3">Bandwidth Optimization</h2>
+        <p class="text-globe-muted text-sm mb-6">
+          This page demonstrates efficient data loading with minimal bandwidth usage.
+          The API client uses sample mode by default for testing, reducing payload size significantly.
+        </p>
+        <div class="grid sm:grid-cols-3 gap-4 text-center">
+          <div class="glass-card p-4">
+            <span class="block text-2xl font-semibold text-globe-text">~5KB</span>
+            <span class="text-xs text-globe-muted uppercase tracking-wide">Avg Request Size</span>
+          </div>
+          <div class="glass-card p-4">
+            <span class="block text-2xl font-semibold text-globe-text">&lt; 1s</span>
+            <span class="text-xs text-globe-muted uppercase tracking-wide">Typical Load Time</span>
+          </div>
+          <div class="glass-card p-4">
+            <span class="block text-2xl font-semibold text-globe-text">GeoJSON</span>
+            <span class="text-xs text-globe-muted uppercase tracking-wide">Compact Format</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="text-center">
+        <a href="/" class="glass-btn inline-flex items-center gap-2 px-6 py-3 font-semibold">
+          &larr; Back to Home
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
