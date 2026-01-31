@@ -12,6 +12,7 @@
     "cap:ios": "npm run build && npx cap sync && npx cap open ios"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.2",
     "@astrojs/svelte": "^7.2.5",
     "@capacitor/android": "^6.2.0",
     "@capacitor/cli": "^6.2.0",
