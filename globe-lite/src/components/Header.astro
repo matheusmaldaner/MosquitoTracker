@@ -1,0 +1,137 @@
+---
+interface Props {
+  variant?: 'dark' | 'light';
+}
+const { variant = 'dark' } = Astro.props;
+void variant;
+---
+
+<header class="sticky top-0 z-50 glass-header">
+  <!-- Top bar -->
+  <div class="border-b border-[color:var(--border)]">
+    <div class="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center text-sm">
+      <span class="text-globe-muted">A Worldwide Science and Education Program</span>
+      <div class="flex items-center gap-4">
+        <a href="#" class="nav-link px-2 py-1 rounded-full">Support</a>
+        <a href="#" class="flex items-center gap-1 font-medium text-globe-text">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          Sign In
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main nav -->
+  <nav class="max-w-7xl mx-auto px-4">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-nasa-cyan/20 border border-nasa-cyan/40 flex items-center justify-center">
+          <svg class="w-6 h-6 text-nasa-cyan" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          </svg>
+        </div>
+        <div>
+          <span class="text-xl font-bold text-globe-text">GLOBE</span>
+          <span class="text-xl text-nasa-cyan"> Program</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden lg:flex items-center gap-1">
+        <div class="group relative">
+          <button class="nav-link px-3 py-2 text-sm font-medium rounded-md">
+            About/Join
+            <svg class="inline w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+        </div>
+        <div class="group relative">
+          <button class="nav-link px-3 py-2 text-sm font-medium rounded-md">
+            Training
+            <svg class="inline w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+        </div>
+        <div class="group relative">
+          <button class="nav-link px-3 py-2 text-sm font-medium rounded-md">
+            Do GLOBE
+            <svg class="inline w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+        </div>
+        <div class="group relative">
+          <button class="nav-link px-3 py-2 text-sm font-medium rounded-md">
+            GLOBE Data
+            <svg class="inline w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+        </div>
+        <div class="group relative">
+          <button class="nav-link px-3 py-2 text-sm font-medium rounded-md">
+            Community
+            <svg class="inline w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+        </div>
+        <div class="group relative">
+          <button class="nav-link px-3 py-2 text-sm font-medium rounded-md">
+            News & Events
+            <svg class="inline w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search + Mobile menu -->
+      <div class="flex items-center gap-2">
+        <button class="p-2 rounded-md nav-link" aria-label="Search">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </button>
+        <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme">
+          <svg class="w-4 h-4 theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364-1.414 1.414M7.05 16.95l-1.414 1.414m0-11.314L7.05 7.05m9.9 9.9 1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+          </svg>
+          <svg class="w-4 h-4 theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>
+          </svg>
+        </button>
+        <button class="lg:hidden p-2 rounded-md nav-link" aria-label="Menu" id="mobile-menu-btn">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile menu (hidden by default) -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-[color:var(--border)]">
+    <div class="px-4 py-3 space-y-1">
+      <a href="#" class="block px-3 py-2 rounded-md nav-link">About/Join</a>
+      <a href="#" class="block px-3 py-2 rounded-md nav-link">Training</a>
+      <a href="#" class="block px-3 py-2 rounded-md nav-link">Do GLOBE</a>
+      <a href="#" class="block px-3 py-2 rounded-md nav-link">GLOBE Data</a>
+      <a href="#" class="block px-3 py-2 rounded-md nav-link">Community</a>
+      <a href="#" class="block px-3 py-2 rounded-md nav-link">News & Events</a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+</script>

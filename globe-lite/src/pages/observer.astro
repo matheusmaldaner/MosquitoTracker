@@ -1,0 +1,409 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const protocols = [
+  {
+    name: "Clouds",
+    desc: "Observe cloud type, cover, and conditions. Your observations help validate NASA satellite data.",
+    icon: "cloud",
+    color: "bg-blue-500",
+    stats: { week: 1247, total: "2.1M" }
+  },
+  {
+    name: "Mosquito Habitat Mapper",
+    desc: "Document standing water sites where mosquitoes breed. Help track disease vectors globally.",
+    icon: "bug",
+    color: "bg-red-500",
+    stats: { week: 328, total: "47K" }
+  },
+  {
+    name: "Land Cover",
+    desc: "Classify what covers the land around you. Compare your observations to satellite imagery.",
+    icon: "map",
+    color: "bg-green-500",
+    stats: { week: 892, total: "156K" }
+  },
+  {
+    name: "Trees",
+    desc: "Measure tree height using your phone. Track forest growth and changes in your area.",
+    icon: "tree",
+    color: "bg-emerald-600",
+    stats: { week: 456, total: "89K" }
+  }
+];
+
+const recentNews = [
+  { title: "Access to All GLOBE Protocols for Observers", date: "Jan 2026", tag: "Update" },
+  { title: "Help Scientists Track Blowing Snow", date: "Dec 2025", tag: "Campaign" },
+  { title: "GLOBE Observer Connect Webinar Series", date: "Monthly", tag: "Event" },
+  { title: "Thirty Years of GLOBE!", date: "2025", tag: "Anniversary" },
+];
+---
+
+<Layout title="GLOBE Observer - Citizen Science App">
+  <!-- Custom Observer Header -->
+  <header class="glass-header">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="/observer" class="flex items-center gap-3">
+          <div class="relative">
+            <div class="w-12 h-12 rounded-full border-2 border-nasa-cyan/50 flex items-center justify-center">
+              <svg class="w-7 h-7 text-nasa-cyan" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs text-globe-muted uppercase tracking-wider">The GLOBE Program</div>
+            <div class="text-xl font-bold">
+              <span class="text-globe-text">GLOBE</span>
+              <span class="text-nasa-cyan"> Observer</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Navigation -->
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="#" class="nav-link px-3 py-2 text-sm rounded-md">Get the App</a>
+          <a href="#protocols" class="nav-link px-3 py-2 text-sm rounded-md">Do GLOBE Observer</a>
+          <a href="#" class="nav-link px-3 py-2 text-sm rounded-md">Get Data</a>
+          <a href="#" class="nav-link px-3 py-2 text-sm rounded-md">News & Events</a>
+          <a href="#" class="nav-link px-3 py-2 text-sm rounded-md">About</a>
+        </nav>
+
+        <!-- Right side -->
+        <div class="flex items-center gap-3">
+          <button class="p-2 nav-link rounded-md">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </button>
+          <button class="theme-toggle hidden sm:inline-flex" data-theme-toggle aria-label="Toggle theme">
+            <svg class="w-4 h-4 theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364-1.414 1.414M7.05 16.95l-1.414 1.414m0-11.314L7.05 7.05m9.9 9.9 1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"/>
+            </svg>
+            <svg class="w-4 h-4 theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>
+            </svg>
+          </button>
+          <a href="#" class="hidden sm:flex items-center gap-2 bg-nasa-cyan text-nasa-dark px-4 py-2 rounded-md font-medium text-sm hover:bg-white transition-colors">
+            Sign In
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="relative hero-surface overflow-hidden">
+      <!-- Background globe -->
+      <div class="absolute inset-0 flex items-center justify-center opacity-10">
+        <svg class="w-[800px] h-[800px] text-nasa-cyan" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" stroke-width="0.3"/>
+          <ellipse cx="100" cy="100" rx="80" ry="30" fill="none" stroke="currentColor" stroke-width="0.3"/>
+          <ellipse cx="100" cy="100" rx="30" ry="80" fill="none" stroke="currentColor" stroke-width="0.3"/>
+          <ellipse cx="100" cy="100" rx="60" ry="80" fill="none" stroke="currentColor" stroke-width="0.3" transform="rotate(30 100 100)"/>
+          <ellipse cx="100" cy="100" rx="60" ry="80" fill="none" stroke="currentColor" stroke-width="0.3" transform="rotate(-30 100 100)"/>
+        </svg>
+      </div>
+
+      <div class="relative max-w-7xl mx-auto px-4 py-16 lg:py-24">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="inline-flex items-center gap-2 bg-nasa-cyan/20 text-nasa-cyan px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              Now with all GLOBE Protocols
+            </div>
+
+            <h1 class="text-4xl lg:text-5xl font-bold text-globe-text mb-6">
+              Be a Citizen Scientist with
+              <span class="text-nasa-cyan">GLOBE Observer</span>
+            </h1>
+
+            <p class="text-xl text-globe-muted mb-8 max-w-lg">
+              A free app that guides you through collecting environmental data. Your observations help NASA scientists study our planet.
+            </p>
+
+            <div class="flex flex-wrap gap-4 mb-8">
+              <a href="#" class="inline-flex items-center gap-3 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-900 transition-colors">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                <div class="text-left">
+                  <div class="text-xs text-white/60">Download on the</div>
+                  <div class="font-semibold">App Store</div>
+                </div>
+              </a>
+              <a href="#" class="inline-flex items-center gap-3 bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-900 transition-colors">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                <div class="text-left">
+                  <div class="text-xs text-white/60">Get it on</div>
+                  <div class="font-semibold">Google Play</div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Low bandwidth notice -->
+            <div class="flex items-center gap-3 text-globe-muted text-sm">
+              <svg class="w-5 h-5 text-nasa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              <span>Optimized for low-bandwidth connections • Works offline</span>
+            </div>
+          </div>
+
+          <!-- Feature image placeholder -->
+          <div class="relative hidden lg:block">
+            <div class="absolute inset-0 bg-gradient-to-br from-nasa-cyan/20 to-nasa-blue/20 rounded-3xl blur-3xl"></div>
+            <div class="relative glass-panel p-8">
+              <div class="aspect-[9/16] max-w-[280px] mx-auto bg-black rounded-[2rem] p-3 shadow-2xl">
+                <div class="h-full bg-gradient-to-br from-nasa-dark to-nasa-blue rounded-[1.5rem] flex flex-col items-center justify-center text-white/60">
+                  <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                  </svg>
+                  <p class="text-sm">GLOBE Observer</p>
+                  <p class="text-xs text-white/40">Take observations</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What is GLOBE Observer -->
+    <section class="py-16 glass-section">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="max-w-3xl">
+          <h2 class="text-3xl font-bold text-globe-text mb-6">What is GLOBE Observer?</h2>
+
+          <div class="space-y-4 text-globe-muted">
+            <p class="flex items-start gap-3">
+              <svg class="w-6 h-6 text-nasa-blue flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>A <strong class="text-globe-text">citizen science app</strong> allowing volunteers in GLOBE countries to take observations and contribute to the Global Learning and Observations to Benefit the Environment (GLOBE) community.</span>
+            </p>
+            <p class="flex items-start gap-3">
+              <svg class="w-6 h-6 text-nasa-green flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>A way to <strong class="text-globe-text">collect data</strong> to track changes in the environment in support of Earth system science research, and validate NASA satellite data and other satellite data.</span>
+            </p>
+            <p class="flex items-start gap-3">
+              <svg class="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>An <strong class="text-globe-text">open data set</strong> available to scientists, and supporting students of all ages in doing real scientific research. Every observation you submit is accessible to researchers worldwide.</span>
+            </p>
+          </div>
+
+          <p class="mt-6 text-globe-muted">
+            Download the app and follow the instructions to get started. Always follow guidelines from your local officials.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Protocols -->
+    <section id="protocols" class="py-16 glass-section">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-globe-text mb-2">Choose Your Protocol</h2>
+          <p class="text-globe-muted">Select a protocol to start making observations</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {protocols.map((protocol) => (
+            <a href="/observe" class="group glass-card rounded-xl overflow-hidden transition-all">
+              <div class={`h-3 ${protocol.color}`}></div>
+              <div class="p-6">
+                <div class={`w-14 h-14 ${protocol.color} bg-opacity-10 rounded-xl flex items-center justify-center mb-4`}>
+                  {protocol.icon === 'cloud' && (
+                    <svg class={`w-7 h-7 ${protocol.color.replace('bg-', 'text-')}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                    </svg>
+                  )}
+                  {protocol.icon === 'bug' && (
+                    <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </svg>
+                  )}
+                  {protocol.icon === 'map' && (
+                    <svg class="w-7 h-7 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                    </svg>
+                  )}
+                  {protocol.icon === 'tree' && (
+                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                    </svg>
+                  )}
+                </div>
+                <h3 class="font-semibold text-globe-text mb-2 group-hover:text-nasa-blue transition-colors">{protocol.name}</h3>
+                <p class="text-sm text-globe-muted mb-4">{protocol.desc}</p>
+
+                <div class="flex items-center justify-between pt-4 border-t border-[color:var(--border)] text-xs">
+                  <div>
+                    <span class="text-globe-muted">This week:</span>
+                    <span class="font-semibold text-globe-text ml-1">{protocol.stats.week.toLocaleString()}</span>
+                  </div>
+                  <div>
+                    <span class="text-globe-muted">Total:</span>
+                    <span class="font-semibold text-globe-text ml-1">{protocol.stats.total}</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Data Map Section -->
+    <section class="py-16 glass-section">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="grid lg:grid-cols-3 gap-8">
+          <div class="lg:col-span-2">
+            <h2 class="text-2xl font-bold text-globe-text mb-4">Latest Data</h2>
+            <p class="text-globe-muted mb-6">Observations from citizen scientists around the world</p>
+
+            <!-- Map placeholder -->
+            <div class="glass-panel hero-surface rounded-xl h-[400px] flex items-center justify-center relative overflow-hidden">
+              <div class="absolute inset-0 opacity-30">
+                <svg class="w-full h-full" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
+                  <!-- Simplified world map dots -->
+                  <g fill="currentColor" class="text-nasa-cyan">
+                    <circle cx="200" cy="150" r="3" opacity="0.6"/>
+                    <circle cx="350" cy="180" r="4" opacity="0.8"/>
+                    <circle cx="450" cy="120" r="3" opacity="0.5"/>
+                    <circle cx="550" cy="200" r="5" opacity="0.9"/>
+                    <circle cx="650" cy="170" r="3" opacity="0.7"/>
+                    <circle cx="300" cy="250" r="4" opacity="0.6"/>
+                    <circle cx="500" cy="280" r="3" opacity="0.5"/>
+                    <circle cx="600" cy="300" r="4" opacity="0.8"/>
+                    <circle cx="180" cy="200" r="3" opacity="0.6"/>
+                    <circle cx="420" cy="160" r="5" opacity="0.9"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="text-center text-globe-muted">
+                <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p>Interactive map loads with real GLOBE API data</p>
+                <a href="#" class="inline-block mt-4 text-nasa-cyan hover:underline text-sm">View Full Map →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent measurements sidebar -->
+          <div>
+            <h3 class="text-lg font-bold text-globe-text mb-4">Recent Measurements</h3>
+            <p class="text-sm text-globe-muted mb-4">Last 7 Days</p>
+
+            <div class="space-y-3">
+              {protocols.map((protocol) => (
+                <div class="flex items-center justify-between p-3 glass-card rounded-lg">
+                  <div class="flex items-center gap-3">
+                    <div class={`w-3 h-3 ${protocol.color} rounded-full`}></div>
+                    <span class="text-sm text-globe-text">{protocol.name}</span>
+                  </div>
+                  <span class="font-semibold text-globe-text">{protocol.stats.week.toLocaleString()}</span>
+                </div>
+              ))}
+            </div>
+
+            <a href="#" class="mt-6 block text-center text-nasa-blue hover:underline text-sm">
+              Explore all data →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="py-16 glass-section">
+      <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-2xl font-bold text-globe-text mb-8">GLOBE Observer Now</h2>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- News -->
+          <div>
+            <h3 class="text-sm font-semibold text-globe-muted uppercase tracking-wider mb-4">News & Events</h3>
+            <div class="space-y-4">
+              {recentNews.map((news) => (
+                <a href="#" class="block p-4 glass-card rounded-lg transition-shadow group">
+                  <div class="flex items-start justify-between gap-4">
+                    <div>
+                      <span class="inline-block px-2 py-0.5 bg-nasa-blue/10 text-nasa-blue text-xs font-medium rounded mb-2">{news.tag}</span>
+                      <h4 class="font-medium text-globe-text group-hover:text-nasa-blue transition-colors">{news.title}</h4>
+                    </div>
+                    <span class="text-xs text-globe-muted whitespace-nowrap">{news.date}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <!-- Get Started -->
+          <div>
+            <h3 class="text-sm font-semibold text-globe-muted uppercase tracking-wider mb-4">Get Started</h3>
+            <div class="glass-panel hero-surface rounded-xl p-6">
+              <h4 class="text-xl font-bold mb-3 text-globe-text">Ready to observe?</h4>
+              <p class="text-globe-muted mb-6">Download the app, create an account, and start contributing to real scientific research.</p>
+
+              <div class="space-y-3">
+                <a href="#" class="flex items-center gap-3 glass-card rounded-lg p-3 transition-colors">
+                  <div class="w-10 h-10 bg-nasa-cyan/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-nasa-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="font-medium text-globe-text">Download the App</p>
+                    <p class="text-xs text-globe-muted">iOS & Android</p>
+                  </div>
+                </a>
+
+                <a href="#" class="flex items-center gap-3 glass-card rounded-lg p-3 transition-colors">
+                  <div class="w-10 h-10 bg-nasa-green/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-nasa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="font-medium text-globe-text">Create Account</p>
+                    <p class="text-xs text-globe-muted">Join the community</p>
+                  </div>
+                </a>
+
+                <a href="#" class="flex items-center gap-3 glass-card rounded-lg p-3 transition-colors">
+                  <div class="w-10 h-10 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="font-medium text-globe-text">Learn Protocols</p>
+                    <p class="text-xs text-globe-muted">eTraining available</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

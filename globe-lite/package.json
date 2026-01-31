@@ -12,8 +12,13 @@
     "@astrojs/svelte": "^7.2.5",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.17.1",
+    "browser-image-compression": "^2.0.2",
     "svelte": "^5.49.1",
     "tailwindcss": "^4.1.18",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "workbox-window": "^7.4.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.58.1"
   }
 }
