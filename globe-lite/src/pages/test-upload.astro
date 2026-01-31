@@ -3,75 +3,78 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ImageUploader from '../components/ImageUploader.svelte';
+
+const specs = [
+  { value: '500 KB', label: 'Max File Size' },
+  { value: '1024 px', label: 'Max Dimension' },
+  { value: 'WebP', label: 'Output Format' },
+  { value: 'Client-side', label: 'Compression' },
+];
 ---
 
-<Layout title="Test Image Upload | GLOBE Lite">
+<Layout title="Upload Demo | GLOBE Lite">
   <Header />
 
-  <main class="py-16">
-    <div class="max-w-2xl mx-auto px-4 space-y-8">
-      <div class="text-center">
-        <h1 class="text-3xl font-bold text-globe-text mb-2">Image Compression Test</h1>
-        <p class="text-globe-muted">Test the low-bandwidth image optimization</p>
+  <main>
+    <!-- Hero -->
+    <section class="py-20 px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <span class="inline-block px-3 py-1 text-xs font-medium bg-[color:var(--accent-dim)] text-nasa-cyan rounded-full mb-6">
+          Image Optimization
+        </span>
+        <h1 class="text-4xl font-bold text-globe-text mb-4">
+          Smart <span class="text-nasa-cyan">Compression</span>
+        </h1>
+        <p class="text-lg text-globe-muted max-w-2xl mx-auto">
+          Test the <strong class="text-globe-text">low-bandwidth image optimization</strong> for field submissions
+        </p>
       </div>
+    </section>
 
-      <div class="glass-card p-6">
-        <h2 class="text-lg font-semibold text-globe-text mb-4">How It Works</h2>
-        <ul class="space-y-2 text-globe-muted text-sm">
-          <li class="flex items-start gap-2">
-            <span class="text-nasa-cyan mt-0.5">1.</span>
+    <!-- Content -->
+    <div class="max-w-2xl mx-auto px-4 space-y-8 pb-16">
+      <!-- How It Works -->
+      <div class="glass-panel p-6">
+        <h3 class="text-lg font-semibold text-globe-text mb-4">How It Works</h3>
+        <ol class="space-y-3 text-globe-muted">
+          <li class="flex gap-3">
+            <span class="text-nasa-cyan font-bold">1.</span>
             <span>Select or capture an image using your camera</span>
           </li>
-          <li class="flex items-start gap-2">
-            <span class="text-nasa-cyan mt-0.5">2.</span>
+          <li class="flex gap-3">
+            <span class="text-nasa-cyan font-bold">2.</span>
             <span>Image is compressed client-side using WebP format</span>
           </li>
-          <li class="flex items-start gap-2">
-            <span class="text-nasa-cyan mt-0.5">3.</span>
+          <li class="flex gap-3">
+            <span class="text-nasa-cyan font-bold">3.</span>
             <span>Resized to max 1024px, target size under 500KB</span>
           </li>
-          <li class="flex items-start gap-2">
-            <span class="text-nasa-cyan mt-0.5">4.</span>
+          <li class="flex gap-3">
+            <span class="text-nasa-cyan font-bold">4.</span>
             <span>Ready for fast upload even on 2G/3G networks</span>
           </li>
-        </ul>
+        </ol>
       </div>
 
+      <!-- Uploader -->
       <div class="glass-panel p-6">
+        <h3 class="text-lg font-semibold text-globe-text mb-4">Try It</h3>
         <ImageUploader client:load maxSizeMB={0.5} maxDimension={1024} />
       </div>
 
-      <div class="glass-card p-6">
-        <h2 class="text-lg font-semibold text-globe-text mb-4">Technical Details</h2>
-        <div class="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <p class="text-globe-muted uppercase tracking-wide text-xs">Max File Size</p>
-            <p class="text-globe-text font-medium">500 KB</p>
+      <!-- Technical Specs -->
+      <div class="grid grid-cols-2 gap-4">
+        {specs.map((spec) => (
+          <div class="glass-card p-4 text-center">
+            <div class="text-xl font-bold text-nasa-cyan">{spec.value}</div>
+            <div class="text-sm text-globe-muted">{spec.label}</div>
           </div>
-          <div>
-            <p class="text-globe-muted uppercase tracking-wide text-xs">Max Dimension</p>
-            <p class="text-globe-text font-medium">1024 px</p>
-          </div>
-          <div>
-            <p class="text-globe-muted uppercase tracking-wide text-xs">Output Format</p>
-            <p class="text-globe-text font-medium">WebP</p>
-          </div>
-          <div>
-            <p class="text-globe-muted uppercase tracking-wide text-xs">Compression</p>
-            <p class="text-globe-text font-medium">Client-side</p>
-          </div>
-        </div>
-        <div class="mt-4 pt-4 border-t border-[color:var(--border)]">
-          <p class="text-globe-muted text-xs">
-            Uses <code class="bg-[color:var(--glass-bg-soft)] px-1 rounded">browser-image-compression</code> with Web Worker support.
-          </p>
-        </div>
+        ))}
       </div>
 
-      <div class="text-center">
-        <a href="/" class="text-nasa-cyan hover:text-nasa-blue transition-colors">
-          &larr; Back to Home
-        </a>
+      <!-- Back -->
+      <div class="text-center py-8">
+        <a href="/" class="secondary-btn">Back to Home</a>
       </div>
     </div>
   </main>

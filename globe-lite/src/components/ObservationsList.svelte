@@ -20,16 +20,16 @@
 
 <div class="space-y-4">
   {#if loading}
-    <div class="glass-card p-4 text-globe-muted">Loading observations...</div>
+    <div class="glass-card p-4" style="color: var(--text-muted);">Loading observations...</div>
   {:else if error}
-    <div class="glass-card p-4 border border-red-500/40 text-red-500">Error: {error}</div>
+    <div class="glass-card p-4" style="border: 1px solid var(--danger); color: var(--danger);">Error: {error}</div>
   {:else}
     <ul class="space-y-4">
       {#each observations as obs}
         <li class="glass-card p-4 text-sm">
-          <p><strong class="text-globe-text">Protocol:</strong> {obs.properties.protocol}</p>
-          <p><strong class="text-globe-text">Date:</strong> {new Date(obs.properties.measuredDate).toLocaleDateString()}</p>
-          <p class="text-globe-muted"><strong class="text-globe-text">Location:</strong> {obs.geometry.coordinates[1]}, {obs.geometry.coordinates[0]}</p>
+          <p><strong style="color: var(--text-primary);">Protocol:</strong> {obs.properties.protocol}</p>
+          <p><strong style="color: var(--text-primary);">Date:</strong> {new Date(obs.properties.measuredDate).toLocaleDateString()}</p>
+          <p style="color: var(--text-muted);"><strong style="color: var(--text-primary);">Location:</strong> {obs.geometry.coordinates[1]}, {obs.geometry.coordinates[0]}</p>
         </li>
       {/each}
     </ul>

@@ -4,9 +4,9 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 const stats = [
-  { label: '<200 KB load', value: 'Ultra-light' },
-  { label: 'Works offline', value: 'Field-ready' },
-  { label: '10x faster', value: '3G optimized' },
+  { value: '<200KB', label: 'Initial load', sub: '10x lighter than current' },
+  { value: '3G Ready', label: 'Field-optimized', sub: 'Works on 2G/3G networks' },
+  { value: 'Offline', label: 'Queue & sync', sub: 'No connection required' },
 ];
 
 const features = [
@@ -29,10 +29,10 @@ const features = [
 ];
 
 const steps = [
-  { title: 'Find standing water', desc: 'Identify potential mosquito habitat.' },
-  { title: 'Photograph the habitat', desc: 'Capture a clear image of the site.' },
-  { title: 'Identify species (optional)', desc: 'Note larvae or adults when possible.' },
-  { title: 'Submit observation', desc: 'Sync instantly or later offline.' },
+  { title: 'Find standing water', desc: 'Look for potential mosquito breeding habitats in your area.' },
+  { title: 'Photograph the site', desc: 'Capture clear images from multiple angles.' },
+  { title: 'Identify species', desc: 'Use the guide to identify larvae if present.' },
+  { title: 'Submit observation', desc: 'Upload instantly or queue for later sync.' },
 ];
 ---
 
@@ -43,33 +43,37 @@ const steps = [
     <!-- Hero -->
     <section class="hero-surface py-16">
       <div class="max-w-6xl mx-auto px-4">
-        <div class="grid lg:grid-cols-2 gap-10 items-center">
-          <div class="glass-panel p-8">
-            <span class="glass-badge px-3 py-1 text-xs font-semibold">Low-bandwidth prototype</span>
-            <h1 class="text-4xl lg:text-5xl font-bold text-globe-text mt-4 mb-4">
-              Global Science. Local Access.
-            </h1>
-            <p class="text-globe-muted text-lg mb-6">
-              GLOBE Observer Lite is citizen science that works everywhere—even on 2G.
-              We cut initial load from megabytes to kilobytes without sacrificing data quality.
-            </p>
-            <div class="flex flex-wrap gap-3">
-              <a href="/observe" class="bg-nasa-cyan text-nasa-dark font-semibold px-6 py-3 rounded-lg hover:bg-white transition-colors">
-                Start Observing
-              </a>
-              <a href="/compare" class="glass-btn inline-flex items-center gap-2 px-6 py-3 font-semibold">
-                See the Comparison
-              </a>
-            </div>
-          </div>
-
-          <div class="grid sm:grid-cols-3 gap-4">
+        <div class="glass-panel p-8 md:p-12 text-center max-w-4xl mx-auto">
+          <span class="glass-badge px-4 py-1.5 text-xs font-semibold tracking-wide">Low-bandwidth prototype for GeoEMERGE 2026</span>
+          <h1 class="text-4xl lg:text-6xl font-bold text-globe-text mt-6 mb-2">
+            Global Science.
+          </h1>
+          <h1 class="text-4xl lg:text-6xl font-bold text-nasa-cyan mb-6">
+            Local Access.
+          </h1>
+          <p class="text-globe-muted text-lg mb-8 max-w-2xl mx-auto">
+            GLOBE Observer Lite brings citizen science to everyone—even on 2G networks.
+            <strong class="text-globe-text">Built for limited connectivity.</strong>
+          </p>
+          
+          <!-- Stats row -->
+          <div class="grid sm:grid-cols-3 gap-4 mb-8">
             {stats.map((stat) => (
               <div class="glass-card p-4 text-center">
-                <div class="text-lg font-semibold text-globe-text">{stat.label}</div>
-                <div class="text-sm text-globe-muted">{stat.value}</div>
+                <div class="text-2xl font-bold text-nasa-cyan">{stat.value}</div>
+                <div class="text-sm font-medium text-globe-text">{stat.label}</div>
+                <div class="text-xs text-globe-muted mt-1">{stat.sub}</div>
               </div>
             ))}
+          </div>
+          
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="/observe" class="bg-nasa-cyan text-nasa-dark font-semibold px-8 py-3 rounded-xl hover:bg-white transition-colors">
+              Start Observing
+            </a>
+            <a href="/compare" class="glass-btn px-8 py-3 font-semibold">
+              See the Comparison
+            </a>
           </div>
         </div>
       </div>
@@ -80,25 +84,41 @@ const steps = [
       <div class="max-w-6xl mx-auto px-4">
         <div class="text-center mb-10">
           <h2 class="text-3xl font-bold text-globe-text">The Digital Divide in Citizen Science</h2>
-          <p class="text-globe-muted mt-3 max-w-2xl mx-auto">
-            When pages take 8 seconds on 3G, observations stop. We built a 10x faster path to participation.
-          </p>
+          <p class="text-globe-muted mt-2">Current apps assume high-speed internet. We're changing that.</p>
         </div>
         <div class="grid md:grid-cols-2 gap-8">
-          <div class="glass-card p-6 border-l-4 border-red-500/70">
-            <h3 class="text-xl font-bold text-globe-text mb-3">Current GLOBE Observer</h3>
-            <ul class="space-y-2 text-globe-muted text-sm">
-              <li>5–8 seconds on 3G</li>
-              <li>2–5 MB initial transfer</li>
-              <li>No offline mode</li>
+          <div class="glass-card p-6 border-l-4 border-red-500/50">
+            <h3 class="text-xl font-bold text-globe-text mb-4">Current GLOBE Observer</h3>
+            <ul class="space-y-3 text-globe-muted">
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-red-500/70"></span>
+                5–8 seconds on 3G
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-red-500/70"></span>
+                2–5 MB initial transfer
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-red-500/70"></span>
+                No offline mode
+              </li>
             </ul>
           </div>
-          <div class="glass-card p-6 border-l-4 border-nasa-green/70">
-            <h3 class="text-xl font-bold text-globe-text mb-3">GLOBE Observer Lite</h3>
-            <ul class="space-y-2 text-globe-muted text-sm">
-              <li>&lt;2 seconds on 3G</li>
-              <li>&lt;200 KB initial transfer</li>
-              <li>Offline-first workflow</li>
+          <div class="glass-card p-6 border-l-4 border-nasa-green/50">
+            <h3 class="text-xl font-bold text-globe-text mb-4">GLOBE Observer Lite</h3>
+            <ul class="space-y-3 text-globe-muted">
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-nasa-green/70"></span>
+                &lt;2 seconds on 3G
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-nasa-green/70"></span>
+                &lt;200 KB initial transfer
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="w-2 h-2 rounded-full bg-nasa-green/70"></span>
+                Offline-first workflow
+              </li>
             </ul>
           </div>
         </div>
@@ -128,12 +148,14 @@ const steps = [
       <div class="max-w-6xl mx-auto px-4">
         <div class="text-center mb-10">
           <h2 class="text-3xl font-bold text-globe-text">How It Works</h2>
-          <p class="text-globe-muted">Optimized for the Mosquito Habitat Mapper workflow.</p>
+          <p class="text-globe-muted mt-2">Optimized for Mosquito Habitat Mapper protocol.</p>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, index) => (
-            <div class="glass-card p-6">
-              <div class="text-sm text-nasa-cyan font-semibold mb-2">Step {index + 1}</div>
+            <div class="glass-card p-6 flex flex-col">
+              <div class="w-10 h-10 rounded-full bg-nasa-cyan/20 border border-nasa-cyan/40 flex items-center justify-center text-nasa-cyan font-bold mb-4">
+                {index + 1}
+              </div>
               <h3 class="font-semibold text-globe-text mb-2">{step.title}</h3>
               <p class="text-sm text-globe-muted">{step.desc}</p>
             </div>
