@@ -1,5 +1,8 @@
 # GLOBE Observer Lite
 
+<div align="center">
+<img src="docs/img/mosquitotracker.png" alt="MosquitoTracker">
+
 > Low-bandwidth optimized citizen science platform for NASA's GLOBE Program
 
 ## The Problem
