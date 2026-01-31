@@ -4,18 +4,39 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 ---
 
-<Layout title="Gallery - GLOBE Observer Lite">
+<Layout title="Gallery | GLOBE Observer Lite">
   <Header />
-  <main class="py-16">
-    <div class="max-w-4xl mx-auto px-4">
-      <div class="glass-card p-8">
-        <h1 class="text-3xl font-bold text-globe-text mb-3">Observation Gallery</h1>
-        <p class="text-globe-muted">View your submitted observations.</p>
-        <a href="/" class="inline-flex items-center gap-2 mt-6 text-nasa-blue hover:underline">
-          &larr; Back to Home
-        </a>
+
+  <main>
+    <!-- Hero -->
+    <section class="py-20 px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <span class="inline-block px-3 py-1 text-xs font-medium bg-[color:var(--accent-dim)] text-nasa-cyan rounded-full mb-6">
+          Your Observations
+        </span>
+        <h1 class="text-4xl font-bold text-globe-text mb-4">
+          Observation <span class="text-nasa-cyan">Gallery</span>
+        </h1>
+        <p class="text-lg text-globe-muted max-w-2xl mx-auto">
+          View and manage your submitted observations
+        </p>
+      </div>
+    </section>
+
+    <!-- Empty State -->
+    <div class="max-w-md mx-auto px-4 pb-16">
+      <div class="glass-panel p-8 text-center">
+        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-[color:var(--accent-dim)] flex items-center justify-center">
+          <svg class="w-10 h-10 text-nasa-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h2 class="text-xl font-semibold text-globe-text mb-2">No Observations Yet</h2>
+        <p class="text-globe-muted mb-6">Start observing to see your submissions here.</p>
+        <a href="/observe" class="primary-btn">Start Observing</a>
       </div>
     </div>
   </main>
+
   <Footer />
 </Layout>

@@ -2,20 +2,61 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+
+const steps = [
+  { num: '1', title: 'Select Protocol', desc: 'Choose Mosquito Habitat, Clouds, Land Cover, or Trees' },
+  { num: '2', title: 'Capture Photos', desc: 'Take photos following the protocol guidelines' },
+  { num: '3', title: 'Add Details', desc: 'Record observations and environmental data' },
+  { num: '4', title: 'Submit', desc: 'Upload instantly or queue for later sync' },
+];
 ---
 
-<Layout title="Observe - GLOBE Observer Lite">
+<Layout title="Observe | GLOBE Observer Lite">
   <Header />
-  <main class="py-16">
-    <div class="max-w-3xl mx-auto px-4">
-      <div class="glass-card p-8">
-        <h1 class="text-3xl font-bold text-globe-text mb-3">Observation Flow</h1>
-        <p class="text-globe-muted">Capture and submit your observations.</p>
-        <a href="/" class="inline-flex items-center gap-2 mt-6 text-nasa-blue hover:underline">
-          &larr; Back to Home
-        </a>
+
+  <main>
+    <!-- Hero -->
+    <section class="py-20 px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <span class="inline-block px-3 py-1 text-xs font-medium bg-[color:var(--accent-dim)] text-nasa-cyan rounded-full mb-6">
+          Coming Soon
+        </span>
+        <h1 class="text-4xl font-bold text-globe-text mb-4">
+          Make an <span class="text-nasa-cyan">Observation</span>
+        </h1>
+        <p class="text-lg text-globe-muted max-w-2xl mx-auto">
+          The full observation capture interface is under development.
+        </p>
+      </div>
+    </section>
+
+    <!-- Preview -->
+    <div class="max-w-4xl mx-auto px-4 pb-16">
+      <div class="glass-panel p-8 text-center mb-8">
+        <h2 class="text-2xl font-semibold text-globe-text mb-4">Observation Flow Preview</h2>
+        <p class="text-globe-muted mb-8">Here's how the optimized observation process will work:</p>
+
+        <div class="steps">
+          {steps.map((step) => (
+            <div class="step-card">
+              <div class="step-number">{step.num}</div>
+              <h3>{step.title}</h3>
+              <p>{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="glass-panel p-6 text-center">
+        <p class="text-globe-muted mb-4">In the meantime, explore our demos:</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="/test-upload" class="primary-btn">Test Image Compression</a>
+          <a href="/" class="secondary-btn">Back to Home</a>
+        </div>
       </div>
     </div>
   </main>
+
   <Footer />
 </Layout>

@@ -41,16 +41,16 @@
 
 {#if !isOnline || pendingCount > 0}
   <div class="fixed bottom-4 right-4 glass-card px-4 py-2 text-sm">
-    <div class="flex items-center gap-2 text-globe-text">
+    <div class="flex items-center gap-2" style="color: var(--text-primary);">
       {#if !isOnline}
         <span class="inline-flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          <span class="w-2 h-2 rounded-full" style="background: #fbbf24;"></span>
           Offline Mode
         </span>
       {/if}
       {#if pendingCount > 0}
         <span class="inline-flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-nasa-cyan"></span>
+          <span class="w-2 h-2 rounded-full" style="background: var(--accent);"></span>
           {pendingCount} pending
         </span>
       {/if}

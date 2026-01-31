@@ -55,24 +55,30 @@
 
 <div class="w-full max-w-lg mx-auto">
   <label for="file-upload" class="cursor-pointer">
-    <div class="glass-card p-8 text-center border-2 border-dashed border-[color:var(--glass-border)] hover:border-nasa-blue">
+    <div class="glass-card p-8 text-center border-2 border-dashed" style="border-color: var(--border); transition: border-color 0.3s;">
       {#if status === 'idle'}
-        <p class="text-globe-muted">Tap to select or take a photo</p>
+        <p style="color: var(--text-muted);">Tap to select or take a photo</p>
       {:else if status === 'compressing'}
-        <p class="text-globe-text">Compressing...</p>
-        <div class="w-full bg-[color:var(--surface-soft)] rounded-full h-2.5 mt-2">
-          <div class="bg-nasa-blue h-2.5 rounded-full animate-pulse"></div>
+        <p style="color: var(--text-primary);">Compressing...</p>
+        <div class="w-full rounded-full h-2.5 mt-2" style="background: var(--bg-tertiary);">
+          <div class="h-2.5 rounded-full animate-pulse" style="background: var(--accent);"></div>
         </div>
       {:else if status === 'ready'}
         <img src={previewUrl} alt="Preview" class="mx-auto h-32 rounded-lg"/>
-        <p class="mt-2 text-sm text-globe-muted">
+        <p class="mt-2 text-sm" style="color: var(--text-muted);">
           Original: {formatBytes(originalSize)} | Compressed: {formatBytes(compressedSize)}
-          <span class="text-nasa-green font-bold ml-2">({compressionRatio}% reduction)</span>
+          <span class="font-bold ml-2" style="color: var(--accent);">({compressionRatio}% reduction)</span>
         </p>
       {:else if status === 'error'}
-        <p class="text-nasa-red">Compression failed. Please try another image.</p>
+        <p style="color: var(--danger);">Compression failed. Please try another image.</p>
       {/if}
     </div>
   </label>
   <input id="file-upload" type="file" class="hidden" accept="image/*" capture="environment" on:change={handleFileSelect} />
 </div>
+
+<style>
+  .glass-card:hover {
+    border-color: var(--accent) !important;
+  }
+</style>

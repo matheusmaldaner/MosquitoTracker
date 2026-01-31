@@ -66,42 +66,43 @@
 
 [data-theme="light"] {
   color-scheme: light;
-  --bg-primary: #f3f5f9;
-  --bg-secondary: rgba(255, 255, 255, 0.9);
-  --bg-tertiary: rgba(255, 255, 255, 0.75);
-  --surface-soft: rgba(15, 23, 42, 0.05);
+  --bg-primary: #f0f4f8;
+  --bg-secondary: rgba(255, 255, 255, 0.6);
+  --bg-tertiary: rgba(255, 255, 255, 0.45);
+  --surface-soft: rgba(15, 23, 42, 0.03);
 
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-muted: #64748b;
 
-  --border: rgba(15, 23, 42, 0.08);
-  --border-strong: rgba(15, 23, 42, 0.16);
+  --border: rgba(15, 23, 42, 0.06);
+  --border-strong: rgba(15, 23, 42, 0.12);
 
   --accent: var(--color-nasa-blue);
   --accent-strong: var(--color-nasa-cyan);
   --accent-glow: rgba(16, 91, 216, 0.18);
 
-  --glass-bg: rgba(255, 255, 255, 0.72);
-  --glass-bg-strong: rgba(255, 255, 255, 0.88);
-  --glass-bg-soft: rgba(255, 255, 255, 0.5);
-  --glass-border: rgba(255, 255, 255, 0.7);
-  --glass-border-strong: rgba(255, 255, 255, 0.9);
-  --glass-highlight: rgba(255, 255, 255, 0.95);
-  --glass-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
-  --glass-shadow-soft: 0 12px 40px rgba(15, 23, 42, 0.08);
+  /* Apple-style liquid glass - more transparent */
+  --glass-bg: rgba(255, 255, 255, 0.35);
+  --glass-bg-strong: rgba(255, 255, 255, 0.45);
+  --glass-bg-soft: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-border-strong: rgba(255, 255, 255, 0.7);
+  --glass-highlight: rgba(255, 255, 255, 0.8);
+  --glass-shadow: 0 8px 32px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  --glass-shadow-soft: 0 4px 24px rgba(15, 23, 42, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
 
-  --orb-1: rgba(2, 191, 231, 0.18);
-  --orb-2: rgba(16, 91, 216, 0.14);
-  --orb-3: rgba(255, 157, 30, 0.12);
-  --orb-4: rgba(46, 133, 64, 0.12);
+  --orb-1: rgba(2, 191, 231, 0.25);
+  --orb-2: rgba(16, 91, 216, 0.2);
+  --orb-3: rgba(255, 157, 30, 0.15);
+  --orb-4: rgba(46, 133, 64, 0.15);
 
-  --hero-start: #e8f0ff;
-  --hero-mid: #f4f7ff;
-  --hero-end: #e8f6ff;
+  --hero-start: #dbeafe;
+  --hero-mid: #e0f2fe;
+  --hero-end: #ecfeff;
 
-  --cta-start: #e7f0ff;
-  --cta-end: #f7fbff;
+  --cta-start: #e0f2fe;
+  --cta-end: #f0f9ff;
 }
 
 html {
@@ -168,13 +169,13 @@ h3,
   background: linear-gradient(135deg, var(--cta-start) 0%, var(--cta-end) 100%);
 }
 
-/* Full-width glass section */
+/* Full-width glass section - Apple liquid glass */
 .glass-section {
-  background: linear-gradient(135deg, var(--glass-bg-strong) 0%, var(--glass-bg-soft) 100%);
+  background: linear-gradient(135deg, var(--glass-bg-soft) 0%, transparent 100%);
   border-top: 1px solid var(--glass-border);
   border-bottom: 1px solid var(--glass-border);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
   position: relative;
   overflow: hidden;
 }
@@ -183,19 +184,19 @@ h3,
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 55%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, transparent 40%);
   pointer-events: none;
 }
 
-/* Large glass panel */
+/* Large glass panel - Apple liquid glass */
 .glass-panel,
 .liquid-glass-lg {
-  background: linear-gradient(135deg, var(--glass-bg-strong) 0%, var(--glass-bg) 100%);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  background: linear-gradient(135deg, var(--glass-bg) 0%, var(--glass-bg-soft) 100%);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-xl);
-  box-shadow: var(--glass-shadow-soft);
+  box-shadow: var(--glass-shadow);
   position: relative;
   overflow: hidden;
 }
@@ -205,25 +206,38 @@ h3,
   content: "";
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 5%;
+  right: 5%;
   height: 1px;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0),
+    transparent,
     var(--glass-highlight),
-    rgba(255, 255, 255, 0)
+    transparent
   );
-  opacity: 0.7;
+  opacity: 0.8;
   pointer-events: none;
 }
 
-/* Base liquid glass card */
+.glass-panel::after,
+.liquid-glass-lg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+/* Base liquid glass card - Apple style */
 .glass-card,
 .liquid-glass {
-  background: linear-gradient(135deg, var(--glass-bg-strong) 0%, var(--glass-bg) 100%);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background: linear-gradient(135deg, var(--glass-bg) 0%, var(--glass-bg-soft) 100%);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   position: relative;
@@ -243,9 +257,10 @@ h3,
   top: 0;
   left: 0;
   right: 0;
-  height: 50%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, transparent 100%);
+  height: 60%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
   pointer-events: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .glass-card::after,
@@ -253,26 +268,26 @@ h3,
   content: "";
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 10%;
+  right: 10%;
   height: 1px;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0),
+    transparent,
     var(--glass-highlight),
-    rgba(255, 255, 255, 0)
+    transparent
   );
   pointer-events: none;
 }
 
 .glass-card:hover,
 .liquid-glass:hover {
-  background: linear-gradient(135deg, var(--glass-bg-strong) 0%, var(--glass-bg-strong) 100%);
+  background: linear-gradient(135deg, var(--glass-bg-strong) 0%, var(--glass-bg) 100%);
   border-color: var(--glass-border-strong);
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1.01);
   box-shadow:
     var(--glass-shadow),
-    0 0 40px var(--accent-glow);
+    0 0 30px var(--accent-glow);
 }
 
 /* Lighter glass card */
