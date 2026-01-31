@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">GLOBE Observer Lite</string>
-    <string name="title_activity_main">GLOBE Observer Lite</string>
-    <string name="package_name">com.globe.observerlite</string>
-    <string name="custom_url_scheme">com.globe.observerlite</string>
-</resources>
