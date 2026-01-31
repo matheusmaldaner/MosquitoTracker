@@ -1,8 +1,0 @@
-{
-  "appId": "com.globe.observerlite",
-  "appName": "GLOBE Observer Lite",
-  "webDir": "globe-lite/dist",
-  "server": {
-    "androidScheme": "https"
-  }
-}
