@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "cd globe-lite && npm install && npm run build",
+  "outputDirectory": "globe-lite/.vercel/output",
+  "framework": null,
+  "installCommand": "cd globe-lite && npm install"
+}
