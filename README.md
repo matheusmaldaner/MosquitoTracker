@@ -170,13 +170,35 @@ Embed the interactive map in any website:
 The app integrates with the [GLOBE API](https://api.globe.gov/search/swagger-ui.html) for:
 
 - Fetching existing observations (GeoJSON format)
-- Submitting new observations (requires API key)
+- Submitting new observations (requires API key + approved app)
 - Protocol support: Clouds, Mosquito Habitat, Land Cover, Tree Heights, Sky Conditions
+
+Important notes:
+- The Search API in the Swagger UI is read-only (GET queries). You do not create those endpoints.
+- Uploads are a separate submission API that requires approval and developer credentials.
+- This app adds **proxy endpoints** (`/api/globe/*` and `/api/globe-upload`) to avoid CORS and keep keys server-side.
 
 ### API Endpoint
 ```
 https://api.globe.gov/search/v1/measurement/?protocols=mosquito_habitat_mapper
 ```
+
+### Quick Tutorial
+
+Read-only (no auth):
+1. `cd globe-lite && npm install && npm run dev`
+2. Use pages like `/observer` and `/test-api` to fetch live data.
+3. No env vars required if you only read data.
+
+Enable uploads (requires credentials):
+1. Obtain a GLOBE developer key/access per the submission API.
+2. Set env vars (example):
+   ```bash
+   GLOBE_API_KEY=your_key
+   GLOBE_API_KEY_HEADER=x-api-key
+   GLOBE_UPLOAD_URL=your_upload_endpoint
+   ```
+3. The app will submit through `/api/globe-upload` (server-side proxy).
 
 ## Scientific Basis
 
