@@ -7,10 +7,14 @@ const API_KEY = import.meta.env.GLOBE_API_KEY || '';
 const API_KEY_HEADER = import.meta.env.GLOBE_API_KEY_HEADER || 'x-api-key';
 
 export const ALL: APIRoute = async ({ request, params }) => {
-  const path = Array.isArray(params.path) ? params.path.join('/') : params.path || '';
-  const baseUrl = API_BASE.endsWith('/') ? API_BASE : `${API_BASE}/`;
+  const rawPath = Array.isArray(params.path) ? params.path.join('/') : params.path || '';
+  // Normalize: remove leading/trailing slashes, then add single leading slash
+  const path = '/' + rawPath.replace(/^\/+|\/+$/g, '');
+  const baseUrl = API_BASE.replace(/\/+$/, ''); // Remove trailing slashes
   const expectedOrigin = new URL(API_BASE).origin;
-  const targetUrl = new URL(path.replace(/^\//, ''), baseUrl);
+  const targetUrl = new URL(path, baseUrl);
+
+  console.log('[GLOBE Proxy] Path:', path, '-> Target:', targetUrl.toString());
 
   // Prevent SSRF: ensure the target URL stays within the expected API origin
   if (targetUrl.origin !== expectedOrigin) {

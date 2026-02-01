@@ -192,10 +192,20 @@
                 geojson: 'TRUE',
                 sample: 'FALSE'
             });
-            const url = `/api/globe/search/v1/measurement/protocol/measureddate/?${params.toString()}`;
+
+            // Try proxy first, fallback to direct API (GLOBE API supports CORS)
+            const proxyUrl = `/api/globe/search/v1/measurement/protocol/measureddate/?${params.toString()}`;
+            const directUrl = `https://api.globe.gov/search/v1/measurement/protocol/measureddate/?${params.toString()}`;
 
             try {
-                const response = await fetch(url);
+                let response = await fetch(proxyUrl);
+
+                // If proxy fails, try direct API
+                if (!response.ok) {
+                    console.log('Proxy failed, trying direct GLOBE API...');
+                    response = await fetch(directUrl);
+                }
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('GLOBE API error:', response.status, errorText);
@@ -206,7 +216,16 @@
                 const data = await response.json();
                 return data;
             } catch (error) {
-                console.error('Failed to fetch GLOBE data:', error);
+                console.error('Proxy failed, trying direct GLOBE API...', error);
+                // Fallback to direct API call
+                try {
+                    const response = await fetch(directUrl);
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                } catch (directError) {
+                    console.error('Direct API also failed:', directError);
+                }
                 document.getElementById('count').textContent = 'Offline';
                 return null;
             }
