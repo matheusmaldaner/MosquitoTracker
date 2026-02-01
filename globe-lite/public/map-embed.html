@@ -54,11 +54,20 @@
       margin-right: 8px;
     }
 
-    .legend {
+    /* Legend container to stack legends vertically */
+    .legend-container {
       position: absolute;
       bottom: 30px;
       left: 10px;
       z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+    }
+
+    .legend {
       background: white;
       padding: 12px;
       border-radius: 8px;
@@ -164,10 +173,6 @@
     }
 
     .satellite-legend {
-      position: absolute;
-      bottom: 140px;
-      left: 10px;
-      z-index: 1000;
       background: white;
       padding: 12px;
       border-radius: 8px;
@@ -251,50 +256,52 @@
     </label>
   </div>
 
-  <div class="legend">
-    <h4>Mosquito Species</h4>
-    <div class="legend-item">
-      <div class="legend-color" style="background: #e74c3c;"></div>
-      <span>Aedes (Dengue, Zika)</span>
+  <div class="legend-container">
+    <div class="satellite-legend" id="satellite-legend">
+      <h4>NASA Satellite Data</h4>
+      <div class="legend-item" id="legend-ndvi" style="display:none;">
+        <span class="legend-gradient" style="background: linear-gradient(to right, #8B4513, #FFFF00, #228B22);"></span>
+        <span>NDVI: Low - High vegetation</span>
+      </div>
+      <div class="legend-item" id="legend-temp" style="display:none;">
+        <span class="legend-gradient" style="background: linear-gradient(to right, #0000FF, #00FFFF, #FFFF00, #FF0000);"></span>
+        <span>Temp: Cold - Hot</span>
+      </div>
+      <div class="legend-item" id="legend-precip" style="display:none;">
+        <span class="legend-gradient" style="background: linear-gradient(to right, #FFFFFF, #87CEEB, #0000FF, #00008B);"></span>
+        <span>Precip: Dry - Heavy rain</span>
+      </div>
+      <div class="legend-item" id="legend-water" style="display:none;">
+        <span class="legend-gradient" style="background: #0066CC;"></span>
+        <span>Water Bodies (blue)</span>
+      </div>
+      <div class="legend-item" id="legend-flood" style="display:none;">
+        <span class="legend-gradient" style="background: linear-gradient(to right, #FF6600, #FF0000);"></span>
+        <span>Flood: Recent flooding</span>
+      </div>
+      <div class="data-date" id="satellite-date">
+        Data from: Loading...
+      </div>
     </div>
-    <div class="legend-item">
-      <div class="legend-color" style="background: #9b59b6;"></div>
-      <span>Anopheles (Malaria)</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-color" style="background: #3498db;"></div>
-      <span>Culex (West Nile)</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-color" style="background: #95a5a6;"></div>
-      <span>Unknown/Other</span>
-    </div>
-  </div>
 
-  <div class="satellite-legend" id="satellite-legend">
-    <h4>NASA Satellite Data</h4>
-    <div class="legend-item" id="legend-ndvi" style="display:none;">
-      <span class="legend-gradient" style="background: linear-gradient(to right, #8B4513, #FFFF00, #228B22);"></span>
-      <span>NDVI: Low - High vegetation</span>
-    </div>
-    <div class="legend-item" id="legend-temp" style="display:none;">
-      <span class="legend-gradient" style="background: linear-gradient(to right, #0000FF, #00FFFF, #FFFF00, #FF0000);"></span>
-      <span>Temp: Cold - Hot</span>
-    </div>
-    <div class="legend-item" id="legend-precip" style="display:none;">
-      <span class="legend-gradient" style="background: linear-gradient(to right, #FFFFFF, #87CEEB, #0000FF, #00008B);"></span>
-      <span>Precip: Dry - Heavy rain</span>
-    </div>
-    <div class="legend-item" id="legend-water" style="display:none;">
-      <span class="legend-gradient" style="background: #0066CC;"></span>
-      <span>Water Bodies (blue)</span>
-    </div>
-    <div class="legend-item" id="legend-flood" style="display:none;">
-      <span class="legend-gradient" style="background: linear-gradient(to right, #FF6600, #FF0000);"></span>
-      <span>Flood: Recent flooding</span>
-    </div>
-    <div class="data-date" id="satellite-date">
-      Data from: Loading...
+    <div class="legend">
+      <h4>Mosquito Species</h4>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #e74c3c;"></div>
+        <span>Aedes (Dengue, Zika)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #9b59b6;"></div>
+        <span>Anopheles (Malaria)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #3498db;"></div>
+        <span>Culex (West Nile)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #95a5a6;"></div>
+        <span>Unknown/Other</span>
+      </div>
     </div>
   </div>
 
