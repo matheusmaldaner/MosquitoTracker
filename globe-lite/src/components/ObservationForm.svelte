@@ -27,14 +27,6 @@
   let submitMessage = '';
   let submitError = false;
 
-  const protocols = [
-    { id: 'clouds', name: 'Clouds', icon: Cloud },
-    { id: 'mosquito_habitat_mapper', name: 'Mosquito Habitat', icon: Bug },
-    { id: 'land_covers', name: 'Land Cover', icon: Leaf },
-    { id: 'tree_heights', name: 'Tree Heights', icon: TreePine },
-    { id: 'sky_conditions', name: 'Sky Conditions', icon: Sun },
-  ];
-
   onMount(() => {
     getLocation();
   });
@@ -184,23 +176,61 @@
   }
 </script>
 
-<form on:submit|preventDefault={handleSubmit} class="space-y-6">
+<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-6">
   <!-- Protocol Selection -->
   <div>
     <label class="block text-sm font-medium text-globe-text mb-2">Protocol</label>
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-      {#each protocols as p}
-        <button
-          type="button"
-          class="p-3 rounded-lg border-2 transition-all text-left {protocol === p.id
-            ? 'border-nasa-blue bg-nasa-blue/10'
-            : 'border-[color:var(--glass-border)] hover:border-nasa-blue/50'}"
-          on:click={() => (protocol = p.id)}
-        >
-          <svelte:component this={p.icon} class="w-5 h-5 mb-1 {protocol === p.id ? 'text-nasa-blue' : 'text-globe-muted'}" />
-          <span class="block text-sm font-medium">{p.name}</span>
-        </button>
-      {/each}
+      <button
+        type="button"
+        class="p-3 rounded-lg border-2 transition-all text-left {protocol === 'clouds'
+          ? 'border-nasa-blue bg-nasa-blue/10'
+          : 'border-[color:var(--glass-border)] hover:border-nasa-blue/50'}"
+        onclick={() => (protocol = 'clouds')}
+      >
+        <Cloud class="w-5 h-5 mb-1 {protocol === 'clouds' ? 'text-nasa-blue' : 'text-globe-muted'}" />
+        <span class="block text-sm font-medium">Clouds</span>
+      </button>
+      <button
+        type="button"
+        class="p-3 rounded-lg border-2 transition-all text-left {protocol === 'mosquito_habitat_mapper'
+          ? 'border-nasa-blue bg-nasa-blue/10'
+          : 'border-[color:var(--glass-border)] hover:border-nasa-blue/50'}"
+        onclick={() => (protocol = 'mosquito_habitat_mapper')}
+      >
+        <Bug class="w-5 h-5 mb-1 {protocol === 'mosquito_habitat_mapper' ? 'text-nasa-blue' : 'text-globe-muted'}" />
+        <span class="block text-sm font-medium">Mosquito Habitat</span>
+      </button>
+      <button
+        type="button"
+        class="p-3 rounded-lg border-2 transition-all text-left {protocol === 'land_covers'
+          ? 'border-nasa-blue bg-nasa-blue/10'
+          : 'border-[color:var(--glass-border)] hover:border-nasa-blue/50'}"
+        onclick={() => (protocol = 'land_covers')}
+      >
+        <Leaf class="w-5 h-5 mb-1 {protocol === 'land_covers' ? 'text-nasa-blue' : 'text-globe-muted'}" />
+        <span class="block text-sm font-medium">Land Cover</span>
+      </button>
+      <button
+        type="button"
+        class="p-3 rounded-lg border-2 transition-all text-left {protocol === 'tree_heights'
+          ? 'border-nasa-blue bg-nasa-blue/10'
+          : 'border-[color:var(--glass-border)] hover:border-nasa-blue/50'}"
+        onclick={() => (protocol = 'tree_heights')}
+      >
+        <TreePine class="w-5 h-5 mb-1 {protocol === 'tree_heights' ? 'text-nasa-blue' : 'text-globe-muted'}" />
+        <span class="block text-sm font-medium">Tree Heights</span>
+      </button>
+      <button
+        type="button"
+        class="p-3 rounded-lg border-2 transition-all text-left {protocol === 'sky_conditions'
+          ? 'border-nasa-blue bg-nasa-blue/10'
+          : 'border-[color:var(--glass-border)] hover:border-nasa-blue/50'}"
+        onclick={() => (protocol = 'sky_conditions')}
+      >
+        <Sun class="w-5 h-5 mb-1 {protocol === 'sky_conditions' ? 'text-nasa-blue' : 'text-globe-muted'}" />
+        <span class="block text-sm font-medium">Sky Conditions</span>
+      </button>
     </div>
   </div>
 
@@ -223,7 +253,7 @@
           <button
             type="button"
             class="text-nasa-blue hover:underline text-sm flex items-center gap-1"
-            on:click={getLocation}
+            onclick={getLocation}
           >
             <RefreshCw class="w-3 h-3" />
             Refresh
@@ -235,7 +265,7 @@
           <button
             type="button"
             class="text-nasa-blue hover:underline text-sm flex items-center gap-1"
-            on:click={getLocation}
+            onclick={getLocation}
           >
             <RefreshCw class="w-3 h-3" />
             Retry
@@ -245,7 +275,7 @@
         <button
           type="button"
           class="text-nasa-blue hover:underline flex items-center gap-1"
-          on:click={getLocation}
+          onclick={getLocation}
         >
           <MapPin class="w-4 h-4" />
           Get Location
@@ -268,7 +298,7 @@
           class="hidden"
           accept="image/*"
           capture="environment"
-          on:change={handleImageSelect}
+          onchange={handleImageSelect}
         />
       </label>
     {:else if imageStatus === 'compressing'}
@@ -286,7 +316,7 @@
           <button
             type="button"
             class="absolute top-2 right-2 bg-nasa-red text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-700"
-            on:click={clearImage}
+            onclick={clearImage}
           >
             <X class="w-4 h-4" />
           </button>
@@ -303,7 +333,7 @@
         <button
           type="button"
           class="mt-2 text-nasa-blue hover:underline"
-          on:click={clearImage}
+          onclick={clearImage}
         >
           Try again
         </button>

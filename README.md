@@ -20,11 +20,12 @@ GLOBE Observer Lite is a lightweight reimagining of the NASA GLOBE Observer app,
 
 ### Key Features
 
-- **Ultra-lightweight**: < 200KB initial load (vs 2-5MB for standard apps)
+- **Ultra-lightweight**: < 200KB initial load (vs 15MB for current site)
+- **Perfect Lighthouse score**: 100/100/100/100 (vs 81/93/88/77)
+- **6x faster load time**: 0.5s LCP vs 3.0s
 - **Offline-first**: Queue observations and sync when online
 - **Smart compression**: Client-side WebP conversion (70-90% size reduction)
 - **Mobile-ready**: Native iOS/Android apps via Capacitor
-- **Background sync**: Service Worker handles uploads automatically
 
 ## Live Demo
 
@@ -39,12 +40,19 @@ Then visit `http://localhost:4321`
 
 ## Performance Comparison
 
-| Metric | Standard App | Our App | Improvement |
-|--------|--------------|------------|-------------|
-| Initial Load | 2-5 MB | < 200 KB | **10-25x** |
-| Time on 3G | 5-8 sec | < 2 sec | **4x faster** |
-| Offline Support | No | Yes | **Full** |
-| Image Upload | 2-5 MB | < 500 KB | **5-10x** |
+*Lighthouse scores measured Feb 1, 2026 using Lighthouse 13.0.1*
+
+| Metric | observer.globe.gov | GLOBE Lite | Improvement |
+|--------|-------------------|------------|-------------|
+| **Lighthouse Performance** | 81 | 100 | **+19 points** |
+| **Lighthouse Accessibility** | 93 | 100 | **+7 points** |
+| **Lighthouse Best Practices** | 88 | 100 | **+12 points** |
+| **Lighthouse SEO** | 77 | 100 | **+23 points** |
+| **Network Payload** | 15,149 KB | ~200 KB | **75x smaller** |
+| **LCP (Load Time)** | 3.0 sec | 0.5 sec | **6x faster** |
+| **FCP** | 0.9 sec | 0.5 sec | **1.8x faster** |
+| **Offline Support** | No | Yes | **Full PWA** |
+| **Image Upload Size** | N/A | < 500 KB | **Compressed** |
 
 ## Features
 

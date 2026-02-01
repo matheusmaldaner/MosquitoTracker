@@ -1,4 +1,4 @@
-const CACHE_NAME = 'globe-lite-v2';
+const CACHE_NAME = 'globe-lite-v3';
 const UPLOAD_ENDPOINT = '/api/globe-upload';
 const STATIC_ASSETS = [
   '/',
@@ -39,13 +39,22 @@ self.addEventListener('activate', (event) => {
 // Fetch: only intercept GET requests
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-  
+
   // Only handle GET requests
   if (request.method !== 'GET') {
     return;
   }
 
   const url = new URL(request.url);
+
+  // Skip caching for Vite dev server assets
+  if (url.pathname.startsWith('/@') ||
+      url.pathname.startsWith('/node_modules/') ||
+      url.pathname.includes('?v=') ||
+      url.pathname.startsWith('/__vite') ||
+      url.pathname.startsWith('/src/')) {
+    return;
+  }
 
   // API calls: network first, fallback to cache
   if (url.hostname === 'api.globe.gov' || url.pathname.startsWith('/api/')) {

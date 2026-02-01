@@ -4,8 +4,8 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 const stats = [
-  { value: '<200KB', label: 'Initial load', sub: '10x lighter than current' },
-  { value: '3G Ready', label: 'Field-optimized', sub: 'Works on 2G/3G networks' },
+  { value: '<200KB', label: 'Initial load', sub: '75x lighter than current' },
+  { value: '6x Faster', label: 'Load time', sub: '0.5s vs 3.0s LCP' },
   { value: 'Offline', label: 'Queue & sync', sub: 'No connection required' },
 ];
 
@@ -89,14 +89,17 @@ const steps = [
         <div class="grid md:grid-cols-2 gap-8">
           <div class="glass-card p-6 border-l-4 border-red-500/50">
             <h3 class="text-xl font-bold text-globe-text mb-4">Current GLOBE Observer</h3>
+            <div class="flex gap-2 mb-4">
+              <span class="text-xs px-2 py-1 rounded bg-orange-500/20 text-orange-400">Lighthouse: 81</span>
+            </div>
             <ul class="space-y-3 text-globe-muted">
               <li class="flex items-center gap-3">
                 <span class="w-2 h-2 rounded-full bg-red-500/70"></span>
-                5–8 seconds on 3G
+                3.0s Largest Contentful Paint
               </li>
               <li class="flex items-center gap-3">
                 <span class="w-2 h-2 rounded-full bg-red-500/70"></span>
-                2–5 MB initial transfer
+                15 MB network payload
               </li>
               <li class="flex items-center gap-3">
                 <span class="w-2 h-2 rounded-full bg-red-500/70"></span>
@@ -106,14 +109,17 @@ const steps = [
           </div>
           <div class="glass-card p-6 border-l-4 border-nasa-green/50">
             <h3 class="text-xl font-bold text-globe-text mb-4">GLOBE Observer Lite</h3>
+            <div class="flex gap-2 mb-4">
+              <span class="text-xs px-2 py-1 rounded bg-green-500/20 text-green-400">Lighthouse: 100</span>
+            </div>
             <ul class="space-y-3 text-globe-muted">
               <li class="flex items-center gap-3">
                 <span class="w-2 h-2 rounded-full bg-nasa-green/70"></span>
-                &lt;2 seconds on 3G
+                0.5s Largest Contentful Paint
               </li>
               <li class="flex items-center gap-3">
                 <span class="w-2 h-2 rounded-full bg-nasa-green/70"></span>
-                &lt;200 KB initial transfer
+                ~200 KB network payload
               </li>
               <li class="flex items-center gap-3">
                 <span class="w-2 h-2 rounded-full bg-nasa-green/70"></span>
