@@ -156,41 +156,18 @@ import Footer from '../components/Footer.astro';
         </div>
       </section>
 
-      <!-- Live Test Section -->
+      <!-- Run Lighthouse Yourself -->
       <section class="glass-panel p-8">
-        <h2 class="text-2xl font-bold text-globe-text mb-3">Try It Yourself</h2>
+        <h2 class="text-2xl font-bold text-globe-text mb-3">Run Lighthouse Yourself</h2>
         <p class="text-globe-muted mb-4">
-          Open Chrome DevTools → Network → Throttle to &quot;Slow 3G&quot; → Reload this page
+          Verify these scores by running Google Lighthouse on both sites:
         </p>
-        <div class="glass-card p-4 font-mono text-sm text-globe-muted">
-          <p>1. Press F12 (or Cmd+Option+I on Mac)</p>
-          <p>2. Go to Network tab</p>
-          <p>3. Select &quot;Slow 3G&quot; from dropdown</p>
-          <p>4. Reload and watch the difference</p>
-        </div>
-      </section>
-
-      <!-- Visual Comparison -->
-      <section>
-        <h2 class="text-2xl font-bold text-center text-globe-text mb-8">Visual Comparison</h2>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="glass-card overflow-hidden">
-            <div class="px-4 py-2 text-sm font-mono text-globe-muted border-b border-[color:var(--border)]">
-              observer.globe.gov
-            </div>
-            <div class="h-64 flex items-center justify-center text-globe-muted">
-              <p>Current site screenshot here</p>
-            </div>
-          </div>
-
-          <div class="glass-card overflow-hidden border border-nasa-green/40">
-            <div class="px-4 py-2 text-sm font-mono text-nasa-green border-b border-[color:var(--border)]">
-              GLOBE Observer Lite
-            </div>
-            <div class="h-64 flex items-center justify-center text-globe-muted">
-              <p>Our version screenshot here</p>
-            </div>
-          </div>
+        <div class="glass-card p-4 font-mono text-sm text-globe-muted space-y-2">
+          <p>1. Open Chrome DevTools (F12 or Cmd+Option+I)</p>
+          <p>2. Go to the <strong class="text-globe-text">Lighthouse</strong> tab</p>
+          <p>3. Select "Navigation" mode and check all categories</p>
+          <p>4. Click <strong class="text-globe-text">"Analyze page load"</strong></p>
+          <p>5. Compare results between <a href="https://observer.globe.gov" target="_blank" class="text-nasa-cyan hover:underline">observer.globe.gov</a> and <a href="https://mosquito-tracker.vercel.app" target="_blank" class="text-nasa-cyan hover:underline">mosquito-tracker.vercel.app</a></p>
         </div>
       </section>
 
