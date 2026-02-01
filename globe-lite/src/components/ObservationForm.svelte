@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import imageCompression from 'browser-image-compression';
+  import { Cloud, Bug, Leaf, TreePine, Sun, MapPin, Loader2, RefreshCw, Camera, X, Upload } from 'lucide-svelte';
 
   // Props
   export let onSubmitSuccess = () => {};
@@ -27,11 +28,11 @@
   let submitError = false;
 
   const protocols = [
-    { id: 'clouds', name: 'Clouds', icon: '☁️' },
-    { id: 'mosquito_habitat_mapper', name: 'Mosquito Habitat', icon: '🦟' },
-    { id: 'land_covers', name: 'Land Cover', icon: '🌿' },
-    { id: 'tree_heights', name: 'Tree Heights', icon: '🌲' },
-    { id: 'sky_conditions', name: 'Sky Conditions', icon: '🌤️' },
+    { id: 'clouds', name: 'Clouds', icon: Cloud },
+    { id: 'mosquito_habitat_mapper', name: 'Mosquito Habitat', icon: Bug },
+    { id: 'land_covers', name: 'Land Cover', icon: Leaf },
+    { id: 'tree_heights', name: 'Tree Heights', icon: TreePine },
+    { id: 'sky_conditions', name: 'Sky Conditions', icon: Sun },
   ];
 
   onMount(() => {
@@ -178,8 +179,8 @@
             : 'border-[color:var(--glass-border)] hover:border-nasa-blue/50'}"
           on:click={() => (protocol = p.id)}
         >
-          <span class="text-xl">{p.icon}</span>
-          <span class="block text-sm mt-1">{p.name}</span>
+          <svelte:component this={p.icon} class="w-5 h-5 mb-1 {protocol === p.id ? 'text-nasa-blue' : 'text-globe-muted'}" />
+          <span class="block text-sm font-medium">{p.name}</span>
         </button>
       {/each}
     </div>
@@ -191,20 +192,22 @@
     <div class="glass-card p-4">
       {#if locationStatus === 'loading'}
         <div class="flex items-center gap-2 text-globe-muted">
-          <span class="animate-spin">📍</span>
+          <Loader2 class="w-4 h-4 animate-spin" />
           Getting location...
         </div>
       {:else if locationStatus === 'success'}
         <div class="flex items-center justify-between">
-          <div class="text-sm">
+          <div class="text-sm flex items-center gap-1">
+            <MapPin class="w-4 h-4 text-nasa-blue" />
             <span class="text-globe-muted">Lat:</span> {latitude?.toFixed(5)}
             <span class="text-globe-muted ml-3">Lng:</span> {longitude?.toFixed(5)}
           </div>
           <button
             type="button"
-            class="text-nasa-blue hover:underline text-sm"
+            class="text-nasa-blue hover:underline text-sm flex items-center gap-1"
             on:click={getLocation}
           >
+            <RefreshCw class="w-3 h-3" />
             Refresh
           </button>
         </div>
@@ -213,19 +216,21 @@
           <span class="text-nasa-red text-sm">{locationError}</span>
           <button
             type="button"
-            class="text-nasa-blue hover:underline text-sm"
+            class="text-nasa-blue hover:underline text-sm flex items-center gap-1"
             on:click={getLocation}
           >
+            <RefreshCw class="w-3 h-3" />
             Retry
           </button>
         </div>
       {:else}
         <button
           type="button"
-          class="text-nasa-blue hover:underline"
+          class="text-nasa-blue hover:underline flex items-center gap-1"
           on:click={getLocation}
         >
-          📍 Get Location
+          <MapPin class="w-4 h-4" />
+          Get Location
         </button>
       {/if}
     </div>
@@ -237,7 +242,7 @@
     {#if imageStatus === 'idle'}
       <label class="block cursor-pointer">
         <div class="glass-card p-8 text-center border-2 border-dashed border-[color:var(--glass-border)] hover:border-nasa-blue transition-colors">
-          <span class="text-4xl">📷</span>
+          <Camera class="w-10 h-10 mx-auto text-globe-muted" />
           <p class="text-globe-muted mt-2">Tap to capture or select photo</p>
         </div>
         <input
@@ -250,7 +255,7 @@
       </label>
     {:else if imageStatus === 'compressing'}
       <div class="glass-card p-8 text-center">
-        <div class="animate-spin text-4xl mb-2">⏳</div>
+        <Loader2 class="w-8 h-8 animate-spin text-nasa-blue mx-auto mb-2" />
         <p class="text-globe-muted">Compressing image...</p>
         <div class="w-full bg-[color:var(--surface-soft)] rounded-full h-2 mt-3">
           <div class="bg-nasa-blue h-2 rounded-full animate-pulse w-3/4"></div>
@@ -265,7 +270,7 @@
             class="absolute top-2 right-2 bg-nasa-red text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-700"
             on:click={clearImage}
           >
-            ✕
+            <X class="w-4 h-4" />
           </button>
         </div>
         <div class="mt-3 text-sm text-globe-muted flex justify-between">
@@ -317,10 +322,11 @@
         : 'bg-nasa-blue hover:bg-nasa-dark'}"
   >
     {#if submitting}
-      <span class="animate-spin inline-block mr-2">⏳</span>
+      <Loader2 class="w-4 h-4 animate-spin inline-block mr-2" />
       Saving...
     {:else}
-      📤 Queue Observation
+      <Upload class="w-4 h-4 inline-block mr-2" />
+      Queue Observation
     {/if}
   </button>
 
