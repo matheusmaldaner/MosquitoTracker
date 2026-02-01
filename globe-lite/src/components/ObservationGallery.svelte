@@ -1,5 +1,17 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
+  import {
+    Bug,
+    Camera,
+    Cloud,
+    FileText,
+    Leaf,
+    Loader2,
+    MapPin,
+    Package,
+    Sun,
+    TreePine
+  } from 'lucide-svelte';
 
   let observations = [];
   let loading = true;
@@ -82,22 +94,22 @@
     }
   }
 
-  function getProtocolEmoji(protocol) {
-    const emojis = {
-      clouds: '☁️',
-      mosquito_habitat_mapper: '🦟',
-      land_covers: '🌿',
-      tree_heights: '🌲',
-      sky_conditions: '🌤️',
+  function getProtocolIcon(protocol) {
+    const icons = {
+      clouds: Cloud,
+      mosquito_habitat_mapper: Bug,
+      land_covers: Leaf,
+      tree_heights: TreePine,
+      sky_conditions: Sun,
     };
-    return emojis[protocol] || '📋';
+    return icons[protocol] || FileText;
   }
 </script>
 
 <div class="space-y-6">
   {#if loading}
     <div class="text-center py-12">
-      <span class="text-4xl animate-spin inline-block">⏳</span>
+      <Loader2 class="w-10 h-10 mx-auto animate-spin text-globe-muted" />
       <p class="text-globe-muted mt-4">Loading observations...</p>
     </div>
   {:else if error}
@@ -107,7 +119,7 @@
   {:else if observations.length === 0}
     <div class="glass-panel p-10 text-center">
       <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-[color:var(--accent-dim)] flex items-center justify-center">
-        <span class="text-4xl">📷</span>
+        <Camera class="w-8 h-8 text-globe-text" />
       </div>
       <h2 class="text-xl font-semibold text-globe-text mb-2">No Observations Yet</h2>
       <p class="text-globe-muted mb-6">Start observing to see your submissions here.</p>
@@ -123,7 +135,10 @@
                 <img src={obs.imageUrl} alt="Observation" class="w-full h-32 object-cover rounded-lg" />
               {:else}
                 <div class="w-full h-32 rounded-lg bg-[color:var(--surface-soft)] flex items-center justify-center text-3xl">
-                  {getProtocolEmoji(obs.protocol)}
+                  <svelte:component
+                    this={getProtocolIcon(obs.protocol)}
+                    class="w-8 h-8 text-globe-text"
+                  />
                 </div>
               {/if}
             </div>
@@ -146,10 +161,16 @@
               {#if obs.data}
                 <div class="mt-2 text-sm text-globe-muted">
                   {#if obs.data.latitude && obs.data.longitude}
-                    <span>📍 {obs.data.latitude.toFixed(4)}, {obs.data.longitude.toFixed(4)}</span>
+                    <span class="inline-flex items-center gap-1">
+                      <MapPin class="w-4 h-4" />
+                      {obs.data.latitude.toFixed(4)}, {obs.data.longitude.toFixed(4)}
+                    </span>
                   {/if}
                   {#if obs.data.imageSize}
-                    <span class="ml-3">📦 {formatBytes(obs.data.imageSize)}</span>
+                    <span class="ml-3 inline-flex items-center gap-1">
+                      <Package class="w-4 h-4" />
+                      {formatBytes(obs.data.imageSize)}
+                    </span>
                   {/if}
                 </div>
               {/if}

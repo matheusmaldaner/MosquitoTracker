@@ -33,9 +33,18 @@
     }
     
     .icon {
-      font-size: 5rem;
+      width: 80px;
+      height: 80px;
       margin-bottom: 1.5rem;
       animation: float 3s ease-in-out infinite;
+      color: #38bdf8;
+    }
+
+    .list-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 0.5rem;
+      color: #38bdf8;
     }
     
     @keyframes float {
@@ -133,7 +142,11 @@
   </style>
 </head>
 <body>
-  <div class="icon">🌍</div>
+  <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M2 12h20"></path>
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+  </svg>
   <h1>You're Offline</h1>
   <p>Don't worry! GLOBE Observer Lite works offline. Your observations are saved locally and will sync when you're back online.</p>
   
@@ -142,10 +155,41 @@
   <div class="card">
     <h2>What you can do offline:</h2>
     <ul>
-      <li><span>📷</span> Capture new observations</li>
-      <li><span>📝</span> View pending uploads</li>
-      <li><span>📍</span> Use GPS location</li>
-      <li><span>🗜️</span> Compress images locally</li>
+      <li>
+        <svg class="list-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        Capture new observations
+      </li>
+      <li>
+        <svg class="list-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <path d="M14 2v6h6"></path>
+          <path d="M16 13H8"></path>
+          <path d="M16 17H8"></path>
+          <path d="M10 9H8"></path>
+        </svg>
+        View pending uploads
+      </li>
+      <li>
+        <svg class="list-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 10c0 4.418-8 12-8 12S4 14.418 4 10a8 8 0 1 1 16 0Z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        Use GPS location
+      </li>
+      <li>
+        <svg class="list-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 9V6a2 2 0 0 0-2-2h-3"></path>
+          <path d="M9 20H6a2 2 0 0 1-2-2v-3"></path>
+          <path d="M20 15v3a2 2 0 0 1-2 2h-3"></path>
+          <path d="M9 4H6a2 2 0 0 0-2 2v3"></path>
+          <path d="M9 15h6"></path>
+          <path d="M9 9h6"></path>
+        </svg>
+        Compress images locally
+      </li>
     </ul>
   </div>
   

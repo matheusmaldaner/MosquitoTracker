@@ -1,5 +1,20 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
+  import {
+    Bug,
+    Camera,
+    CheckCircle2,
+    Cloud,
+    FileText,
+    Info,
+    Leaf,
+    Loader2,
+    MapPin,
+    Package,
+    RefreshCw,
+    Sun,
+    TreePine
+  } from 'lucide-svelte';
 
   let observations = [];
   let loading = true;
@@ -151,15 +166,15 @@
     }
   }
 
-  function getProtocolEmoji(protocol) {
-    const emojis = {
-      clouds: '☁️',
-      mosquito_habitat_mapper: '🦟',
-      land_covers: '🌿',
-      tree_heights: '🌲',
-      sky_conditions: '🌤️',
+  function getProtocolIcon(protocol) {
+    const icons = {
+      clouds: Cloud,
+      mosquito_habitat_mapper: Bug,
+      land_covers: Leaf,
+      tree_heights: TreePine,
+      sky_conditions: Sun,
     };
-    return emojis[protocol] || '📋';
+    return icons[protocol] || FileText;
   }
 </script>
 
@@ -190,9 +205,9 @@
         on:click={syncNow}
       >
         {#if syncing}
-          <span class="animate-spin">⏳</span>
+          <Loader2 class="w-4 h-4 animate-spin" />
         {:else}
-          <span>🔄</span>
+          <RefreshCw class="w-4 h-4" />
         {/if}
         Sync Now
       </button>
@@ -209,20 +224,23 @@
   <!-- Loading state -->
   {#if loading}
     <div class="text-center py-12">
-      <span class="text-4xl animate-spin inline-block">⏳</span>
+      <Loader2 class="w-10 h-10 mx-auto animate-spin text-globe-muted" />
       <p class="text-globe-muted mt-4">Loading...</p>
     </div>
   {:else if observations.length === 0}
     <!-- Empty state -->
     <div class="glass-card p-12 text-center">
-      <span class="text-5xl">✅</span>
+      <CheckCircle2 class="w-12 h-12 mx-auto text-green-500" />
       <h3 class="text-xl font-semibold mt-4 text-globe-text">All caught up!</h3>
       <p class="text-globe-muted mt-2">No pending observations to sync.</p>
       <a
         href="/observe"
         class="inline-block mt-6 px-6 py-3 bg-nasa-blue text-white rounded-lg hover:bg-nasa-dark transition-colors"
       >
-        📷 Capture New Observation
+        <span class="inline-flex items-center gap-2">
+          <Camera class="w-4 h-4" />
+          Capture New Observation
+        </span>
       </a>
     </div>
   {:else}
@@ -233,7 +251,10 @@
           <div class="flex items-start gap-4">
             <!-- Protocol icon -->
             <div class="text-3xl flex-shrink-0">
-              {getProtocolEmoji(obs.protocol)}
+              <svelte:component
+                this={getProtocolIcon(obs.protocol)}
+                class="w-8 h-8 text-globe-text"
+              />
             </div>
 
             <!-- Details -->
@@ -254,10 +275,16 @@
               {#if obs.data}
                 <div class="mt-2 text-sm text-globe-muted">
                   {#if obs.data.latitude && obs.data.longitude}
-                    <span>📍 {obs.data.latitude.toFixed(4)}, {obs.data.longitude.toFixed(4)}</span>
+                    <span class="inline-flex items-center gap-1">
+                      <MapPin class="w-4 h-4" />
+                      {obs.data.latitude.toFixed(4)}, {obs.data.longitude.toFixed(4)}
+                    </span>
                   {/if}
                   {#if obs.data.imageSize}
-                    <span class="ml-3">📦 {formatBytes(obs.data.imageSize)}</span>
+                    <span class="ml-3 inline-flex items-center gap-1">
+                      <Package class="w-4 h-4" />
+                      {formatBytes(obs.data.imageSize)}
+                    </span>
                   {/if}
                 </div>
               {/if}
@@ -292,12 +319,15 @@
 
   <!-- Info box -->
   <div class="glass-card p-4 mt-6">
-    <h3 class="font-semibold text-globe-text mb-2">💡 How syncing works</h3>
-    <ul class="text-sm text-globe-muted space-y-1">
-      <li>• Observations are saved locally on your device</li>
-      <li>• When online, they automatically sync to GLOBE servers</li>
-      <li>• You can also manually trigger sync with the button above</li>
-      <li>• Failed uploads can be retried individually</li>
+    <h3 class="font-semibold text-globe-text mb-2 inline-flex items-center gap-2">
+      <Info class="w-4 h-4" />
+      How syncing works
+    </h3>
+    <ul class="text-sm text-globe-muted space-y-1 list-disc list-inside">
+      <li>Observations are saved locally on your device</li>
+      <li>When online, they automatically sync to GLOBE servers</li>
+      <li>You can also manually trigger sync with the button above</li>
+      <li>Failed uploads can be retried individually</li>
     </ul>
   </div>
 </div>
