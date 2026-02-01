@@ -8,7 +8,18 @@ const API_KEY_HEADER = import.meta.env.GLOBE_API_KEY_HEADER || 'x-api-key';
 
 export const ALL: APIRoute = async ({ request, params }) => {
   const path = Array.isArray(params.path) ? params.path.join('/') : params.path || '';
-  const targetUrl = new URL(path.replace(/^\//, ''), API_BASE.endsWith('/') ? API_BASE : `${API_BASE}/`);
+  const baseUrl = API_BASE.endsWith('/') ? API_BASE : `${API_BASE}/`;
+  const expectedOrigin = new URL(API_BASE).origin;
+  const targetUrl = new URL(path.replace(/^\//, ''), baseUrl);
+
+  // Prevent SSRF: ensure the target URL stays within the expected API origin
+  if (targetUrl.origin !== expectedOrigin) {
+    return new Response(
+      JSON.stringify({ error: 'Invalid proxy target' }),
+      { status: 400, headers: { 'content-type': 'application/json' } }
+    );
+  }
+
   const requestUrl = new URL(request.url);
 
   requestUrl.searchParams.forEach((value, key) => {
