@@ -146,6 +146,62 @@
       font-weight: 600;
       color: #555;
     }
+
+    .control-section {
+      font-size: 11px;
+      font-weight: 600;
+      color: #666;
+      margin: 12px 0 6px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-top: 1px solid #eee;
+      padding-top: 8px;
+    }
+
+    .control-section:first-of-type {
+      border-top: none;
+      margin-top: 0;
+    }
+
+    .satellite-legend {
+      position: absolute;
+      bottom: 140px;
+      left: 10px;
+      z-index: 1000;
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      font-size: 11px;
+      display: none;
+    }
+
+    .satellite-legend h4 {
+      margin-bottom: 8px;
+      color: #333;
+      font-size: 12px;
+    }
+
+    .satellite-legend .legend-item {
+      margin-bottom: 6px;
+    }
+
+    .satellite-legend .legend-gradient {
+      width: 80px;
+      height: 12px;
+      border-radius: 2px;
+      margin-right: 8px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .data-date {
+      font-size: 10px;
+      color: #888;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #eee;
+    }
   </style>
 </head>
 <body>
@@ -153,9 +209,11 @@
 
   <div class="controls">
     <h3>Map Layers</h3>
+
+    <p class="control-section">GLOBE Data</p>
     <label class="layer-toggle">
       <input type="checkbox" id="toggle-observations" checked>
-      GLOBE Observations
+      Mosquito Observations
     </label>
     <label class="layer-toggle">
       <input type="checkbox" id="toggle-risk">
@@ -164,6 +222,32 @@
     <label class="layer-toggle">
       <input type="checkbox" id="toggle-heatmap">
       Density Heatmap
+    </label>
+
+    <p class="control-section">NASA Satellite Data</p>
+    <label class="layer-toggle">
+      <input type="checkbox" id="toggle-ndvi">
+      MODIS NDVI (Vegetation)
+    </label>
+    <label class="layer-toggle">
+      <input type="checkbox" id="toggle-temp">
+      Land Surface Temp
+    </label>
+    <label class="layer-toggle">
+      <input type="checkbox" id="toggle-precip">
+      GPM Precipitation
+    </label>
+    <label class="layer-toggle">
+      <input type="checkbox" id="toggle-water">
+      MODIS Water Bodies
+    </label>
+    <label class="layer-toggle">
+      <input type="checkbox" id="toggle-flood">
+      VIIRS Flood Detection
+    </label>
+    <label class="layer-toggle">
+      <input type="checkbox" id="toggle-truecolor">
+      VIIRS True Color
     </label>
   </div>
 
@@ -184,6 +268,33 @@
     <div class="legend-item">
       <div class="legend-color" style="background: #95a5a6;"></div>
       <span>Unknown/Other</span>
+    </div>
+  </div>
+
+  <div class="satellite-legend" id="satellite-legend">
+    <h4>NASA Satellite Data</h4>
+    <div class="legend-item" id="legend-ndvi" style="display:none;">
+      <span class="legend-gradient" style="background: linear-gradient(to right, #8B4513, #FFFF00, #228B22);"></span>
+      <span>NDVI: Low - High vegetation</span>
+    </div>
+    <div class="legend-item" id="legend-temp" style="display:none;">
+      <span class="legend-gradient" style="background: linear-gradient(to right, #0000FF, #00FFFF, #FFFF00, #FF0000);"></span>
+      <span>Temp: Cold - Hot</span>
+    </div>
+    <div class="legend-item" id="legend-precip" style="display:none;">
+      <span class="legend-gradient" style="background: linear-gradient(to right, #FFFFFF, #87CEEB, #0000FF, #00008B);"></span>
+      <span>Precip: Dry - Heavy rain</span>
+    </div>
+    <div class="legend-item" id="legend-water" style="display:none;">
+      <span class="legend-gradient" style="background: #0066CC;"></span>
+      <span>Water Bodies (blue)</span>
+    </div>
+    <div class="legend-item" id="legend-flood" style="display:none;">
+      <span class="legend-gradient" style="background: linear-gradient(to right, #FF6600, #FF0000);"></span>
+      <span>Flood: Recent flooding</span>
+    </div>
+    <div class="data-date" id="satellite-date">
+      Data from: Loading...
     </div>
   </div>
 
@@ -215,6 +326,107 @@
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Data: <a href="https://observer.globe.gov">NASA GLOBE Observer</a>',
       maxZoom: 18
     }).addTo(map);
+
+    // ===========================================
+    // NASA GIBS Satellite Layers
+    // ===========================================
+
+    // Helper function to get date string for GIBS (data has latency)
+    function getGIBSDate(daysAgo = 1) {
+      const date = new Date();
+      date.setDate(date.getDate() - daysAgo);
+      return date.toISOString().split('T')[0];
+    }
+
+    // Store dates for display
+    const gibsDates = {
+      ndvi: getGIBSDate(10),      // NDVI updates every 8 days, use 10 for safety
+      temp: getGIBSDate(2),       // Temperature - 2 day latency
+      precip: getGIBSDate(3),     // Precipitation - 3 day latency
+      trueColor: getGIBSDate(1)   // True color - 1 day latency
+    };
+
+    // MODIS NDVI Layer (Vegetation Health - green areas = potential mosquito habitat)
+    const modisNDVILayer = L.tileLayer(
+      'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/' + gibsDates.ndvi + '/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png',
+      {
+        tileSize: 256,
+        opacity: 0.7,
+        attribution: 'NASA GIBS MODIS NDVI',
+        maxZoom: 9,
+        minZoom: 1
+      }
+    );
+
+    // MODIS Land Surface Temperature Layer (mosquitoes thrive 15-40°C)
+    const modisTempLayer = L.tileLayer(
+      'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_Land_Surface_Temp_Day/default/' + gibsDates.temp + '/GoogleMapsCompatible_Level7/{z}/{y}/{x}.png',
+      {
+        tileSize: 256,
+        opacity: 0.7,
+        attribution: 'NASA GIBS MODIS LST',
+        maxZoom: 7,
+        minZoom: 1
+      }
+    );
+
+    // GPM Precipitation Layer (rainfall creates breeding sites)
+    const gpmPrecipLayer = L.tileLayer(
+      'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/GPM_3IMERGDF_06_precipitationCal/default/' + gibsDates.precip + '/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png',
+      {
+        tileSize: 256,
+        opacity: 0.6,
+        attribution: 'NASA GIBS GPM IMERG',
+        maxZoom: 6,
+        minZoom: 1
+      }
+    );
+
+    // VIIRS True Color (for visual reference)
+    const viirsLayer = L.tileLayer(
+      'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_CorrectedReflectance_TrueColor/default/' + gibsDates.trueColor + '/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg',
+      {
+        tileSize: 256,
+        opacity: 0.9,
+        attribution: 'NASA GIBS VIIRS',
+        maxZoom: 9,
+        minZoom: 1
+      }
+    );
+
+    // MODIS Water Mask Layer (identifies water bodies - potential mosquito breeding sites)
+    const modisWaterLayer = L.tileLayer(
+      'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Water_Mask/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png',
+      {
+        tileSize: 256,
+        opacity: 0.7,
+        attribution: 'NASA GIBS MODIS Water Mask',
+        maxZoom: 9,
+        minZoom: 1
+      }
+    );
+
+    // VIIRS Flood Detection (shows recent flooding - creates breeding habitat)
+    const viirsFloodLayer = L.tileLayer(
+      'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_NOAA20_Flood_Detection_3Day_Composite/default/' + gibsDates.trueColor + '/GoogleMapsCompatible_Level8/{z}/{y}/{x}.png',
+      {
+        tileSize: 256,
+        opacity: 0.8,
+        attribution: 'NASA GIBS VIIRS Flood',
+        maxZoom: 8,
+        minZoom: 1
+      }
+    );
+
+    // Store satellite layers for toggle controls
+    const satelliteLayers = {
+      ndvi: modisNDVILayer,
+      temperature: modisTempLayer,
+      precipitation: gpmPrecipLayer,
+      trueColor: viirsLayer,
+      water: modisWaterLayer,
+      flood: viirsFloodLayer
+    };
 
     // Layer groups
     const observationsLayer = L.markerClusterGroup({
@@ -429,44 +641,102 @@
       document.getElementById('stats').innerHTML = `<strong>${features.length}</strong> demo observations`;
     }
 
-    // Add demo risk zones
+    // Calculate dynamic risk zones based on observation clusters
     function addRiskZones() {
       riskZonesLayer.clearLayers();
 
-      const riskZones = [
-        { center: [9.0820, -79.5], radius: 500000, risk: 'high', name: 'Central America' },
-        { center: [-10, -55], radius: 800000, risk: 'high', name: 'Amazon Basin' },
-        { center: [5, 20], radius: 600000, risk: 'high', name: 'Central Africa' },
-        { center: [15, 100], radius: 500000, risk: 'medium', name: 'Southeast Asia' },
-        { center: [25, -80], radius: 300000, risk: 'medium', name: 'Florida/Caribbean' }
-      ];
+      if (!observationsData || observationsData.length === 0) {
+        console.log('No observation data for risk calculation');
+        return;
+      }
 
+      // Grid-based clustering for risk calculation
+      const gridSize = 2; // degrees
+      const grid = {};
+
+      // Count observations per grid cell
+      observationsData.forEach(feature => {
+        if (!feature.geometry || !feature.geometry.coordinates) return;
+        const [lng, lat] = feature.geometry.coordinates;
+        const gridKey = `${Math.floor(lat / gridSize) * gridSize},${Math.floor(lng / gridSize) * gridSize}`;
+
+        if (!grid[gridKey]) {
+          grid[gridKey] = { count: 0, lat: 0, lng: 0, species: {} };
+        }
+        grid[gridKey].count++;
+        grid[gridKey].lat += lat;
+        grid[gridKey].lng += lng;
+
+        // Track species for risk assessment
+        const props = feature.properties || {};
+        const species = getSpeciesFromData(props);
+        grid[gridKey].species[species] = (grid[gridKey].species[species] || 0) + 1;
+      });
+
+      // Calculate risk and create zones
       const riskColors = {
-        high: { color: '#e74c3c', fillColor: '#e74c3c', fillOpacity: 0.2 },
-        medium: { color: '#f39c12', fillColor: '#f39c12', fillOpacity: 0.15 },
-        low: { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.1 }
+        high: { color: '#e74c3c', fillColor: '#e74c3c', fillOpacity: 0.25 },
+        medium: { color: '#f39c12', fillColor: '#f39c12', fillOpacity: 0.2 },
+        low: { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.15 }
       };
 
-      riskZones.forEach(zone => {
-        const style = riskColors[zone.risk];
-        const circle = L.circle(zone.center, {
-          radius: zone.radius,
+      Object.keys(grid).forEach(key => {
+        const cell = grid[key];
+        if (cell.count < 2) return; // Skip cells with too few observations
+
+        const centerLat = cell.lat / cell.count;
+        const centerLng = cell.lng / cell.count;
+
+        // Calculate risk level based on:
+        // 1. Observation density
+        // 2. Presence of disease-carrying species (Aedes, Anopheles)
+        let riskScore = 0;
+        riskScore += Math.min(cell.count * 10, 50); // Density (max 50 points)
+        riskScore += (cell.species.aedes || 0) * 15; // Aedes = Dengue/Zika
+        riskScore += (cell.species.anopheles || 0) * 15; // Anopheles = Malaria
+        riskScore += (cell.species.culex || 0) * 5; // Culex = West Nile
+
+        let risk = 'low';
+        let radius = 100000; // 100km base
+        if (riskScore >= 80) {
+          risk = 'high';
+          radius = 150000;
+        } else if (riskScore >= 40) {
+          risk = 'medium';
+          radius = 120000;
+        }
+
+        const style = riskColors[risk];
+        const circle = L.circle([centerLat, centerLng], {
+          radius: radius,
           color: style.color,
           fillColor: style.fillColor,
           fillOpacity: style.fillOpacity,
           weight: 2
         });
 
+        // Build species breakdown
+        const speciesBreakdown = Object.entries(cell.species)
+          .map(([sp, count]) => `${sp}: ${count}`)
+          .join(', ');
+
         circle.bindPopup(`
           <div class="popup-content">
-            <h4>${zone.name}</h4>
-            <p><span class="label">Risk Level:</span> ${zone.risk.toUpperCase()}</p>
-            <p>Based on environmental conditions favorable for mosquito breeding.</p>
+            <h4>Risk Zone (Calculated)</h4>
+            <p><span class="label">Risk Level:</span> ${risk.toUpperCase()}</p>
+            <p><span class="label">Observations:</span> ${cell.count}</p>
+            <p><span class="label">Species:</span> ${speciesBreakdown}</p>
+            <p><span class="label">Risk Score:</span> ${riskScore}/100</p>
+            <p style="font-size:10px; color:#666; margin-top:8px;">
+              Calculated from GLOBE observation density and species composition.
+            </p>
           </div>
         `);
 
         riskZonesLayer.addLayer(circle);
       });
+
+      console.log(`Created ${Object.keys(grid).length} risk zones from ${observationsData.length} observations`);
     }
 
     // Layer toggle handlers
@@ -495,6 +765,99 @@
       } else if (heatmapLayer) {
         map.removeLayer(heatmapLayer);
       }
+    });
+
+    // ===========================================
+    // Satellite Layer Toggle Handlers
+    // ===========================================
+
+    function updateSatelliteLegend() {
+      const ndviOn = document.getElementById('toggle-ndvi').checked;
+      const tempOn = document.getElementById('toggle-temp').checked;
+      const precipOn = document.getElementById('toggle-precip').checked;
+      const waterOn = document.getElementById('toggle-water').checked;
+      const floodOn = document.getElementById('toggle-flood').checked;
+      const trueColorOn = document.getElementById('toggle-truecolor').checked;
+
+      const anyActive = ndviOn || tempOn || precipOn || waterOn || floodOn || trueColorOn;
+
+      const legendEl = document.getElementById('satellite-legend');
+      legendEl.style.display = anyActive ? 'block' : 'none';
+
+      // Show/hide individual legend items
+      document.getElementById('legend-ndvi').style.display = ndviOn ? 'flex' : 'none';
+      document.getElementById('legend-temp').style.display = tempOn ? 'flex' : 'none';
+      document.getElementById('legend-precip').style.display = precipOn ? 'flex' : 'none';
+      document.getElementById('legend-water').style.display = waterOn ? 'flex' : 'none';
+      document.getElementById('legend-flood').style.display = floodOn ? 'flex' : 'none';
+
+      // Update date display
+      if (anyActive) {
+        let dateText = 'Data: ';
+        const dates = [];
+        if (ndviOn) dates.push(`NDVI ${gibsDates.ndvi}`);
+        if (tempOn) dates.push(`Temp ${gibsDates.temp}`);
+        if (precipOn) dates.push(`Precip ${gibsDates.precip}`);
+        if (waterOn) dates.push('Water (static)');
+        if (floodOn) dates.push(`Flood ${gibsDates.trueColor}`);
+        document.getElementById('satellite-date').textContent = dateText + dates.join(', ');
+      }
+    }
+
+    document.getElementById('toggle-ndvi').addEventListener('change', function() {
+      if (this.checked) {
+        map.addLayer(satelliteLayers.ndvi);
+      } else {
+        map.removeLayer(satelliteLayers.ndvi);
+      }
+      updateSatelliteLegend();
+    });
+
+    document.getElementById('toggle-temp').addEventListener('change', function() {
+      if (this.checked) {
+        map.addLayer(satelliteLayers.temperature);
+      } else {
+        map.removeLayer(satelliteLayers.temperature);
+      }
+      updateSatelliteLegend();
+    });
+
+    document.getElementById('toggle-precip').addEventListener('change', function() {
+      if (this.checked) {
+        map.addLayer(satelliteLayers.precipitation);
+      } else {
+        map.removeLayer(satelliteLayers.precipitation);
+      }
+      updateSatelliteLegend();
+    });
+
+    document.getElementById('toggle-water').addEventListener('change', function() {
+      if (this.checked) {
+        map.addLayer(satelliteLayers.water);
+      } else {
+        map.removeLayer(satelliteLayers.water);
+      }
+      updateSatelliteLegend();
+    });
+
+    document.getElementById('toggle-flood').addEventListener('change', function() {
+      if (this.checked) {
+        map.addLayer(satelliteLayers.flood);
+      } else {
+        map.removeLayer(satelliteLayers.flood);
+      }
+      updateSatelliteLegend();
+    });
+
+    document.getElementById('toggle-truecolor').addEventListener('change', function() {
+      if (this.checked) {
+        // True color should go below other layers
+        map.addLayer(satelliteLayers.trueColor);
+        satelliteLayers.trueColor.bringToBack();
+      } else {
+        map.removeLayer(satelliteLayers.trueColor);
+      }
+      updateSatelliteLegend();
     });
 
     // Initialize
