@@ -7,7 +7,7 @@
 
 [![Astro](https://img.shields.io/badge/Astro-5.17-FF5D01?logo=astro)](https://astro.build)
 [![Svelte](https://img.shields.io/badge/Svelte-5-FF3E00?logo=svelte)](https://svelte.dev)
-[![Capacitor](https://img.shields.io/badge/Capacitor-8-119EFF?logo=capacitor)](https://capacitorjs.com)
+[![Capacitor](https://img.shields.io/badge/Capacitor-6.2-119EFF?logo=capacitor)](https://capacitorjs.com)
 [![NASA](https://img.shields.io/badge/NASA-GLOBE%20Observer-0B3D91?logo=nasa&logoColor=white)](https://observer.globe.gov/)
 <a href="https://geoemerge.devpost.com/">
   <img alt="GeoEMERGE Hackathon 2026" src="https://img.shields.io/badge/GeoEMERGE-Hackathon%202026-purple">
@@ -176,7 +176,7 @@ The app integrates with the [GLOBE API](https://api.globe.gov/search/swagger-ui.
 Important notes:
 - The Search API in the Swagger UI is read-only (GET queries). You do not create those endpoints.
 - Uploads are a separate submission API that requires approval and developer credentials.
-- This app adds **proxy endpoints** (`/api/globe/*` and `/api/globe-upload`) to avoid CORS and keep keys server-side.
+- This app uses **server-side proxy endpoints** (`/api/globe/*` and `/api/globe-upload`) to avoid CORS and keep keys server-side. This requires a dynamic deployment (Astro `output: 'server'` / Vercel adapter).
 
 ### API Endpoint
 ```
@@ -188,7 +188,7 @@ https://api.globe.gov/search/v1/measurement/?protocols=mosquito_habitat_mapper
 Read-only (no auth):
 1. `cd globe-lite && npm install && npm run dev`
 2. Use pages like `/observer` and `/test-api` to fetch live data.
-3. No env vars required if you only read data.
+3. No env vars required if you only read data, but you must run in dev or deploy dynamically so the `/api/globe/*` proxy exists.
 
 Enable uploads (requires credentials):
 1. Obtain a GLOBE developer key/access per the submission API.
