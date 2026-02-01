@@ -55,7 +55,20 @@
       },
       (error) => {
         locationStatus = 'error';
-        locationError = error.message;
+        // Provide user-friendly guidance based on error code
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            locationError = 'Location access denied. Please enable location permissions in your browser settings (click the lock icon in the address bar).';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            locationError = 'Location unavailable. Please check your device\'s GPS/location services are enabled.';
+            break;
+          case error.TIMEOUT:
+            locationError = 'Location request timed out. Please try again or move to an area with better GPS signal.';
+            break;
+          default:
+            locationError = error.message || 'Unable to get location. Please try again.';
+        }
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
@@ -79,6 +92,11 @@
       const compressed = await imageCompression(file, options);
       compressedSize = compressed.size;
       compressionRatio = Math.round((1 - compressedSize / originalSize) * 100);
+
+      // Revoke previous URL to prevent memory leak
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
 
       imageBlob = compressed;
       imagePreview = URL.createObjectURL(compressed);

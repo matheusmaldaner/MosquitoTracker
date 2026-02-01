@@ -5,21 +5,30 @@
   let isOnline = true;
   let pendingCount = 0;
 
+  // Debounce utility to prevent rapid state changes from network fluctuations
+  function debounce(fn, delay) {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => fn(...args), delay);
+    };
+  }
+
   onMount(() => {
     isOnline = navigator.onLine;
 
-    const handleOnline = () => {
+    const handleOnline = debounce(() => {
       isOnline = true;
       if ('serviceWorker' in navigator && 'SyncManager' in window) {
         navigator.serviceWorker.ready.then((reg) => {
           reg.sync.register('sync-observations');
         });
       }
-    };
+    }, 300);
 
-    const handleOffline = () => {
+    const handleOffline = debounce(() => {
       isOnline = false;
-    };
+    }, 300);
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
