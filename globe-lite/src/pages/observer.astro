@@ -4,7 +4,7 @@ import Footer from '../components/Footer.astro';
 
 const protocols = [
   {
-    id: "clouds",
+    id: "sky_conditions",
     name: "Clouds",
     desc: "Observe cloud type, cover, and conditions. Your observations help validate NASA satellite data.",
     icon: "cloud",
@@ -79,16 +79,16 @@ const recentNews = [
 
         <!-- Right side -->
         <div class="flex items-center gap-3">
-          <a href="#protocol-search" class="p-2 nav-link rounded-md" data-search-toggle aria-label="Search protocols">
+          <a href="#protocol-search" class="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center nav-link rounded-md" data-search-toggle aria-label="Search protocols">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
           </a>
-          <button class="theme-toggle hidden sm:inline-flex" data-theme-toggle aria-label="Toggle theme">
-            <svg class="w-4 h-4 theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <button class="theme-toggle hidden sm:inline-flex min-w-[44px] min-h-[44px] items-center justify-center" data-theme-toggle aria-label="Toggle theme">
+            <svg class="w-5 h-5 theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364-1.414 1.414M7.05 16.95l-1.414 1.414m0-11.314L7.05 7.05m9.9 9.9 1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"/>
             </svg>
-            <svg class="w-4 h-4 theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <svg class="w-5 h-5 theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>
             </svg>
           </button>

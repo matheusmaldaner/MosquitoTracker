@@ -189,20 +189,25 @@
                 protocols: 'mosquito_habitat_mapper',
                 startdate: '2017-01-01',
                 enddate,
-                geojson: 'TRUE'
+                geojson: 'TRUE',
+                sample: 'FALSE'
             });
             const url = `/api/globe/search/v1/measurement/protocol/measureddate/?${params.toString()}`;
 
             try {
                 const response = await fetch(url);
-                if (!response.ok) throw new Error('API error: ' + response.status);
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('GLOBE API error:', response.status, errorText);
+                    document.getElementById('count').textContent = 'API Error';
+                    return null;
+                }
 
                 const data = await response.json();
                 return data;
             } catch (error) {
                 console.error('Failed to fetch GLOBE data:', error);
-                // Show error in UI for debugging
-                document.getElementById('count').textContent = 'API Error';
+                document.getElementById('count').textContent = 'Offline';
                 return null;
             }
         }
